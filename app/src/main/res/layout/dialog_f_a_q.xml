@@ -1,0 +1,118 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:orientation="vertical"
+    tools:context=".activity.SupportActivity">
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_5sdp"
+        android:padding="@dimen/_5sdp"
+        app:cardBackgroundColor="@color/colorWhite"
+        app:cardCornerRadius="@dimen/_8sdp"
+        app:cardElevation="@dimen/_5sdp"
+        app:cardMaxElevation="@dimen/_5sdp"
+        app:cardPreventCornerOverlap="true">
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:padding="@dimen/_15sdp">
+
+
+                <WebView
+                    android:id="@+id/webView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_8sdp"
+                    android:layout_marginTop="@dimen/_8sdp"
+                    android:layout_marginRight="@dimen/_8sdp"
+                    android:background="@color/colorWhite" />
+
+
+         <!--       <Button
+                    android:id="@+id/material_buttonId"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_35sdp"
+                    android:layout_marginLeft="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_20sdp"
+                    android:background="@color/colorGreen"
+                    android:text="@string/ok"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="@dimen/_14dp"
+                    android:textStyle="bold"
+                    android:tooltipText="@string/ok" />-->
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:layout_marginLeft="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_20sdp"
+                    android:orientation="vertical">
+
+                    <com.marozzi.roundbutton.RoundButton
+                        android:id="@+id/bt_success"
+                        style="@style/TextStyle194"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:gravity="center"
+                        android:text="@string/ok"
+                        app:rb_animation_alpha="false"
+                        app:rb_animation_corner_radius="@dimen/_20sdp"
+                        app:rb_animation_duration="500"
+                        app:rb_animation_progress_color="@color/colorAccent"
+                        app:rb_animation_progress_padding="8dp"
+                        app:rb_animation_progress_width="2dp"
+                        app:rb_background_color="@android:color/transparent"
+                        app:rb_background_color_pressed="@color/colorPrimary"
+                        app:rb_corner_color="@color/colorPrimary"
+                        app:rb_corner_color_pressed="@color/colorPrimary"
+                        app:rb_corner_width="1dp"
+                        app:rb_success_resource="@drawable/ic_done_white_48dp"
+                        app:rb_text_color="@color/colorPrimary"
+                        app:rb_text_color_pressed="@android:color/white" />
+
+                  <!--  <com.marozzi.roundbutton.RoundButton
+                        android:id="@+id/bt_round"
+                        style="@style/TextStyle194"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:gravity="center"
+                        android:text="@string/ok"
+                        app:rb_animation_alpha="false"
+                        app:rb_animation_corner_radius="20dp"
+                        app:rb_animation_duration="500"
+                        app:rb_animation_progress_color="@color/colorPrimaryDark"
+                        app:rb_animation_progress_padding="8dp"
+                        app:rb_animation_progress_width="2dp"
+                        app:rb_background_color="@android:color/transparent"
+                        app:rb_background_color_pressed="@color/colorPrimary"
+                        app:rb_corner_color="@color/colorPrimary"
+                        app:rb_corner_color_pressed="@color/colorPrimary"
+                        app:rb_corner_radius="4dp"
+                        app:rb_corner_width="1dp"
+                        app:rb_text_color="@color/colorPrimary"
+                        app:rb_text_color_pressed="@android:color/white" />
+-->
+                </LinearLayout>
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
+    </androidx.cardview.widget.CardView>
+
+
+</LinearLayout>

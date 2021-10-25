@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <group android:checkableBehavior="single">
+
+    <item
+        android:id="@+id/home"
+        android:icon="@drawable/home"
+        android:title="@string/home"/>
+
+    <item
+        android:id="@+id/chat"
+        android:icon="@drawable/chat"
+        android:title="@string/chat" />
+    <item
+        android:id="@+id/profile"
+        android:icon="@drawable/user"
+        android:title="@string/account"/>
+
+<!--    <item
+        android:id="@+id/search"
+        android:title="@string/driver_info"
+        android:icon="@drawable/ic_location_pin"/>-->
+
+    </group>
+
+</menu>

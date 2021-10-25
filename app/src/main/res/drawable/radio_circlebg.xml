@@ -1,0 +1,21 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <!-- Larger blue circle -->
+    <item>
+        <shape android:shape="oval">
+            <padding
+                android:bottom="20dp"
+                android:left="20dp"
+                android:right="20dp"
+                android:top="20dp" />
+            <size
+                android:width="@dimen/_15sdp"
+                android:height="@dimen/_15sdp" />
+            <stroke
+                android:width="3dp"
+                android:color="@color/colorGray" />
+        </shape>
+    </item>
+
+</layer-list>
