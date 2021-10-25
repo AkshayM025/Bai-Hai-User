@@ -109,7 +109,7 @@
     <string name="points">Points</string>
     <string name="give_free_stuff">GIVE FREE STUFF</string>
     <string name="get_free_stuff">GET FREE STUFF</string>
-    <string name="volunteer_with_nbai_hai">VOLUNTEER WITH\nBAI-HAI</string>
+    <string name="volunteer_with_nbai_hai">VOLUNTEER WITH\nBYE-HI</string>
     <string name="subscribe_your_foundation">SUBSCRIBE YOUR FOUNDATION</string>
     <string name="no_result">No Result</string>
     <string name="payment_ammount">Payment Amount</string>
@@ -219,7 +219,7 @@
     <string name="category">Category</string>
     <string name="action_cancel">Cancel</string>
     <string name="coins">Coins</string>
-    <string name="product_donations">Bai-Hai is in process of approving the product.</string>
+    <string name="product_donations">Bye-Hi is in process of approving the product.</string>
     <string name="home">Home</string>
     <string name="chat">Chat</string>
     <string name="driver_info">Driver Info</string>

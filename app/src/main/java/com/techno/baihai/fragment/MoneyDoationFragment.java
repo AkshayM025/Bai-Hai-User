@@ -61,7 +61,7 @@ public class MoneyDoationFragment extends Fragment {
 
 
         binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Foundation History"));
-        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Bai-Hai History"));
+        binding.tabLayout.addTab(binding.tabLayout.newTab().setText("Bye-Hi History"));
         binding.tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         binding.viewPager.setAdapter(new MyAdapter(getActivity(), getChildFragmentManager(), binding.tabLayout.getTabCount()));

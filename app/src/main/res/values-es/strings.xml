@@ -103,7 +103,7 @@
     <string name="hello_before_everything_ntell_us_what_do_you_want_to_do">Hola, antes que todo, \ndinos que quieres hacer?</string>
     <string name="donate_to_the_free_store">DONA A LA TIENDA GRATIS</string>
     <string name="donate_to_a_foundaton">DONAR A UNA FUNDACIÓN</string>
-    <string name="donate_to_bai_hai">DONAR A BAI-HAI</string>
+    <string name="donate_to_bai_hai">DONAR A BYE-HI</string>
     <string name="available_foundations">Fundaciones disponibles</string>
     <string name="nicolas_medellin">Nicolas Medellin</string>
     <string name="donations">Donaciones</string>
@@ -111,7 +111,7 @@
     <string name="points">Puntos</string>
     <string name="give_free_stuff">REGALAR COSAS GRATIS</string>
     <string name="get_free_stuff">OBTENER COSAS GRATIS</string>
-    <string name="volunteer_with_nbai_hai">VOLUNTARIO CON \nBAI-HAI</string>
+    <string name="volunteer_with_nbai_hai">VOLUNTARIO CON \nBYE-HI</string>
     <string name="subscribe_your_foundation">SUSCRIBE TU FUNDACIÓN</string>
     <string name="no_result">Sin resultados</string>
     <string name="payment_ammount">Monto del pago</string>
@@ -221,7 +221,7 @@
     <string name="category" >Categoría</string>
     <string name="action_cancel">Cancel</string>
     <string name="coins">Monedas</string>
-    <string name="product_donations">Bai-Hai está en proceso de aprobar el producto.</string>
+    <string name="product_donations">Bye-Hi está en proceso de aprobar el producto.</string>
     <string name="home">Home</string>
     <string name="chat">Chat</string>
     <string name="driver_info">Driver Info</string>

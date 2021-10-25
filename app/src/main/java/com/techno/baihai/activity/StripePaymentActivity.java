@@ -268,7 +268,7 @@ public class StripePaymentActivity extends AppCompatActivity {
                                             Toast.makeText(mContext, "Please enter amount", Toast.LENGTH_SHORT).show();
                                         } else {
                                             alertDialog.dismiss();
-                                            Toast.makeText(mContext, "DonateToBai-Hai!!", Toast.LENGTH_LONG).show();
+                                            Toast.makeText(mContext, "DonateToBye-Hi!!", Toast.LENGTH_LONG).show();
                                             if (uid!=null&&!uid.equalsIgnoreCase("")&&tokenId!=null&&!tokenId.equalsIgnoreCase(""))
                                             {PaymentStripApi(uid, "USD", ammount, "Confirm", tokenId, "01");}
                                             else {

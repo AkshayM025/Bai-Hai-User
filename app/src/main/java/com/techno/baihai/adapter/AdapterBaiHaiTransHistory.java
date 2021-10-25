@@ -53,7 +53,7 @@ public class AdapterBaiHaiTransHistory extends RecyclerView.Adapter<AdapterBaiHa
 
         holder.itemDoseBinding.foundationOrderid.setText("OrderNo: "+dataModel.getId());
         holder.itemDoseBinding.foundationAmount.setText("$ "+dataModel.getAmount());
-        holder.itemDoseBinding.foundationOrgname.setText("Foundation: Bai-Hai");
+        holder.itemDoseBinding.foundationOrgname.setText("Foundation: Bye-Hi");
         holder.itemDoseBinding.foundationProductname.setVisibility(View.GONE);
         holder.itemDoseBinding.foundationDateTimeId.setText("Date&Time: "+dataModel.getDateTime());
         holder.itemDoseBinding.foundationStatusId.setText(dataModel.getStatus());

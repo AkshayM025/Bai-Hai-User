@@ -48,7 +48,7 @@ public class MyPaymentHistoryActivity extends AppCompatActivity {
 
 
         tabLayout.addTab(tabLayout.newTab().setText("Foundation History"));
-        tabLayout.addTab(tabLayout.newTab().setText("Bai-Hai History"));
+        tabLayout.addTab(tabLayout.newTab().setText("Bye-Hi History"));
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
         viewPager.setAdapter(new MyAdapter(this, getSupportFragmentManager(), tabLayout.getTabCount()));
