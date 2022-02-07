@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
@@ -43,12 +44,13 @@ public class DonationFragment extends Fragment implements View.OnClickListener {
 
     FragmentListener listener;
 
-    public DonationFragment (FragmentListener listener) {
+    public DonationFragment(FragmentListener listener) {
 
         this.listener = listener;
     }
 
-    public DonationFragment() {}
+    public DonationFragment() {
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -92,7 +94,7 @@ public class DonationFragment extends Fragment implements View.OnClickListener {
                 break;
 
             case R.id.donatio_card2:
-               // listener.click(new ProductDonateFragment(listener));
+                // listener.click(new ProductDonateFragment(listener));
                 startActivity(new Intent(getActivity(), ProductDonateActivity.class));
 
 
@@ -100,7 +102,7 @@ public class DonationFragment extends Fragment implements View.OnClickListener {
 
             case R.id.donatio_card3:
                 //listener.click(new PaymentFragment(listener));
-                PrefManager.setBoolean(PrefManager.KEY_BaiHai_Status,false);
+                PrefManager.setBoolean(PrefManager.KEY_BaiHai_Status, false);
                 startActivity(new Intent(getActivity(), StripePaymentActivity.class));
 
                 break;
@@ -112,7 +114,10 @@ public class DonationFragment extends Fragment implements View.OnClickListener {
     public void onStart() {
         super.onStart();
         User user = PrefManager.getInstance(getActivity()).getUser();
-        if(!user.getGuideGiveFree().equals("1") ){
+        iv_card1.setVisibility(View.GONE);
+        iv_card3.setVisibility(View.GONE);
+
+        if (!user.getGuideGiveFree().equals("1")) {
             ShowIntro(getResources().getString(R.string.guide_donation_donate), getResources().getString(R.string.guide_donation_donate1), iv_card2, 1);
 
         }
@@ -120,12 +125,14 @@ public class DonationFragment extends Fragment implements View.OnClickListener {
     }
 
     private void ShowIntro(String title, String text, CardView viewId, final int type) {
+        if (type == 1) {
+            iv_card2.setTop(900);
 
+             }
         new GuideView.Builder(mContext)
                 .setTitle(title)
                 .setContentText(text)
                 .setGravity(Gravity.center)
-                .setIndicatorHeight(25)
                 .setContentTextSize(12)//optional
                 .setTitleTextSize(14)//optional
                 .setDismissType(DismissType.anywhere) //optional - default dismissible by TargetView
@@ -134,10 +141,14 @@ public class DonationFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onDismiss(View view) {
                         if (type == 1) {
+                            iv_card1.setVisibility(View.VISIBLE);
+                            iv_card3.setVisibility(View.VISIBLE);
+                            iv_card2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
                             ShowIntro(getResources().getString(R.string.guide_donation_non_profit), getResources().getString(R.string.guide_donation_non_profit1), iv_card1, 6);
                         } else if (type == 6) {
                             ShowIntro(getResources().getString(R.string.guide_donation_non_profit2), getResources().getString(R.string.guide_donation_non_profit21), iv_card3, 5);
-                        } else if (type == 5)  {
+                        } else if (type == 5) {
                             setGuideDonation();
                             SharedPreferences.Editor sharedPreferencesEditor = mContext.getSharedPreferences("show_case_pref",
                                     Context.MODE_PRIVATE).edit();
@@ -151,10 +162,10 @@ public class DonationFragment extends Fragment implements View.OnClickListener {
 
     private void setGuideDonation() {
         User user = PrefManager.getInstance(getActivity()).getUser();
-        String id=null;
-        if(user.getId() == ""){
+        String id = null;
+        if (user.getId() == "") {
             id = user.getId();
-        }else{
+        } else {
             id = user.getId();
         }
 
@@ -166,7 +177,7 @@ public class DonationFragment extends Fragment implements View.OnClickListener {
                 .setParam(parms1)
                 .execute(new ApiCallBuilder.onResponse() {
                     public void Success(String response) {
-                        try{
+                        try {
                             Log.e("selectedresponse=>", "-------->" + response);
                             JSONObject object = new JSONObject(response);
                             String message = object.getString("message");
@@ -184,7 +195,6 @@ public class DonationFragment extends Fragment implements View.OnClickListener {
                             );
 
                             PrefManager.getInstance(getActivity()).userLogin(user2);
-
 
 
                         } catch (JSONException e) {

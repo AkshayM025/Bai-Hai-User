@@ -133,7 +133,7 @@
     <string name="y">Y</string>
     <string name="search">Search</string>
     <string name="subscribe_s_your_norganization">Subscribes your Non Profit.?</string>
-    <string name="name_of_the_organization">Name of the organization</string>
+    <string name="name_of_the_organization">Name of the Non Profit</string>
     <string name="location">Location</string>
     <string name="email">Email</string>
     <string name="phone">Phone</string>
@@ -223,8 +223,8 @@
     <string name="home">Home</string>
     <string name="chat">Chat</string>
     <string name="driver_info">Driver Info</string>
-    <string name="how_to_donate_things_or_money_to_the_organization">how to donate things or money to the organization</string>
-    <string name="purpose_of_organization">Purpose of organization</string>
+    <string name="how_to_donate_things_or_money_to_the_organization">how to donate things or money to the non profit</string>
+    <string name="purpose_of_organization">Purpose of non profit</string>
     <string name="unlimited">Unlimited</string>
     <string name="default_notification_channel_id">fcm_default_channel</string>
     <string name="report">report</string>

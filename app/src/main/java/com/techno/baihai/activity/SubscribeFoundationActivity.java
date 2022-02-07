@@ -143,7 +143,7 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
         //first we will do the validations
         int length = 10;
         if (org_name.equalsIgnoreCase("")) {
-            CustomSnakbar.showSnakabar(mContext, view, "Please Enter Organization Name!");
+            CustomSnakbar.showSnakabar(mContext, view, "Please Enter Not Profit Name!");
             et_orgname.requestFocus();
 
         } else if (mobile.equalsIgnoreCase("")) {
@@ -156,7 +156,7 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
             CustomSnakbar.showSnakabar(mContext, view, "Please Enter Location!");
             et_location.requestFocus();
         } else if (contat_name.equalsIgnoreCase("")) {
-            CustomSnakbar.showSnakabar(mContext, view, "Please Enter Purpose of organization");
+            CustomSnakbar.showSnakabar(mContext, view, "Please Enter Purpose of non profit");
             et_contact.requestFocus();
         } else if (description.equalsIgnoreCase("")) {
             CustomSnakbar.showSnakabar(mContext, view, "Please Enter Description!");
