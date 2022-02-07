@@ -51,6 +51,7 @@ public class MyDonationFragment extends Fragment {
     public MyDonationFragment(FragmentListener listener) {
         this.listener = listener;
     }
+
     public MyDonationFragment() {
     }
 
@@ -89,7 +90,6 @@ public class MyDonationFragment extends Fragment {
 
 
         if (isInternetPresent) {
-            // final Animation myAnim = AnimationUtils.loadAnimation(, R.anim.rotate);
             GetProductIntrustCountApi();
         } else {
             PrefManager prefManager = new PrefManager(mContext);
@@ -132,19 +132,13 @@ public class MyDonationFragment extends Fragment {
 
 
                                 JSONArray result = object.optJSONArray("result");
-                               // Log.e(TAG, "result=>" + result);
+                                // Log.e(TAG, "result=>" + result);
 
 
                                 if (result != null) {
                                     for (int i = 0; i < result.length(); i++) {
 
                                         JSONObject object1 = result.getJSONObject(i);
-
-                                       /* JSONObject object2=object1.optJSONObject("user_details");
-                                        assert object2 != null;
-                                        String seller_name=object2.getString("name");
-                                        Log.e("","name=>"+seller_name);
-    */
 
 
                                         String product_id = object1.optString("id");
@@ -155,8 +149,7 @@ public class MyDonationFragment extends Fragment {
 
                                         String category_id = object1.optString("category_id");
                                         String category_name = object1.optString("category_name");
-                                        String product_status=object1.optString("status");
-
+                                        String product_status = object1.optString("status");
 
 
                                         String product_name = object1.optString("name");
@@ -167,11 +160,9 @@ public class MyDonationFragment extends Fragment {
 
                                         String product_used = object1.optString("used");
                                         String product_total_chat = object1.optString("totalchatrequest");
-                                        String product_lat=object1.optString("lat");
-                                        String product_lon=object1.optString("lon");
-                                        Log.e(TAG, "productStatus=>" +product_status);
-
-
+                                        String product_lat = object1.optString("lat");
+                                        String product_lon = object1.optString("lon");
+                                        Log.e(TAG, "productStatus=>" + product_status);
 
 
                                         myProductModeListls.add(new MyProductModeListl(product_id, seller_id, "", category_id,

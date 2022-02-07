@@ -21,7 +21,7 @@ import com.techno.baihai.utils.PrefManager;
 import java.util.ArrayList;
 import java.util.List;
 
-public class  SliderAdapter extends
+public class SliderAdapter extends
         SliderViewAdapter<SliderAdapter.SliderAdapterVH> {
 
 
@@ -78,12 +78,12 @@ public class  SliderAdapter extends
 
                 Intent intent = new Intent();
 
-                if (position==0) {
+                if (position == 0) {
                     PrefManager.setString(Constant.RECEIVER_ID, myProductModeList.get(position).getSeller_id());
                     intent = new Intent(context, CategoryProductActivity.class);
                     intent.putExtra("getSellerId", myProductModeList.get(position).getSeller_id());
                     intent.putExtra("getSellerName", myProductModeList.get(position).getProduct_seller_name());
-                    Log.e("getSellerN",myProductModeList.get(position).getProduct_seller_name());
+                    Log.e("getSellerN", myProductModeList.get(position).getProduct_seller_name());
 
                     intent.putExtra("getProductId", myProductModeList.get(position).getProduct_id());
                     intent.putExtra("getProductCategoryId", myProductModeList.get(position).getProduct_category_id());
@@ -104,7 +104,7 @@ public class  SliderAdapter extends
                     intent = new Intent(context, CategoryProductActivity.class);
                     intent.putExtra("getSellerId", myProductModeList.get(position).getSeller_id());
                     intent.putExtra("getSellerName", myProductModeList.get(position).getProduct_seller_name());
-                    Log.e("getSellerN",myProductModeList.get(position).getProduct_seller_name());
+                    Log.e("getSellerN", myProductModeList.get(position).getProduct_seller_name());
 
 
                     intent.putExtra("getProductId", myProductModeList.get(position).getProduct_id());

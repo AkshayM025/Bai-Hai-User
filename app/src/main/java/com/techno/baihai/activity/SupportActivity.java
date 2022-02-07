@@ -158,17 +158,10 @@ public class SupportActivity extends AppCompatActivity implements FAQListener {
                                 }
 
 
-                   /*startActivity(new Intent(mContext, HomeActivity.class).
-                                            setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                                                    Intent.FLAG_ACTIVITY_NEW_TASK));
-                                    Animatoo.animateSlideLeft(mContext);
-                                    finish();
-*/
                             } else if (status.equals("0")) {
 
                                 progressDialog.dismiss();
                                 swipLayout.setRefreshing(false);
-                                //Toast.makeText(mContext, "Wrong Username or Password", Toast.LENGTH_LONG).show();
                             }
 
 
@@ -177,7 +170,6 @@ public class SupportActivity extends AppCompatActivity implements FAQListener {
                             progressDialog.dismiss();
                             swipLayout.setRefreshing(false);
                             Log.i(TAG, "errorL", e);
-                            //Toast.makeText(mContext, "Check Your Network "+e, Toast.LENGTH_LONG).show();
                             e.printStackTrace();
                         }
 
@@ -249,14 +241,8 @@ public class SupportActivity extends AppCompatActivity implements FAQListener {
                                     dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
 
                                     WebView mywebview = dialog.findViewById(R.id.webView);
-                                    // mywebview.loadUrl("https://www.javatpoint.com/");
-
-                                  //String data = "<html><body><h1>Hello, Javatpoint!</h1></body></html>";
-                                  // mywebview.loadData(data, "text/html", "UTF-8");
 
                                     mywebview.loadData(description, "text/html", "UTF-8");
-                                    // mywebview.loadUrl("http://bai-hai.com/terms_and_conditions.html");
-                                   // Button materialButton = dialog.findViewById(R.id.material_buttonId);
                                     final RoundButton bt = (RoundButton)dialog.findViewById(R.id.bt_success);
                                     bt.setOnClickListener(new View.OnClickListener() {
                                         @Override
@@ -278,27 +264,13 @@ public class SupportActivity extends AppCompatActivity implements FAQListener {
 
                                         }
                                     });
-
-                              /*      materialButton.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            dialog.dismiss();
-
-                                        }
-                                    });*/
                                     dialog.show();
-
-
-
-
-                                    //newDialog(mContext,description);
 
                                 } else if (status.equals("0")) {
 
                                     progressDialog.dismiss();
                                     swipLayout.setRefreshing(false);
-                                    //Toast.makeText(mContext, "Wrong Username or Password", Toast.LENGTH_LONG).show();
-                                }
+                                  }
                             } catch (JSONException e1) {
                                 e1.printStackTrace();
                             }
@@ -312,12 +284,6 @@ public class SupportActivity extends AppCompatActivity implements FAQListener {
                             //Toast.makeText(mContext, "Check Your Network "+e, Toast.LENGTH_LONG).show();
                             e.printStackTrace();
                         }
-
-                       /* mAdapter = new FaqListAdapter(getApplicationContext(), faqModelLists,SupportActivity.this);
-                        recyclerView.removeAllViews();
-                        recyclerView.setAdapter(mAdapter);
-                        mAdapter.notifyDataSetChanged();
-*/
 
 
                     }

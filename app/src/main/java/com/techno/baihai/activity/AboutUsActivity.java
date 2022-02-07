@@ -2,10 +2,7 @@ package com.techno.baihai.activity;
 
 import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
@@ -26,7 +23,6 @@ AboutUsActivity extends AppCompatActivity {
     ProgressBar progressBar = null;
     VideoView videoView = null;
     String videoUrl = "http://bai-hai.com/uploads/video/Bai-Hai.mp4";
-    Context context = null;
     TextView tv_cancel;
 
     @Override
@@ -38,30 +34,13 @@ AboutUsActivity extends AppCompatActivity {
 
         tv_cancel = findViewById(R.id.tv_cancel);
 
-        tv_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                finish();
+        tv_cancel.setOnClickListener(v -> finish());
 
-            }
-        });
-
-      /*  VideoView videoView = findViewById(R.id.exerciseVideo);
-        try {
-            videoView.setVideoPath("http://videocdn.bodybuilding.com/video/mp4/62000/62792m.mp4");
-            videoView.start();
-        }catch(Exception e){
-            e.printStackTrace();
-            Log.e("videoView",e.getMessage());
-
-        }*/
-//http://bai-hai.com/uploads/video/Bai-Hai.mp4
-        videoView = (VideoView) findViewById(R.id.videoview);
-        progressBar = (ProgressBar) findViewById(R.id.progressbar);
+        videoView = findViewById(R.id.videoview);
+        progressBar = findViewById(R.id.progressbar);
 
 
-
-        MediaController mediaController= new MediaController(this);
+        MediaController mediaController = new MediaController(this);
         mediaController.setAnchorView(videoView);
 
 
@@ -70,34 +49,17 @@ AboutUsActivity extends AppCompatActivity {
         videoView.setVideoURI(videoUri);
         videoView.start();
         progressBar.setVisibility(View.VISIBLE);
-        videoView.setOnPreparedListener(new MediaPlayer.OnPreparedListener() {
-            @Override
-            public void onPrepared(MediaPlayer mp) {
+        videoView.setOnPreparedListener(mp -> {
+            // TODO Auto-generated method stub
+            mp.start();
+            mp.setOnVideoSizeChangedListener((mp1, arg1, arg2) -> {
                 // TODO Auto-generated method stub
-                mp.start();
-                mp.setOnVideoSizeChangedListener(new MediaPlayer.OnVideoSizeChangedListener() {
-                    @Override
-                    public void onVideoSizeChanged(MediaPlayer mp, int arg1,
-                                                   int arg2) {
-                        // TODO Auto-generated method stub
-                        progressBar.setVisibility(View.GONE);
-                        mp.start();
-                    }
-                });
-            }
+                progressBar.setVisibility(View.GONE);
+                mp1.start();
+            });
         });
-        //Creating MediaController
-       /* VideoView videoView =(VideoView)findViewById(R.id.videoview);
-        MediaController mediaController= new MediaController(this);
-        mediaController.setAnchorView(videoView);
-        Uri videoUri = Uri.parse(videoUrl);
-        videoView.setMediaController(mediaController);
-        videoView.setVideoURI(videoUri);
-        videoView.requestFocus();
-        videoView.start();
-*/
-    }
 
+    }
 
 
     public void faceBookLike(View view) {
@@ -107,17 +69,16 @@ AboutUsActivity extends AppCompatActivity {
         try {
             getPackageManager().getPackageInfo("com.facebook.katana", 0);
             Intent fb = new Intent(Intent.ACTION_VIEW, Uri.parse("fb://page/" + fbPageId));
-            //Intent fb = new Intent(Intent.ACTION_VIEW,  Uri.parse(fbPageUrl));
 
             startActivity(fb);
         } catch (Exception e) {
-            Intent fb = new Intent(Intent.ACTION_VIEW,  Uri.parse(fbPageUrl));
+            Intent fb = new Intent(Intent.ACTION_VIEW, Uri.parse(fbPageUrl));
             startActivity(fb);
         }
     }
 
     private void launchMarket() {
-        Uri uri = Uri.parse("http://play.google.com/store/apps/details?id=" +"com.facebook.katana");
+        Uri uri = Uri.parse("http://play.google.com/store/apps/details?id=" + "com.facebook.katana");
         Intent myAppLinkToMarket = new Intent(Intent.ACTION_VIEW, uri);
         try {
             startActivity(myAppLinkToMarket);
@@ -125,7 +86,8 @@ AboutUsActivity extends AppCompatActivity {
             Toast.makeText(this, " unable to find market app", Toast.LENGTH_LONG).show();
         }
     }
-    private void InstaShare(){
+
+    private void InstaShare() {
         Uri uri = Uri.parse("https://instagram.com/bai_hai_org?igshid=1f00e9w7qaxas");
         Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
 
@@ -143,26 +105,21 @@ AboutUsActivity extends AppCompatActivity {
         launchMarket();
     }
 
-    public void LegalInfo(View view){
+    public void LegalInfo(View view) {
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
-        // Configura el titulo.
         alertDialogBuilder.setTitle(getResources().getString(R.string.legal_information));
 
-// Configura el mensaje.
         alertDialogBuilder
                 .setMessage(getResources().getString(R.string.legal_mesagge))
                 .setCancelable(false)
-                .setNeutralButton(getResources().getString(R.string.legal_cancel),new DialogInterface.OnClickListener() { // define the 'Cancel' button
-                    public void onClick(DialogInterface dialog, int which) {
-                        //Either of the following two lines should work.
-                        dialog.cancel();
-                        //dialog.dismiss();
-                    }
+                .setNeutralButton(getResources().getString(R.string.legal_cancel), (dialog, which) -> {
+                    //Either of the following two lines should work.
+                    dialog.cancel();
                 }).create().show();
 
     }
 
-    private void ShareApp(){
+    private void ShareApp() {
 
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
@@ -174,13 +131,13 @@ AboutUsActivity extends AppCompatActivity {
 
 
     @Override
-    public void onResume(){
+    public void onResume() {
         super.onResume();
         videoView.resume();
     }
 
     @Override
-    public void onPause(){
+    public void onPause() {
         super.onPause();
         videoView.suspend();
     }

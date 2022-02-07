@@ -64,24 +64,17 @@ public class MyProductListActivity extends AppCompatActivity {
     private static final String TAG = "MyProductListActivity";
     EditText search_Product;
     Spinner spinner;
-    //ImageView product_refresh;
     String popupDistance;
     private Boolean isInternetPresent = false;
     private Context mContext;
     private RecyclerView product_recyclerView;
     private RecyclerView.Adapter product_mAdapter;
-    private CardView card_view,card_view1,card_view2,card_view3;
-    //    private static final int AUTOCOMPLETE_REQUEST_CODE = 111;
-//    private double lat, lng;
+    private CardView card_view, card_view1, card_view2, card_view3;
     private String latitude, longitude;
     private List<MyProductModeListl> myProductModeListls;
     private TextView location_productId, noDataList;
     private String uid, CatId, searchProductTxt;
     private String distance;
-    private String catImag;
-   // private ImageView cat_ImgId;
-   // private TextView cat_TxtId;
-    private String catName;
     private String popupFillter;
     private String fillte;
     List<String> categoryLists;
@@ -94,7 +87,7 @@ public class MyProductListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_product_list);
 
         mContext = this;
-        categoryLists= new ArrayList<String>();
+        categoryLists = new ArrayList<String>();
         isInternetPresent = PrefManager.isNetworkConnected(mContext);
         location_productId = findViewById(R.id.location_productId);
         card_view = findViewById(R.id.card_view);
@@ -108,25 +101,8 @@ public class MyProductListActivity extends AppCompatActivity {
 
         getCurrentLocation();
 
-        //cat_ImgId = findViewById(R.id.cat_ImgId);
-        //cat_TxtId = findViewById(R.id.cat_TxtId);
-
 
         ImageView drop = findViewById(R.id.drop_downProductId);
-
-       // CatId = getIntent().getStringExtra("categoryId");
-
-        //String catImgUrl = getIntent().getStringExtra("categoryImage");
-        //String catName = getIntent().getStringExtra("categoryName");
-
-       // Preference.save(mContext, "categoryId", CatId);
-        //Preference.save(mContext, "categoryName", catName);
-        //Preference.save(mContext, "categoryImage", catImgUrl);
-
-
-       // Log.i(TAG, "cetId: " + CatId);
-
-        //Toast.makeText(mContext, "categoryId=:" + CatId, Toast.LENGTH_SHORT).show();
 
         drop.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -209,39 +185,6 @@ public class MyProductListActivity extends AppCompatActivity {
         }
 
 
-       // product_refresh = findViewById(R.id.product_refresh);
-       /* product_refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-
-                //Creating the instance of PopupMenu
-                PopupMenu popup = new PopupMenu(mContext, product_refresh);
-                //Inflating the Popup using xml file
-                popup.getMenuInflater().inflate(R.menu.poupup_menu2, popup.getMenu());
-
-                //registering popup with OnMenuItemClickListener
-                popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                    public boolean onMenuItemClick(MenuItem item) {
-                        Toast.makeText(mContext, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
-                        popupFillter = (String) item.getTitle();
-                        PrefManager.save(mContext, PrefManager.KEY_Fillter, popupFillter);
-                        Toast.makeText(mContext, "fillter" + popupFillter, Toast.LENGTH_LONG).show();
-                        item.setCheckable(true);
-                        item.setChecked(true);
-
-
-                        Toast.makeText(mContext, "S=> " + popupFillter, Toast.LENGTH_LONG).show();
-                        GetProductList();
-
-                        return true;
-                    }
-                });
-
-                popup.show();//showing popup menu
-            }
-        });
-        */
         categoryLists.add("");
         categoryLists.add("Technology");
         categoryLists.add("Sport");
@@ -253,7 +196,7 @@ public class MyProductListActivity extends AppCompatActivity {
         categoryLists.add("Pets");
         categoryLists.add("Clothes");
 
-         spinner = (Spinner) findViewById(R.id.spinner);
+        spinner = (Spinner) findViewById(R.id.spinner);
         ArrayAdapter ad
                 = new ArrayAdapter(
                 this, android.R.layout.simple_spinner_item, categoryLists);
@@ -265,12 +208,11 @@ public class MyProductListActivity extends AppCompatActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
-            public void onItemSelected(AdapterView adapterView, View view, int position, long id)
-            {
+            public void onItemSelected(AdapterView adapterView, View view, int position, long id) {
 
                 String item = adapterView.getItemAtPosition(position).toString();
                 Log.e("spinner=>", "" + item);
-                 GetSearchProduct();
+                GetSearchProduct();
                 Toast.makeText(adapterView.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
 
                 //set as selected item.
@@ -278,20 +220,13 @@ public class MyProductListActivity extends AppCompatActivity {
             }
 
             @Override
-            public void onNothingSelected(AdapterView<?> parent)
-            {
+            public void onNothingSelected(AdapterView<?> parent) {
                 // vacio
 
             }
         });
 
         noDataList = findViewById(R.id.not_DataList);
-
-        //Glide.with(mContext)
-        //        .load(catImgUrl).error(R.drawable.profile_img)
-        //        .into(cat_ImgId);
-        // Picasso.get().load(catImag).placeholder(R.drawable.unnamed).into(cat_ImgId);
-        //  cat_TxtId.setText(catName);
 
 
     }
@@ -323,10 +258,8 @@ public class MyProductListActivity extends AppCompatActivity {
                 String postalCode = addresses.get(0).getPostalCode();
                 String knownName = addresses.get(0).getFeatureName();
 
-                // result.append(address.getLocality()).append("\n");
-                // result.append(address.getCountryName());
+
                 Log.e("Addresss===", addressStreet + " " + city + " " + country);
-                // tvServiceLocation.setText(addressStreet + " " + city + " " + country);
                 location_productId.setText(city + " " + country);
             }
         } catch (IOException e) {
@@ -335,7 +268,6 @@ public class MyProductListActivity extends AppCompatActivity {
 
         return result.toString();
     }
-
 
 
     private void getCurrentLocation() {
@@ -349,150 +281,26 @@ public class MyProductListActivity extends AppCompatActivity {
             Log.e("lon=>", "-------->" + longitude);
             final double lat1 = track.getLatitude();
             final double lon1 = track.getLongitude();
-            //location_productId.setText(Tools.getCompleteAddressString(this, lat1, lon1));
             getAddress(lat1, lon1);
-            //latLng = new LatLng(latitude, longitude);
 
         } else {
             track.showSettingsAlert();
         }
     }
 
-   /* private void GetRefreshProduct() {
 
+    @Override
+    public void onStart() {
+        super.onStart();
+        User user = PrefManager.getInstance(this).getUser();
+        if (!user.getGuideFree().equals("1")) {
+            ShowIntro(getResources().getString(R.string.guide_filters), getResources().getString(R.string.guide_filters1), card_view, 1);
 
-        Log.e("distance", distance);
-
-
-        final ProgressDialog progressDialog;
-        progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait...");
-        progressDialog.show();
-
-        // http://bai-hai.com/webservice/get_product_by_category?
-        // category_id=1&
-        // user_id=12&
-        // distance=10
-        HashMap<String, String> param = new HashMap<>();
-        param.put("user_id", uid);
-        param.put("category_id", CatId);
-        param.put("distance", "10");
-        ApiCallBuilder.build(this)
-                .isShowProgressBar(false)
-                .setUrl(Constant.BASE_URL + "get_product_by_category?") //http://bai-hai.com/webservice/get_product_by_category?
-                .setParam(param)
-                .execute(new ApiCallBuilder.onResponse() {
-                    @Override
-                    public void Success(String response) {
-                        Log.e("Response==>", "" + response);
-                        progressDialog.dismiss();
-                        noDataList.setVisibility(View.GONE);
-                        try {
-                            JSONObject object = new JSONObject(response);
-                            String status = object.optString("status");
-                            String message = object.optString("message");
-                            if (status.equals("1")) {
-
-
-                                JSONArray result = object.optJSONArray("result");
-                                Log.e(TAG, "result=>" + result);
-                                myProductModeListls.clear();
-
-
-                                // if (result != null) {
-                                for (int i = 0; i < result.length(); i++) {
-
-                                    JSONObject object1 = result.getJSONObject(i);
-                                    JSONObject object2 = object1.optJSONObject("user_details");
-                                    String seller_name = object2.getString("name");
-
-                                    Log.e("", "name=>" + seller_name);
-
-                                    JSONObject object3 = object1.optJSONObject("category_details");
-                                    String category_image = object3.getString("cat_image");
-                                    String category_name = object3.getString("cat_name");
-                                    Log.e("", "category_image=>" + category_image);
-
-
-
-                                    String product_id = object1.optString("id");
-
-
-                                    String seller_id = object1.optString("user_id");
-
-
-                                    String category_id = object1.optString("category_id");
-
-                                    String product_name = object1.optString("name");
-                                    String product_name_imageUrl = object1.optString("image1");
-                                    String product_description = object1.optString("description");
-
-                                    String product_address = object1.optString("address");
-
-                                    String product_used = object1.optString("used");
-                                    String product_lat=object1.getString("lat");
-                                    String product_lon=object1.getString("lon");
-
-
-                                    myProductModeListls.add(new MyProductModeListl(product_id, seller_id, seller_name, category_id,
-                                            product_name, product_description, "",
-                                            product_address, product_used, product_name_imageUrl,
-                                            "", category_image, category_name, product_lat, product_lon));
-                                    product_mAdapter.notifyDataSetChanged();
-
-                                }
-
-
-                            } else {
-                                try {
-                                    myProductModeListls.clear();
-                                    product_recyclerView.removeAllViews();
-                                    product_mAdapter.notifyDataSetChanged();
-                                    noDataList.setVisibility(View.VISIBLE);
-                                    Toast.makeText(mContext, "Data Not Found ", Toast.LENGTH_LONG).show();
-                                }catch (Exception e){
-                                    Log.e("noDataException", String.valueOf(e));
-                                }
-                            }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            //Toast.makeText(mContext, "Check Your Network: " , Toast.LENGTH_LONG).show();
-
-
-                        }
-                        product_mAdapter = new MyProductListAdapter(getApplicationContext(), myProductModeListls);
-                        product_recyclerView.removeAllViews();
-                        product_recyclerView.setAdapter(product_mAdapter);
-
-
-
-                    }
-
-                    @Override
-                    public void Failed(String error) {
-
-                        progressDialog.dismiss();
-                        noDataList.setVisibility(View.VISIBLE);
-                        Toast.makeText(mContext, "Check Your Network: " + error, Toast.LENGTH_LONG).show();
-                    }
-                });
-
+        }
 
     }
-*/
-   @Override
-   public void onStart() {
-       super.onStart();
-       User user = PrefManager.getInstance(this).getUser();
-       if(!user.getGuideFree().equals("1") ){
-           ShowIntro("Filters", "Filter products  by distance", card_view, 1);
 
-       }
-
-   }
     private void GetProductList() {
-
 
 
         if (!popupDistance.equals("0")) {
@@ -500,21 +308,15 @@ public class MyProductListActivity extends AppCompatActivity {
             if (popupDistance.equals("Unlimited")) {
 
                 distance = "10000";
-            }else {
+            } else {
                 distance = PrefManager.get(mContext, PrefManager.KEY_DISTANCE).split(" ")[0];
 
             }
         } else {
             distance = "10";
         }
-        /*if (popupFillter!=null&&popupFillter.equals("Old Product"))
-        {
-            fillte="ASC";
 
-        }else{
-            fillte="DESC";
-        }*/
-        fillte="DESC";
+        fillte = "DESC";
         Log.e("distance", distance);
         Log.e("latitude", latitude);
 
@@ -523,10 +325,6 @@ public class MyProductListActivity extends AppCompatActivity {
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
 
-        // http://bai-hai.com/webservice/get_product_by_category?
-        // category_id=1&
-        // user_id=12&
-        // distance=10
 
         HashMap<String, String> param = new HashMap<>();
         param.put("user_id", uid);
@@ -591,8 +389,8 @@ public class MyProductListActivity extends AppCompatActivity {
                                             category_name = object3.getString("cat_name");
                                         }
                                         Log.e("", "category_image=>" + category_image);
-                                        catImag = category_image;
-                                        catName = category_name;
+                                        String catImag = category_image;
+                                        String catName = category_name;
 
                                         String product_id = object1.optString("id");
 
@@ -610,11 +408,10 @@ public class MyProductListActivity extends AppCompatActivity {
                                         String product_dateTime = object1.getString("date_time");
 
 
-
                                         myProductModeListls.add(new MyProductModeListl(product_id, seller_id, seller_name, category_id,
                                                 product_name, product_description, "",
                                                 product_address, "product_used", product_name_imageUrl,
-                                                "", category_image, category_name, product_lat, product_lon,product_status,product_dateTime));
+                                                "", category_image, category_name, product_lat, product_lon, product_status, product_dateTime));
 
 
                                     }
@@ -674,10 +471,10 @@ public class MyProductListActivity extends AppCompatActivity {
 
         HashMap<String, String> param = new HashMap<>();
         String productStxt = search_Product.getText().toString().trim();
-        if(spinner.getSelectedItemPosition()!=0){
-            CatId=""+spinner.getSelectedItemPosition()+"";
-        }else{
-            CatId="0";
+        if (spinner.getSelectedItemPosition() != 0) {
+            CatId = "" + spinner.getSelectedItemPosition() + "";
+        } else {
+            CatId = "0";
         }
         Log.e("Spinner==>", "" + spinner.getSelectedItemPosition());
 
@@ -716,11 +513,7 @@ public class MyProductListActivity extends AppCompatActivity {
                                     for (int i = 0; i < result.length(); i++) {
 
                                         JSONObject object1 = result.getJSONObject(i);
-                                        /*JSONObject object2=object1.optJSONObject("user_details");
-                                        assert object2 != null;
-                                        String seller_name=object2.getString("name");
-                                        Log.e("","name=>"+seller_name);
-    */
+
                                         JSONObject object3 = object1.optJSONObject("category_details");
                                         String category_image = null;
                                         if (object3 != null) {
@@ -732,8 +525,8 @@ public class MyProductListActivity extends AppCompatActivity {
                                         }
                                         Log.e("", "category_image=>" + category_image);
 
-                                        catImag = category_image;
-                                        catName = category_name;
+                                        String catImag = category_image;
+                                        String catName = category_name;
 
 
                                         String seller_id = object1.getString("user_id");
@@ -807,14 +600,15 @@ public class MyProductListActivity extends AppCompatActivity {
 
 
     }
-    private   List<String> GetCategory() {
+
+    private List<String> GetCategory() {
 
 
-        List<String> categoryProd= new ArrayList<String>();
-        String langua="EN";
-        String lang=PrefManager.get(mContext,"lang");
-        if (lang.equals("es")&& lang!=null){
-            langua="ES";
+        List<String> categoryProd = new ArrayList<String>();
+        String langua = "EN";
+        String lang = PrefManager.get(mContext, "lang");
+        if (lang.equals("es") && lang != null) {
+            langua = "ES";
         }
 
         HashMap<String, String> param = new HashMap<>();
@@ -876,7 +670,6 @@ public class MyProductListActivity extends AppCompatActivity {
                         }
 
 
-
                     }
 
                     @Override
@@ -887,7 +680,7 @@ public class MyProductListActivity extends AppCompatActivity {
                     }
                 });
 
-return categoryProd;
+        return categoryProd;
     }
 
     private void ShowIntro(String title, String text, CardView viewId, final int type) {
@@ -904,13 +697,13 @@ return categoryProd;
                     @Override
                     public void onDismiss(View view) {
                         if (type == 1) {
-                            ShowIntro("Filters", "Filter  products by name", card_view1, 6);
+                            ShowIntro(getResources().getString(R.string.guide_filters2), getResources().getString(R.string.guide_filters21), card_view1, 6);
                         } else if (type == 6) {
-                            ShowIntro("Filters", "Filter products by category", card_view2, 5);
-                        }  else if (type == 5) {
+                            ShowIntro(getResources().getString(R.string.guide_filters3), getResources().getString(R.string.guide_filters31), card_view2, 5);
+                        } else if (type == 5) {
                             card_view3.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 750));
-                            ShowIntro("Products List", "Here you can see pictures and information about products and  contact the donator", card_view3, 4);
-                        }else if (type == 4)  {
+                            ShowIntro(getResources().getString(R.string.guide_product_list), getResources().getString(R.string.guide_product_list1), card_view3, 4);
+                        } else if (type == 4) {
                             setGuideProducts();
                             card_view3.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
 
@@ -924,12 +717,12 @@ return categoryProd;
                 .show();
     }
 
-     private void setGuideProducts() {
+    private void setGuideProducts() {
         User user = PrefManager.getInstance(this).getUser();
-        String id=null;
-        if(user.getId() == ""){
+        String id = null;
+        if (user.getId() == "") {
             id = user.getId();
-        }else{
+        } else {
             id = user.getId();
         }
 
@@ -941,7 +734,7 @@ return categoryProd;
                 .setParam(parms1)
                 .execute(new ApiCallBuilder.onResponse() {
                     public void Success(String response) {
-                        try{
+                        try {
                             Log.e("selectedresponse=>", "-------->" + response);
                             JSONObject object = new JSONObject(response);
                             String message = object.getString("message");
@@ -959,7 +752,6 @@ return categoryProd;
                             );
 
                             PrefManager.getInstance(mContext).userLogin(user2);
-
 
 
                         } catch (JSONException e) {

@@ -64,13 +64,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 handleNow(data);
             }
 
-            // Handle message within 10 seconds
-           // handleNow(data);
 
-             /* if (jobType.equalsIgnoreCase(JobType.LONG.name())) {
-                 // For long-running tasks (10 seconds or more) use WorkManager.
-                 scheduleLongRunningJob();
-            } else {} */
 
         }
 
@@ -290,15 +284,6 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }
 
 
-            // msg = object.getString("key");
-
-            //            Drawable drawable = getApplicationInfo().loadIcon(getPackageManager());
-//            Bitmap bitmap = ((BitmapDrawable)drawable).getBitmap();
-
-      /*  Intent intent = new Intent(this, SplashActivity.class);
-        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 , intent,
-                PendingIntent.FLAG_ONE_SHOT);*/
 if((messageBody.equals("message user") && (currentTime.getDate()== 16 ))
         || Chatresult.equals("insert_chat") ||
         chatStatus.equals("Your Chat request is Accepted") ||

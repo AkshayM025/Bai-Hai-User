@@ -113,7 +113,7 @@ public class DonationFragment extends Fragment implements View.OnClickListener {
         super.onStart();
         User user = PrefManager.getInstance(getActivity()).getUser();
         if(!user.getGuideGiveFree().equals("1") ){
-            ShowIntro("Donate", "Help others. Give free stuff", iv_card2, 1);
+            ShowIntro(getResources().getString(R.string.guide_donation_donate), getResources().getString(R.string.guide_donation_donate1), iv_card2, 1);
 
         }
 
@@ -134,9 +134,9 @@ public class DonationFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onDismiss(View view) {
                         if (type == 1) {
-                            ShowIntro("Non profit", "Here you have the  possibility to send money to fundation", iv_card1, 6);
+                            ShowIntro(getResources().getString(R.string.guide_donation_non_profit), getResources().getString(R.string.guide_donation_non_profit1), iv_card1, 6);
                         } else if (type == 6) {
-                            ShowIntro("Non profit", "Here you have the  possibility to help bye-hi", iv_card3, 5);
+                            ShowIntro(getResources().getString(R.string.guide_donation_non_profit2), getResources().getString(R.string.guide_donation_non_profit21), iv_card3, 5);
                         } else if (type == 5)  {
                             setGuideDonation();
                             SharedPreferences.Editor sharedPreferencesEditor = mContext.getSharedPreferences("show_case_pref",

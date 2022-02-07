@@ -121,8 +121,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
         super.onCreate(savedInstanceState);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-        binding = DataBindingUtil.setContentView(this,R.layout.fragment_product_category);
-      //  setContentView(R.layout.fragment_product_category);
+        binding = DataBindingUtil.setContentView(this, R.layout.fragment_product_category);
         PrefManager.isConnectingToInternet(this);
         isInternetPresent = PrefManager.isNetworkConnected(this);
 
@@ -140,18 +139,11 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
         Log.e("red_ID", "-------->" + uid);
 
 
-
-
         try {
             product_SellerId = getIntent().getStringExtra("getSellerId");
             productId = getIntent().getStringExtra("getProductId");
             product_SellerName = getIntent().getStringExtra("getSellerName");
 
-
-
-
-
-            // Toast.makeText(mContext, "productId=> " + productId, Toast.LENGTH_SHORT).show();
 
             product_categoryId = getIntent().getStringExtra("getProductCategoryId");
             product_categoryImage = getIntent().getStringExtra("getProductCategoryImageUrl");
@@ -166,7 +158,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 
             productNameId = findViewById(R.id.prodNameId);
             productNameId.setText("Name:- " + productName);
-            sellerNameId.setText("SellerName: "+product_SellerName);
+            sellerNameId.setText("SellerName: " + product_SellerName);
 
             sellerNameId.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -183,26 +175,12 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
             Toast.makeText(mContext, "" + exception, Toast.LENGTH_LONG).show();
         }
 
-       GetSliderProductList(productId);
-
-    /*
-        PrefManager.setString(Preference.KEY_getProductCategoryId,product_categoryId);
-        PrefManager.setString(Preference.KEY_getProductName,productName);
-        PrefManager.setString(Preference.KEY_getProductImageUrl,productImgUrl);
-        PrefManager.setString(Preference.KEY_getProductDecrip,productDescrip);
-        PrefManager.setString(Preference.KEY_getProductAddress,productAddress);
+        GetSliderProductList(productId);
 
 
-*/
-
-
-       // product_ImgdetailsId = findViewById(R.id.product_ImgdetailsId);
         product_DricrptionId = findViewById(R.id.product_DricrptionId);
 
         product_DricrptionId.setText(productDescrip);
-
-
-       // Picasso.get().load(productImgUrl).placeholder(R.drawable.product_placeholder).into(product_ImgdetailsId);
 
 
         Picasso.get().load(product_categoryImage).placeholder(R.drawable.unnamed).into(catImageView);
@@ -219,8 +197,6 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
             chat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-//                    Intent intent = new Intent();
-                    //GetChatStatusApi();
                     ChatRequestDialog();
 
                 }
@@ -229,7 +205,6 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
         }
 
         getCurrentLocation();
-        //getAddress()
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
@@ -251,8 +226,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 
 
         HashMap<String, String> param = new HashMap<>();
-        param.put("product_id",productId);
-
+        param.put("product_id", productId);
 
 
         ApiCallBuilder.build(this)
@@ -265,7 +239,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                         Log.e("get_latest_product=>", "" + response);
                         progressDialog.dismiss();
                         try {
-                            GetProDetailModel  commentModel = new Gson().fromJson(response, GetProDetailModel.class);
+                            GetProDetailModel commentModel = new Gson().fromJson(response, GetProDetailModel.class);
 
                             JSONObject object = new JSONObject(response);
                             String status = object.optString("status");
@@ -276,43 +250,41 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                                 Log.e("get_image_2=>", "" + object1.optString("image1").split("images/").length);
                                 binding.imageSlider.setVisibility(View.VISIBLE);
                                 myProductModeListls = new ArrayList<>();
-                                if( object1.optString("image1").split("images/").length == 2){
-                                    myProductModeListls.add(new MyProductModeListl(productId,commentModel.getResult().getUserId(),
-                                            commentModel.getResult().getUserDetails().getUserName(),commentModel.getResult().getCategoryId(),commentModel.getResult().getName(),commentModel.getResult().getDescription(),
-                                            "",commentModel.getResult().getAddress(),commentModel.getResult().getUsed(),commentModel.getResult().getImage1(),
-                                            "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(),  commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
+                                if (object1.optString("image1").split("images/").length == 2) {
+                                    myProductModeListls.add(new MyProductModeListl(productId, commentModel.getResult().getUserId(),
+                                            commentModel.getResult().getUserDetails().getUserName(), commentModel.getResult().getCategoryId(), commentModel.getResult().getName(), commentModel.getResult().getDescription(),
+                                            "", commentModel.getResult().getAddress(), commentModel.getResult().getUsed(), commentModel.getResult().getImage1(),
+                                            "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(), commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
 
                                 }
-                                if( object1.optString("image2").split("images/").length == 2){
-                                    myProductModeListls.add(new MyProductModeListl(productId,commentModel.getResult().getUserId(),
-                                            commentModel.getResult().getUserDetails().getUserName(),commentModel.getResult().getCategoryId(),commentModel.getResult().getName(),commentModel.getResult().getDescription(),
-                                            "",commentModel.getResult().getAddress(),commentModel.getResult().getUsed(),commentModel.getResult().getImage2(),
-                                            "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(),  commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
+                                if (object1.optString("image2").split("images/").length == 2) {
+                                    myProductModeListls.add(new MyProductModeListl(productId, commentModel.getResult().getUserId(),
+                                            commentModel.getResult().getUserDetails().getUserName(), commentModel.getResult().getCategoryId(), commentModel.getResult().getName(), commentModel.getResult().getDescription(),
+                                            "", commentModel.getResult().getAddress(), commentModel.getResult().getUsed(), commentModel.getResult().getImage2(),
+                                            "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(), commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
 
                                 }
-                                if( object1.optString("image3").split("images/").length == 2){
-                                    myProductModeListls.add(new MyProductModeListl(productId,commentModel.getResult().getUserId(),
-                                            commentModel.getResult().getUserDetails().getUserName(),commentModel.getResult().getCategoryId(),commentModel.getResult().getName(),commentModel.getResult().getDescription(),
-                                            "",commentModel.getResult().getAddress(),commentModel.getResult().getUsed(),commentModel.getResult().getImage3(),
-                                            "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(),  commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
+                                if (object1.optString("image3").split("images/").length == 2) {
+                                    myProductModeListls.add(new MyProductModeListl(productId, commentModel.getResult().getUserId(),
+                                            commentModel.getResult().getUserDetails().getUserName(), commentModel.getResult().getCategoryId(), commentModel.getResult().getName(), commentModel.getResult().getDescription(),
+                                            "", commentModel.getResult().getAddress(), commentModel.getResult().getUsed(), commentModel.getResult().getImage3(),
+                                            "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(), commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
 
                                 }
-                                if( object1.optString("image4").split("images/").length == 2){
-                                    myProductModeListls.add(new MyProductModeListl(productId,commentModel.getResult().getUserId(),
-                                            commentModel.getResult().getUserDetails().getUserName(),commentModel.getResult().getCategoryId(),commentModel.getResult().getName(),commentModel.getResult().getDescription(),
-                                            "",commentModel.getResult().getAddress(),commentModel.getResult().getUsed(),commentModel.getResult().getImage4(),
-                                            "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(),  commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
+                                if (object1.optString("image4").split("images/").length == 2) {
+                                    myProductModeListls.add(new MyProductModeListl(productId, commentModel.getResult().getUserId(),
+                                            commentModel.getResult().getUserDetails().getUserName(), commentModel.getResult().getCategoryId(), commentModel.getResult().getName(), commentModel.getResult().getDescription(),
+                                            "", commentModel.getResult().getAddress(), commentModel.getResult().getUsed(), commentModel.getResult().getImage4(),
+                                            "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(), commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
 
                                 }
-                                if( object1.optString("image5").split("images/").length == 2){
-                                    myProductModeListls.add(new MyProductModeListl(productId,commentModel.getResult().getUserId(),
-                                            commentModel.getResult().getUserDetails().getUserName(),commentModel.getResult().getCategoryId(),commentModel.getResult().getName(),commentModel.getResult().getDescription(),
-                                            "",commentModel.getResult().getAddress(),commentModel.getResult().getUsed(),commentModel.getResult().getImage5(),
-                                            "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(),  commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
+                                if (object1.optString("image5").split("images/").length == 2) {
+                                    myProductModeListls.add(new MyProductModeListl(productId, commentModel.getResult().getUserId(),
+                                            commentModel.getResult().getUserDetails().getUserName(), commentModel.getResult().getCategoryId(), commentModel.getResult().getName(), commentModel.getResult().getDescription(),
+                                            "", commentModel.getResult().getAddress(), commentModel.getResult().getUsed(), commentModel.getResult().getImage5(),
+                                            "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(), commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
 
                                 }
-
-
 
 
                                 adapter = new SliderAdapter(getApplicationContext(), myProductModeListls);
@@ -328,18 +300,12 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                                 binding.imageSlider.startAutoCycle();
 
 
-
-
-
-                            }else {
+                            } else {
                                 binding.imageSlider.setVisibility(View.GONE);
                                 binding.productImgdetailsId.setVisibility(View.VISIBLE);
 
                                 Toast.makeText(mContext, "You have no new product\nnear by ", Toast.LENGTH_SHORT).show();
-                                }
-
-
-
+                            }
 
 
                         } catch (JSONException e) {
@@ -386,22 +352,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                 icon(BitmapDescriptorFactory.fromBitmap((smallMarker)));// .icon(bitmapDescriptorFromVector(this, R.drawable.ic_circle));
 
 
-        //5256 2208 0046 7254
-        // mMarker = mMap.addMarker(markerOptions);
-
     }
-
-  /*  private BitmapDescriptor bitmapDescriptorFromVector(Context context, @DrawableRes int vectorDrawableResourceId) {
-        Drawable background = ContextCompat.getDrawable(context, R.drawable.ic_circle);
-        background.setBounds(0, 0, background.getIntrinsicWidth(), background.getIntrinsicHeight());
-        Drawable vectorDrawable = ContextCompat.getDrawable(context, vectorDrawableResourceId);
-        vectorDrawable.setBounds(40, 20, vectorDrawable.getIntrinsicWidth() + 40, vectorDrawable.getIntrinsicHeight() + 20);
-        Bitmap bitmap = Bitmap.createBitmap(background.getIntrinsicWidth(), background.getIntrinsicHeight(), Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(bitmap);
-        background.draw(canvas);
-        vectorDrawable.draw(canvas);
-        return BitmapDescriptorFactory.fromBitmap(bitmap);
-    }*/
 
 
     @Override
@@ -411,8 +362,6 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
         mMap = googleMap;
         // Add a marker in Sydney and move the camera
         LatLng Point = new LatLng(Double.parseDouble(productlat), Double.parseDouble(productlon));
-        // mMap.addMarker(new MarkerOptions().position(Point).title("Product"));
-        //mMap.moveCamera(CameraUpdateFactory.newLatLng(Point));
         if (mCircle == null || mMarker == null) {
             drawMarkerWithCircle(Point);
         } else {
@@ -420,28 +369,6 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
         }
         mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(Point, 16));
 
-
-/*        CircleOptions circleOptions = new CircleOptions()
-                .center(Point)   //set center
-                .radius(500)   //set radius in meters
-                .fillColor(Color.TRANSPARENT)  //default
-                .strokeColor(Color.BLUE)
-                .strokeWidth(5);
-
-        mCircle  = mMap.addCircle(circleOptions);*/
-
-      /*  mMap.setOnMyLocationChangeListener(new GoogleMap.OnMyLocationChangeListener() {
-            @Override
-            public void onMyLocationChange(Location location) {
-                LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-                if(mCircle == null || mMarker == null){
-                    drawMarkerWithCircle(Point);
-                }else{
-                    updateMarkerWithCircle(Point);
-                }
-            }
-        });
-*/
 
     }
 
@@ -460,14 +387,9 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                 String postalCode = addresses.get(0).getPostalCode();
                 String knownName = addresses.get(0).getFeatureName();
 
-                // result.append(address.getLocality()).append("\n");
-                // result.append(address.getCountryName());
                 Log.e("Address===", addressStreet + " " + city + " " + country);
                 Log.e("addressStreet===", addressStreet);
-//                Log.e("city===", city);
                 Log.e("country===", country);
-
-                // tvServiceLocation.setText(addressStreet + " " + city + " " + country);
                 details_locationId.setText(city + " " + country);
             }
         } catch (IOException e) {
@@ -488,10 +410,6 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
         iv_Img_product = mView.findViewById(R.id.iv_Img_product);
         iv_txt_product = mView.findViewById(R.id.iv_txt_product);
         iv_message_product = mView.findViewById(R.id.iv_message_product);
-        //iv_txtstatus_product.setText(Status);
-        //iv_txt_product.setText(productName);
-
-        // Toast.makeText(mContext, "" + message, Toast.LENGTH_LONG).show();
         Glide.with(CategoryProductActivity.this).load(productImgUrl).error(R.drawable.unnamed).placeholder(R.drawable.product_placeholder).into(iv_Img_product);
 
         TextView btn_okay = mView.findViewById(R.id.btn_okay);
@@ -501,12 +419,12 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
         alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         alertDialog.setCanceledOnTouchOutside(true);
         btn_exit.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            alertDialog.dismiss();
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
 
-                                        }
-                                    });
+            }
+        });
         btn_okay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -518,8 +436,6 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                     } else {
                         PrefManager prefManager = new PrefManager(mContext);
                         PrefManager.showSettingsAlert(mContext);
-            /*    AlertConnection.showAlertDialog(mContext, "No Internet Connection",
-                    "You don't have internet connection.", false);*/
                     }
                 } else {
                     Toast.makeText(mContext, "Please enter message..!!", Toast.LENGTH_LONG).show();
@@ -537,9 +453,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
         final AlertDialog.Builder alert = new AlertDialog.Builder(CategoryProductActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.chat_confirm_dailog, null);
 
-     //   layout_status = findViewById(R.id.layout_status);
-
-    ImageView cancel = mView.findViewById(R.id.cancel);
+        ImageView cancel = mView.findViewById(R.id.cancel);
 
 
         Button btn_okay = mView.findViewById(R.id.btn_okay);
@@ -559,46 +473,6 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
             public void onClick(View v) {
 
                 if (message.equals("You have already sent a request,please wait for approval")) {
-
-/*
-                                    final AlertDialog.Builder alert = new AlertDialog.Builder(CategoryProductFragment.this);
-                                    View mView = getLayoutInflater().inflate(R.layout.chat_request_alertbox, null);
-
-                                    layout_status = findViewById(R.id.layout_status);
-
-                                    iv_Img_product = mView.findViewById(R.id.iv_Img_product);
-                                    iv_txt_product = mView.findViewById(R.id.iv_txt_product);
-                                    iv_txtstatus_product = mView.findViewById(R.id.iv_status_product);
-                                    iv_txtstatus_product.setText(Status);
-                                    iv_txt_product.setText(productName);
-                                    Toast.makeText(mContext, "" + message, Toast.LENGTH_LONG).show();
-                                    Glide.with(CategoryProductFragment.this).load(productImgUrl).error(R.drawable.unnamed)
-                                            .placeholder(R.drawable.product_placeholder).into(iv_Img_product);
-
-                                    TextView btn_okay = mView.findViewById(R.id.btn_okay);
-                                    alert.setView(mView);
-                                    final AlertDialog alertDialog = alert.create();
-                                    alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                                    alertDialog.setCanceledOnTouchOutside(false);
-                                    btn_okay.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            // myCustomMessage.setText(txt_inputText.getText().toString());
-
-                                            alertDialog.dismiss();
-                                            startActivity(new Intent(mContext, HomeActivity.class).
-                                                    setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                                                            Intent.FLAG_ACTIVITY_NEW_TASK));
-                                            Animatoo.animateShrink(mContext);
-                                            finish();
-
-                                        }
-                                    });
-                                    alertDialog.show();*/
-
-
-
-                   // Toast.makeText(mContext, "" + message, Toast.LENGTH_LONG).show();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -615,10 +489,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                     }, 2000);
 
 
-                }
-                else {
-
-                   // Toast.makeText(mContext, "Your chat request:" + Status, Toast.LENGTH_LONG).show();
+                } else {
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
@@ -646,14 +517,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
     }
 
 
-
     private void GetChatStatusApi(String chatmessage) {
-
-
-        // http://bai-hai.com/webservice/chat_request?
-        // user_id=1&
-        // seller_id=2&
-        // product_id=1
 
 
         final ProgressDialog progressDialog;
@@ -711,77 +575,6 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                                 Log.e("", "status=>" + Status);
                                 ConfirmationDialog(message);
 
-                             /*   if (message.equals("You have already sent a request,please wait for approval")) {
-
-*//*
-                                    final AlertDialog.Builder alert = new AlertDialog.Builder(CategoryProductFragment.this);
-                                    View mView = getLayoutInflater().inflate(R.layout.chat_request_alertbox, null);
-
-                                    layout_status = findViewById(R.id.layout_status);
-
-                                    iv_Img_product = mView.findViewById(R.id.iv_Img_product);
-                                    iv_txt_product = mView.findViewById(R.id.iv_txt_product);
-                                    iv_txtstatus_product = mView.findViewById(R.id.iv_status_product);
-                                    iv_txtstatus_product.setText(Status);
-                                    iv_txt_product.setText(productName);
-                                    Toast.makeText(mContext, "" + message, Toast.LENGTH_LONG).show();
-                                    Glide.with(CategoryProductFragment.this).load(productImgUrl).error(R.drawable.unnamed)
-                                            .placeholder(R.drawable.product_placeholder).into(iv_Img_product);
-
-                                    TextView btn_okay = mView.findViewById(R.id.btn_okay);
-                                    alert.setView(mView);
-                                    final AlertDialog alertDialog = alert.create();
-                                    alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                                    alertDialog.setCanceledOnTouchOutside(false);
-                                    btn_okay.setOnClickListener(new View.OnClickListener() {
-                                        @Override
-                                        public void onClick(View v) {
-                                            // myCustomMessage.setText(txt_inputText.getText().toString());
-
-                                            alertDialog.dismiss();
-                                            startActivity(new Intent(mContext, HomeActivity.class).
-                                                    setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                                                            Intent.FLAG_ACTIVITY_NEW_TASK));
-                                            Animatoo.animateShrink(mContext);
-                                            finish();
-
-                                        }
-                                    });
-                                    alertDialog.show();*//*
-
-
-
-                                    Toast.makeText(mContext, "" + message, Toast.LENGTH_LONG).show();
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            Intent intent = new Intent(mContext, HomeActivity.class);
-                                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
-                                                    Intent.FLAG_ACTIVITY_NEW_TASK);
-                                            startActivity(intent);
-                                            finish();
-                                            Animatoo.animateSlideDown(mContext);
-
-                                        }
-                                    }, 2000);
-
-
-                                }
-                                else {
-
-                                    Toast.makeText(mContext, "Your chat request:" + Status, Toast.LENGTH_LONG).show();
-                                    new Handler().postDelayed(new Runnable() {
-                                        @Override
-                                        public void run() {
-                                            startActivity(new Intent(CategoryProductActivity.this, HomeActivity.class));
-                                            finish();
-
-                                        }
-                                    }, 2000);
-
-
-                                }
-*/
 
                             } else if (status.equals("0")) {
 
@@ -822,10 +615,6 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
             Log.e("lon=>", "-------->" + longitude);
             final double lat1 = track.getLatitude();
             final double lon1 = track.getLongitude();
-            //details_locationId.setText(Tools.getCompleteAddressString(this, lat1, lon1));
-
-
-            //latLng = new LatLng(latitude, longitude);
 
         } else {
             track.showSettingsAlert();
@@ -857,14 +646,11 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                             String status = object.optString("status");
                             String message = object.optString("message");
                             if (status.equals("1")) {
-                              //  loading_spinnerId.setVisibility(View.GONE);
 
 
                                 //   https://www.shipit.ng/BaiHai/webservice/get_profile?user_id=1
 
                                 JSONObject result = object.optJSONObject("result");
-                                //String id = result.optString("id");
-                                //Log.e("resultt=>", "" + response);
 
 
                                 String user_ID = "null";
@@ -910,10 +696,9 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                                 // Log.e("image=>", "-------->" + image);
 
 
-                                User user = new User(user_ID, username, email, password, mobile,image, legal_info,guide,guide_free,guide_give_free);
+                                User user = new User(user_ID, username, email, password, mobile, image, legal_info, guide, guide_free, guide_give_free);
 
                                 PrefManager.getInstance(getApplicationContext()).userLogin(user);
-
 
 
                                 final AlertDialog.Builder alert = new AlertDialog.Builder(CategoryProductActivity.this);
@@ -933,8 +718,6 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                                 alertDialog.setCanceledOnTouchOutside(false);
                                 nameId.setText(user.getUsername());
                                 user_mobileId.setText(mobile);
-                                //et_passwordID.setText(user.getPassword());
-                                //Glide.with(mContext).load(image).error(R.drawable.profile_img).into(civ_User);
                                 Picasso.get().load(image).placeholder(R.drawable.profile_img).into(user_imgId);
                                 img_cancel.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -953,7 +736,6 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                                 });
 
 
-
                                 alertDialog.show();
 
 
@@ -966,20 +748,13 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 
                         } catch (Exception e) {
                             e.printStackTrace();
-                            //loading_spinnerId.setVisibility(View.GONE);
 
                             Log.e("error: ", String.valueOf(e));
-                            //Toast.makeText(EditAccountActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void Failed(String error) {
-                        // progess.dismiss();
-                        //loading_spinnerId.setVisibility(View.GONE);
-
-
-                        // CustomSnakbar.showDarkSnakabar(EditAccountActivity.this, mview, "" + error);
                         Toast.makeText(mContext, "Failed" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -996,56 +771,8 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
         } else {
             PrefManager prefManager = new PrefManager(mContext);
             PrefManager.showSettingsAlert(mContext);
-            /*    AlertConnection.showAlertDialog(mContext, "No Internet Connection",
-                    "You don't have internet connection.", false);*/
         }
 
-
- /*       final AlertDialog.Builder alert = new AlertDialog.Builder(CategoryProductActivity.this);
-
-        View mView = getLayoutInflater().inflate(R.layout.user_dialog, null);
-        nameId = mView.findViewById(R.id.nameId);
-        user_mobileId = mView.findViewById(R.id.user_mobileId);
-        user_imgId = mView.findViewById(R.id.user_imgId);
-        btn_user_dialog = mView.findViewById(R.id.user_imgId);
-        img_cancel = mView.findViewById(R.id.img_cancel);
-        loading_spinnerId = mView.findViewById(R.id.loading_spinnerId);
-
-        if (isInternetPresent) {
-            GetProfile(product_SellerId);
-        } else {
-            PrefManager prefManager = new PrefManager(mContext);
-            PrefManager.showSettingsAlert(mContext);
-            */
-        /*    AlertConnection.showAlertDialog(mContext, "No Internet Connection",
-                    "You don't have internet connection.", false);*/
-        /*
-        }
-
-
-        alert.setView(mView);
-        final AlertDialog alertDialog = alert.create();
-        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        alertDialog.setCanceledOnTouchOutside(false);
-        img_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-
-            }
-        });
-
-        btn_user_dialog.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-
-            }
-        });
-
-
-
-        alertDialog.show();*/
     }
 
 }

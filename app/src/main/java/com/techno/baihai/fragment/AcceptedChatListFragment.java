@@ -74,9 +74,6 @@ public class AcceptedChatListFragment extends Fragment {
 
         User user = PrefManager.getInstance(getActivity()).getUser();
         uid = String.valueOf(user.getId());
-        //Log.i("TAG", "user_id: " + uid);
-
-//        Log.e("SellerId=>", PrefManager.getString("SellerId"));
         txt_acceptedChat = view.findViewById(R.id.txt_acceptedChat);
 
         accepted_Chat_recyclerview = view.findViewById(R.id.aceepted_Chatrecyclerview);
@@ -196,8 +193,6 @@ public class AcceptedChatListFragment extends Fragment {
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            //Toast.makeText(mContext, "Check Your Network: " , Toast.LENGTH_LONG).show();
-
 
                         }
                         accepted_chat_mAdapter = new AcceptedChatAdapter(getActivity(), acceptedChatModals);
@@ -211,7 +206,6 @@ public class AcceptedChatListFragment extends Fragment {
                     public void Failed(String error) {
 
                         progressDialog.dismiss();
-                        //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
                         Toast.makeText(mContext, "Check Your Network: " + error, Toast.LENGTH_LONG).show();
                     }
                 });

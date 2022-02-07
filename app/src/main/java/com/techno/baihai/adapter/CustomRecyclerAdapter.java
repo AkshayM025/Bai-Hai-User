@@ -62,22 +62,19 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
                 if (position == 0) {
                     intent = new Intent(context, PersonalDonateFragment.class);
                     intent.putExtra("org_name", String.valueOf(personUtils.get(position).getOrganizationName()));
-                    intent.putExtra("org_id",personUtils.get(position).getOrg_id());
+                    intent.putExtra("org_id", personUtils.get(position).getOrg_id());
 
 
                     context.startActivity(intent);
                 } else {
                     intent = new Intent(context, PersonalDonateFragment.class);
                     intent.putExtra("org_name", String.valueOf(personUtils.get(position).getOrganizationName()));
-                    intent.putExtra("org_id",personUtils.get(position).getOrg_id());
+                    intent.putExtra("org_id", personUtils.get(position).getOrg_id());
                     context.startActivity(intent);
                 }
             }
         });
 
-        //activity = (AppCompatActivity) view.getContext();
-        //
-        //           // holder.pJobProfile.setText(pu.getContactName());
 
     }
 
@@ -91,7 +88,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
         public TextView org_name;
         public CardView foundationCardId;
-        public TextView contact_name, email, mobile, location, description,webpage;
+        public TextView contact_name, email, mobile, location, description, webpage;
 
         public ViewHolder(View itemView) {
             super(itemView);

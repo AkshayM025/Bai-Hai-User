@@ -219,8 +219,6 @@ public class ProductDonateFragment extends Fragment implements Spinner.OnItemSel
                 } else {
                     PrefManager prefManager = new PrefManager(mContext);
                     PrefManager.showSettingsAlert(mContext);
-            /*AlertConnection.showAlertDialog(mContext, "No Internet Connection",
-                    "You don't have internet connection.", false);*/
                 }
 
             }
@@ -265,53 +263,8 @@ public class ProductDonateFragment extends Fragment implements Spinner.OnItemSel
         } else {
             PrefManager prefManager = new PrefManager(mContext);
             PrefManager.showSettingsAlert(mContext);
-            /*AlertConnection.showAlertDialog(mContext, "No Internet Connection",
-                    "You don't have internet connection.", false);*/
         }
 
-  /*      try {
-
-
-//        places=(AutoCompleteTextView)view.findViewById(R.id.places);
-            adapter = new MyPlacesAdapter(getActivity());
-
-            et_productLocation.setAdapter(adapter);
-// text changed listener to get results precisely according to our search
-            et_productLocation.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (count > 0) {
-//calling getfilter to filter the results
-                        adapter.getFilter().filter(s);
-//notify the adapters after results changed
-                        adapter.notifyDataSetChanged();
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-            });
-
-// handling click of autotextcompleteview items
-
-            et_productLocation.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    MyGooglePlaces googlePlaces = (MyGooglePlaces) parent.getItemAtPosition(position);
-                    et_productLocation.setText(googlePlaces.getAddress());
-                    p_lat = String.valueOf(googlePlaces.getLatitude());
-                    p_lng = String.valueOf(googlePlaces.getLongitude());
-                }
-            });
-        }
-        catch (Exception e) {
-            Toast.makeText(mContext, "Not Found..Try again..!!"+ e, Toast.LENGTH_SHORT).show();
-        }*/
         return view;
     }
 
@@ -320,15 +273,12 @@ public class ProductDonateFragment extends Fragment implements Spinner.OnItemSel
     public void onItemSelected(AdapterView<?> adapterView, View view, int poistion, long l) {
 
 
-        //  Toast.makeText(mContext, "Select: "+adapterView.getItemIdAtPosition(poistion), Toast.LENGTH_SHORT).show();
         catid = String.valueOf(adapterView.getSelectedItemId());
         Log.i(TAG, "catId=>" + catid);
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-
-        //textViewName.setText(getName(position));
 
 
     }
@@ -351,54 +301,6 @@ public class ProductDonateFragment extends Fragment implements Spinner.OnItemSel
         }
     }
 
-
-
-
-
-/*
-    public File saveBitmapToFile(File file){
-        try {
-
-            // BitmapFactory options to downsize the image
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = true;
-            o.inSampleSize = 6;
-            // factor of downsizing the image
-
-            FileInputStream inputStream = new FileInputStream(file);
-            //Bitmap selectedBitmap = null;
-            BitmapFactory.decodeStream(inputStream, null, o);
-            inputStream.close();
-
-            // The new size we want to scale to
-            final int REQUIRED_SIZE=75;
-
-            // Find the correct scale value. It should be the power of 2.
-            int scale = 1;
-            while(o.outWidth / scale / 2 >= REQUIRED_SIZE &&
-                    o.outHeight / scale / 2 >= REQUIRED_SIZE) {
-                scale *= 2;
-            }
-
-            BitmapFactory.Options o2 = new BitmapFactory.Options();
-            o2.inSampleSize = scale;
-            inputStream = new FileInputStream(file);
-
-            Bitmap selectedBitmap = BitmapFactory.decodeStream(inputStream, null, o2);
-            inputStream.close();
-
-            // here i override the original image file
-            file.createNewFile();
-            FileOutputStream outputStream = new FileOutputStream(file);
-
-            selectedBitmap.compress(Bitmap.CompressFormat.JPEG, 100 , outputStream);
-
-            return file;
-        } catch (Exception e) {
-            return null;
-        }
-    }
-*/
 
     private void Validate(View view) {
 
@@ -429,10 +331,9 @@ public class ProductDonateFragment extends Fragment implements Spinner.OnItemSel
 
     private void UploadProductToStoreApi(final String uid, String p_name, String p_description, String p_location, final View view) {
 
-        if (usedTxt==null){
-            usedTxt="Y";
+        if (usedTxt == null) {
+            usedTxt = "Y";
         }
-
 
 
         if (file == null) {
@@ -487,20 +388,7 @@ public class ProductDonateFragment extends Fragment implements Spinner.OnItemSel
                                     et_productDesc.setText("");
                                     et_productLocation.setText("");
 
-                                    /*    // CustomSnakbar.showSnakabar(mContext, view, "Thankyou for Donation\nplease check your email for further instructions!");
-                                        androidx.appcompat.app.AlertDialog.Builder builder =
-                                                new androidx.appcompat.app.AlertDialog.Builder(getActivity());
-                                        builder.setTitle("Donation");
-                                        builder.setMessage("Your Product Donated\nplease check your email for further instructions!");
-                                        builder.setPositiveButton("OK",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog,
-                                                                        int which) {
-                                                        getActivity().finish();
 
-                                                    }
-                                                });
-                                        builder.show();*/
                                     startActivity(new Intent(mContext, ThankyouPointActivity.class));
                                     Animatoo.animateInAndOut(mContext);
 
@@ -532,122 +420,6 @@ public class ProductDonateFragment extends Fragment implements Spinner.OnItemSel
     }
 
 
-
-/*
-    private void ProductDonate(final String uid, String p_name, String p_description, String p_location, final View view) {
-        //  http://bai-hai.com/webservice/add_product_by_user?name=testproduct&description=thisis%20test&address=vijay&
-        // lat=789456&lon=5464&category_id=1&user_id=12
-        try {
-            if (pathOfImg == null) {
-                CustomSnakbar.showSnakabar(mContext, view, "Please Select a Product Image");
-
-            } else if (usedTxt == null) {
-                CustomSnakbar.showSnakabar(mContext, view, "Please Select a Product Used");
-
-            } else {
-                final ProgressDialog progressDialog;
-                progressDialog = new ProgressDialog(getActivity());
-                progressDialog.setMessage("Please wait...");
-                progressDialog.show();
-
-
-                HashMap<String, String> parms = new HashMap<>();
-                parms.put("user_id", uid);
-                parms.put("name", p_name);
-                parms.put("description", p_description);
-                parms.put("address", p_location);
-                parms.put("used", usedTxt);
-                parms.put("category_id", catid);
-                parms.put("lat", latitude);
-                parms.put("lon", longitude);
-
-
-                ApiCallBuilder.build(getActivity())
-                        .isShowProgressBar(false)
-                        .setUrl(Constant.BASE_URL + "add_product_by_user?")
-                        .setParam(parms)
-                        .setFile("image1", pathOfImg)
-                        .execute(new ApiCallBuilder.onResponse() {
-                            @Override
-                            public void Success(String response) {
-                                progressDialog.dismiss();
-                                Log.e("Responsep=>", "" + response);
-
-
-                                Log.e("selectedImagePath=>", "-------->" + pathOfImg);
-
-
-                                try {
-
-                                    JSONObject object = new JSONObject(response);
-                                    String status = object.optString("status");
-                                    String message = object.optString("message");
-                                    if (status.equals("1")) {
-
-
-                                        et_productName.setText("");
-                                        et_productDesc.setText("");
-                                        et_productLocation.setText("");
-
-
-    // CustomSnakbar.showSnakabar(mContext, view, "Thankyou for Donation\nplease check your email for further instructions!");
-                                        androidx.appcompat.app.AlertDialog.Builder builder =
-                                                new androidx.appcompat.app.AlertDialog.Builder(getActivity());
-                                        builder.setTitle("Donation");
-                                        builder.setMessage("Your Product Donated\nplease check your email for further instructions!");
-                                        builder.setPositiveButton("OK",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog,
-                                                                        int which) {
-                                                        getActivity().finish();
-
-                                                    }
-                                                });
-                                        builder.show();
-
-                                        startActivity(new Intent(mContext, ThankyouPointActivity.class));
-                                        Animatoo.animateInAndOut(mContext);
-
-
-                                    } else {
-                                        progressDialog.dismiss();
-
-                                        CustomSnakbar.showDarkSnakabar(getContext(), view, "" + message);
-                                    }
-
-                                }
-                                catch (JSONException e) {
-
-                                    progressDialog.dismiss();
-                                    // Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
-                                    e.printStackTrace();
-                                }
-
-
-                            }
-
-                            @Override
-                            public void Failed(String error) {
-                                progressDialog.dismiss();
-                                Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-            }
-        } catch (Exception e) {
-            //progressDialog.dismiss();
-
-            Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-
-        }
-
-
-    }
-
-
- */
-
-
     private void GetCategory() {
 
 
@@ -655,10 +427,10 @@ public class ProductDonateFragment extends Fragment implements Spinner.OnItemSel
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
-        String langua="EN";
-        String lang= PrefManager.get(mContext,"lang");
-        if (lang.equals("es")&& lang!=null){
-            langua="ES";
+        String langua = "EN";
+        String lang = PrefManager.get(mContext, "lang");
+        if (lang.equals("es") && lang != null) {
+            langua = "ES";
         }
 
         HashMap<String, String> param = new HashMap<>();
@@ -697,7 +469,7 @@ public class ProductDonateFragment extends Fragment implements Spinner.OnItemSel
                                             JSONObject object1 = jArray.getJSONObject(i);
 
 
-                                           // Log.e(TAG, "resulti=>" + i);
+                                            // Log.e(TAG, "resulti=>" + i);
                                             category_id = object1.getString("id");
                                             category_name = object1.getString("category_name");
                                             String imageUrl = object1.getString("image");
@@ -752,42 +524,6 @@ public class ProductDonateFragment extends Fragment implements Spinner.OnItemSel
 
 
     }
-
-  /*  private void selectImage() {
-        final PickImageDialog dialog = PickImageDialog.build(new PickSetup());
-        dialog.setOnPickCancel(new IPickCancel() {
-            @Override
-            public void onCancelClick() {
-                dialog.dismiss();
-            }
-        }).setOnPickResult(new IPickResult() {
-            @Override
-            public void onPickResult(PickResult r) {
-
-                if (r.getError() == null) {
-                    //If you want the Uri.
-                    //Mandatory to refresh image from Uri.
-                    //getImageView().setImageURI(null);
-                    //Setting the real returned image.
-                    //getImageView().setImageURI(r.getUri());
-                    //If you want the Bitmap.
-                    Glide.with(mContext).load(r.getUri()).error(R.drawable.user).into(pickImg);
-
-//                    binding.image.setImageBitmap(r.getBitmap());
-                    image = r.getPath();
-                    Log.e("Imagepath", image);
-
-                    //r.getPath();
-                } else {
-                    //Handle possible errors
-                    //TODO: do what you have to do with r.getError();
-                    Toast.makeText(mContext, r.getError().getMessage(), Toast.LENGTH_LONG).show();
-                }
-
-            }
-
-        }).show(getActivity());
-    }*/
 
 
     private void showPictureDialog() {
@@ -844,12 +580,6 @@ public class ProductDonateFragment extends Fragment implements Spinner.OnItemSel
             case 0:
                 if (resultCode == RESULT_OK) {
 
-//                    Uri selectedImage = data.getData();
-//
-//                    Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-//
-//                    user_profile.setImageBitmap(bitmap);
-
                     try {
                         Bundle extras = data.getExtras();
                         Bitmap imageBitmap = (Bitmap) extras.get("data");
@@ -865,13 +595,13 @@ public class ProductDonateFragment extends Fragment implements Spinner.OnItemSel
 
                         pathOfImg = RealPathUtil.getRealPath(mContext, tempUri);
                         file = new File(pathOfImg);
-                      //  Toast.makeText(mContext, "CamHerePath" + pathOfImg, Toast.LENGTH_LONG).show();
+                        //  Toast.makeText(mContext, "CamHerePath" + pathOfImg, Toast.LENGTH_LONG).show();
 
                         image = pathOfImg;
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(mContext, ""+e, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;
@@ -897,7 +627,7 @@ public class ProductDonateFragment extends Fragment implements Spinner.OnItemSel
                         pathOfImg = RealPathUtil.getRealPath(mContext, tempUri);
                         file = new File(pathOfImg);
 
-                       // Toast.makeText(mContext, "galleryHerePath" + pathOfImg, Toast.LENGTH_LONG).show();
+                        // Toast.makeText(mContext, "galleryHerePath" + pathOfImg, Toast.LENGTH_LONG).show();
 
                         image = pathOfImg;
 
@@ -924,7 +654,7 @@ public class ProductDonateFragment extends Fragment implements Spinner.OnItemSel
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage,
-                "Title"+System.currentTimeMillis(), null);
+                "Title" + System.currentTimeMillis(), null);
         return Uri.parse(path);
     }
 

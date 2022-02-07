@@ -89,15 +89,16 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
     private File file;
     private ImageView Umap_location;
     private String code;
-    ArrayList<String> category= new ArrayList<>();
-    ArrayList<GetCategoryModel.Result> category_new= new ArrayList<>();    private Spinner spinner;
+    ArrayList<String> category = new ArrayList<>();
+    ArrayList<GetCategoryModel.Result> category_new = new ArrayList<>();
+    private Spinner spinner;
     private String catid;
     private String category_id;
     private String category_name;
     private APIInterface apiInterface;
     private String Category_id;
     private String PcategoryName;
-    private boolean check=true;
+    private boolean check = true;
     private String productLat;
     private String productLong;
     private String productStatus;
@@ -119,7 +120,6 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
         apiInterface = APIClient.getClient().create(APIInterface.class);
 
 
-
         User user = PrefManager.getInstance(mContext).getUser();
 
         uid = String.valueOf(user.getId());
@@ -137,8 +137,6 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
         //Adding an Item Selected Listener to our Spinner
         //As we have implemented the class Spinner.OnItemSelectedListener to this class iteself we are passing this to setOnItemSelectedListener
         spinner.setOnItemSelectedListener(this);
-
-
 
 
         et_productName = findViewById(R.id.et_productNameUpdate);
@@ -189,8 +187,8 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
         id_acceptedImg = findViewById(R.id.id_acceptedImg);
         id_sold_outImg = findViewById(R.id.id_sold_outImg);
 
-        Uet_productLocation=findViewById(R.id.Uet_productLocation);
-        Umap_location=findViewById(R.id.Umap_location);
+        Uet_productLocation = findViewById(R.id.Uet_productLocation);
+        Umap_location = findViewById(R.id.Umap_location);
 
         productCatId = getIntent().getStringExtra("categoryId");
         PcategoryName = getIntent().getStringExtra("categoryName");
@@ -205,18 +203,17 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
         productLat = getIntent().getStringExtra("productLat");
         productLong = getIntent().getStringExtra("productLong");
         productStatus = getIntent().getStringExtra("productStatus");
-        Log.e(TAG, "productStatus=>" +productStatus);
+        Log.e(TAG, "productStatus=>" + productStatus);
 
 
         statusId = findViewById(R.id.statusId);
         grp_status = findViewById(R.id.grp_status);
 
-        if (productStatus.equals("Active"))
-        {
+        if (productStatus.equals("Active")) {
             statusId.setText("Status:");
             grp_status.setVisibility(View.VISIBLE);
 
-        }else {
+        } else {
 
             statusId.setVisibility(View.VISIBLE);
             statusId.setText("Status:- Pending");
@@ -224,15 +221,12 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
         }
 
 
-
-
-
         Glide.with(mContext).load(productImgUrl).error(R.drawable.user).into(pickImg);
         et_productName.setText(productName);
         et_productDesc.setText(productDesc);
         Uet_productLocation.setText(productAddress);
 
-      //  product_status = "Active";
+        //  product_status = "Active";
         id_accepted.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -261,8 +255,6 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
                 } else {
                     PrefManager prefManager = new PrefManager(mContext);
                     PrefManager.showSettingsAlert(mContext);
-            /*AlertConnection.showAlertDialog(mContext, "No Internet Connection",
-                    "You don't have internet connection.", false);*/
                 }
 
             }
@@ -271,7 +263,7 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
             @Override
             public void onClick(View view) {
 
-                              if (isInternetPresent) {
+                if (isInternetPresent) {
                     DeleteProductApi();
                 } else {
                     PrefManager prefManager = new PrefManager(mContext);
@@ -284,13 +276,11 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
         });
 
 
-
         Umap_location.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 startActivityForResult(new Intent(UpdateProductActivity.this, PinLocationActivity.class), AUTOCOMPLETE_REQUEST_CODE);
-               // startActivity(new Intent(UpdateProductActivity.this, GoogleMapActivity.class).putExtra("code","1"));
-               // code="1";
+
 
             }
         });
@@ -299,7 +289,6 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
         if (isInternetPresent) {
             GetUserCategoryApi();
         } else {
-          //  PrefManager prefManager = new PrefManager(mContext);
             PrefManager.showSettingsAlert(mContext);
 
         }
@@ -310,8 +299,6 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int poistion, long l) {
 
-
-        //  Toast.makeText(mContext, "Select: "+adapterView.getItemIdAtPosition(poistion), Toast.LENGTH_SHORT).show();
         try {
             if (check) {
                 for (int i = 1; i <= category_new.size(); i++) {
@@ -331,7 +318,7 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
             Log.e(TAG, "catId=>" + Category_id);
             Log.e(TAG, "pcatId=>" + productCatId);
             Log.e(TAG, "pcatName=>" + PcategoryName);
-        }catch(Exception e){
+        } catch (Exception e) {
 
             Log.e(TAG, "bhhfg=>" + e.getMessage());
 
@@ -342,8 +329,6 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
-        //textViewName.setText(getName(position));
-
 
     }
 
@@ -351,22 +336,7 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
     @Override
     public void onResume() {
         super.onResume();
-    /*    try {
 
-            if (code.equals("1")) {
-
-                Uet_productLocation.setText( PrefManager.get(mContext, PrefManager.address));
-                lat = PrefManager.get(this, PrefManager.lat);
-                lng =  PrefManager.get(this, PrefManager.lng);
-            }
-
-
-        }
-        catch(Exception e){
-            e.printStackTrace();
-            Toast.makeText(mContext, ""+e, Toast.LENGTH_SHORT).show();
-
-        }*/
 
     }
 
@@ -381,7 +351,6 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
             longitude = String.valueOf(track.getLongitude());
             Log.e("lon=>", "-------->" + longitude);
 
-            //latLng = new LatLng(latitude, longitude);
 
         } else {
             track.showSettingsAlert();
@@ -393,8 +362,6 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
 
         String p_name = et_productName.getText().toString().trim();
         String p_description = et_productDesc.getText().toString().trim();
-        //String profile_pic = getStringImage(bitmap);
-
 
         if (p_name.equalsIgnoreCase("")) {
             CustomSnakbar.showDarkSnakabar(mContext, view, "Please enter product name!");
@@ -443,9 +410,7 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
                             for (int i = 0; i < commentModel.getResult().size(); i++) {
 
 
-
                                 category.add(commentModel.getResult().get(i).getCategoryName());
-                                //  category.add(commentModel.getResult().get(i).getId());
 
 
                             }
@@ -459,13 +424,12 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
                             }
 
 
-
-                        }else {
+                        } else {
 
                             Toast.makeText(mContext, "No Category found", Toast.LENGTH_SHORT).show();
 
                         }
-                    }else {
+                    } else {
                         Toast.makeText(mContext, "Model not correct", Toast.LENGTH_SHORT).show();
 
                     }
@@ -480,7 +444,7 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
             public void onFailure(Call<GetCategoryModel> call, Throwable t) {
                 progressDialog.dismiss();
 
-                Toast.makeText(mContext, ""+call, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "" + call, Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -488,9 +452,7 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
     }
 
 
-
-
-    private void UpdateProduct(final String p_name, String p_description, final View view){
+    private void UpdateProduct(final String p_name, String p_description, final View view) {
 
 
         final ProgressDialog progressDialog;
@@ -498,34 +460,34 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
 
-        if (String.valueOf(lat)!=null&&String.valueOf(lng)!=null&&product_status!=null&&Category_id!=null){
+        if (String.valueOf(lat) != null && String.valueOf(lng) != null && product_status != null && Category_id != null) {
 
-        }else {
-            lat= Double.parseDouble(productLat);
-            lng= Double.parseDouble(productLong);
-            product_status=productStatus;
-            Category_id=productCatId;
+        } else {
+            lat = Double.parseDouble(productLat);
+            lng = Double.parseDouble(productLong);
+            product_status = productStatus;
+            Category_id = productCatId;
         }
-       String getNewAddress=Uet_productLocation.getText().toString().trim();
+        String getNewAddress = Uet_productLocation.getText().toString().trim();
 
         HashMap<String, String> parms = new HashMap<>();
-        parms.put("user_id",uid);
-        parms.put("name",p_name);
-        parms.put("description",p_description);
-        parms.put("category_id",Category_id);
-        parms.put("product_id",productId);
-        parms.put("price","0.00");
-        parms.put("address",getNewAddress);
-        parms.put("used",productUsed);
-        parms.put("lat",String.valueOf(lat));
-        parms.put("lon",String.valueOf(lng));
-        parms.put("status",product_status);
+        parms.put("user_id", uid);
+        parms.put("name", p_name);
+        parms.put("description", p_description);
+        parms.put("category_id", Category_id);
+        parms.put("product_id", productId);
+        parms.put("price", "0.00");
+        parms.put("address", getNewAddress);
+        parms.put("used", productUsed);
+        parms.put("lat", String.valueOf(lat));
+        parms.put("lon", String.valueOf(lng));
+        parms.put("status", product_status);
 
-        HashMap<String,File> fileHashMap = new HashMap<String,File>();
-        fileHashMap.put("image1",file);
+        HashMap<String, File> fileHashMap = new HashMap<String, File>();
+        fileHashMap.put("image1", file);
         Log.e("camPath", String.valueOf(file));
 
- // *http://bai-hai.com/webservice/update_product?product_id=1&user_id=71&name=this%20is%20tes&
+        // *http://bai-hai.com/webservice/update_product?product_id=1&user_id=71&name=this%20is%20tes&
         // category_id=21&description=this%20is%20tes&price=10&address=12hd&lat=78.12&lon=4615.45&
         // used=Yes&status=Active
 
@@ -540,15 +502,14 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
                         Log.e("ResponseUpdate", "" + response);
 
 
-
                         try {
 
                             JSONObject jsonObject = new JSONObject(response);
 
-                            if(jsonObject.getString("status").equals("1")) {
+                            if (jsonObject.getString("status").equals("1")) {
 
 
-                                startActivity(new Intent(mContext,HomeActivity.class));
+                                startActivity(new Intent(mContext, HomeActivity.class));
                                 Toast.makeText(mContext, "Success", Toast.LENGTH_SHORT).show();
                             } else {
                                 Toast.makeText(mContext, "Fail To Update, Check Network", Toast.LENGTH_SHORT).show();
@@ -571,112 +532,6 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
                     }
                 });
     }
-
-
-
-
-/*
-    private void ProductDonate(final String p_name, String p_description, final View view) {
-        //  http://bai-hai.com/webservice/add_product_by_user?name=testproduct&description=thisis%20test&address=vijay&
-        // lat=789456&lon=5464&category_id=1&user_id=12
-
-                final ProgressDialog progressDialog;
-                progressDialog = new ProgressDialog(mContext);
-                progressDialog.setMessage("Please wait...");
-                progressDialog.show();
-
-                HashMap<String, String> parms = new HashMap<>();
-                parms.put("user_id", uid);
-                parms.put("name", p_name);
-                parms.put("description", p_description);
-                parms.put("category_id", productCatId);
-                parms.put("product_id", productId);
-                parms.put("price", "0.00");
-                //  parms.put("image1", pathOfImg);
-                parms.put("address", productAddress);
-                parms.put("used", productUsed);
-                parms.put("lat", latitude);
-                parms.put("lon", longitude);
-                parms.put("status", product_status);
-        HashMap<String,File> fileHashMap = new HashMap<String,File>();
-        fileHashMap.put("image1",file);
-
-
-        ApiCallBuilder.build(this)
-                        .isShowProgressBar(false)
-                        .setUrl(Constant.BASE_URL + "update_product?")
-                        .setParam(parms)
-                        .setFile("image1",file)
-                        .execute(new ApiCallBuilder.onResponse() {
-                            @Override
-                            public void Success(String response) {
-                                progressDialog.dismiss();
-                                Log.e("ResponseUpdate", "" + response);
-
-
-                                Log.e("selectedImagePath=>", "-------->" + pathOfImg);
-
-
-                                try {
-
-                                    JSONObject object = new JSONObject(response);
-                                    String status = object.optString("status");
-                                    String message = object.optString("message");
-                                    if (status.equals("1")) {
-
-
-                                        et_productName.setText("");
-                                        et_productDesc.setText("");
-                                        // et_productLocation.setText("");
-
-
-   // CustomSnakbar.showSnakabar(mContext, view, "Thankyou for Donation\nplease check your email for further instructions!");
-                                        androidx.appcompat.app.AlertDialog.Builder builder =
-                                                new androidx.appcompat.app.AlertDialog.Builder(getActivity());
-                                        builder.setTitle("Donation");
-                                        builder.setMessage("Your Product Donated\nplease check your email for further instructions!");
-                                        builder.setPositiveButton("OK",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog,
-                                                                        int which) {
-                                                        getActivity().finish();
-
-                                                    }
-                                                });
-                                        builder.show();
-
-                                        startActivity(new Intent(mContext, HomeActivity.class));
-                                        Animatoo.animateInAndOut(mContext);
-
-
-                                    } else {
-                                        progressDialog.dismiss();
-
-                                        CustomSnakbar.showDarkSnakabar(mContext, view, "" + message);
-                                    }
-
-                                } catch (JSONException e) {
-
-                                    progressDialog.dismiss();
-                                    // Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
-                                    e.printStackTrace();
-                                }
-
-
-                            }
-
-                            @Override
-                            public void Failed(String error) {
-                                progressDialog.dismiss();
-                                Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-
-    }
-
- */
-
 
 
     private void DeleteProductApi() {
@@ -761,8 +616,6 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
     }
 
 
-
-
     private void showPictureDialog() {
         android.app.AlertDialog.Builder pictureDialog = new AlertDialog.Builder(mContext);
         pictureDialog.setTitle("Select Action");
@@ -811,12 +664,6 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
             case 0:
                 if (resultCode == RESULT_OK) {
 
-//                    Uri selectedImage = data.getData();
-//
-//                    Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-//
-//                    user_profile.setImageBitmap(bitmap);
-
                     try {
                         Bundle extras = data.getExtras();
                         Bitmap imageBitmap = (Bitmap) extras.get("data");
@@ -826,12 +673,9 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
                         // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
                         Uri tempUri = getImageUri(mContext, imageBitmap);
 
-                        // CALL THIS METHOD TO GET THE ACTUAL PATH
-//                        Toast.makeText(SignUpActivity.this,"Here "+ getRealPathFromURI(tempUri), Toast.LENGTH_LONG).show();
-
 
                         pathOfImg = RealPathUtil.getRealPath(mContext, tempUri);
-                         file= new File(pathOfImg);
+                        file = new File(pathOfImg);
 
                         Toast.makeText(mContext, "CamHerePath=>  " + pathOfImg, Toast.LENGTH_LONG).show();
 
@@ -857,12 +701,9 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
                         // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
                         Uri tempUri = getImageUri(mContext, bitmap);
 
-                        // CALL THIS METHOD TO GET THE ACTUAL PATH
-//                        Toast.makeText(SignUpActivity.this,"Here "+ getRealPathFromURI(tempUri), Toast.LENGTH_LONG).show();
-
 
                         pathOfImg = RealPathUtil.getRealPath(mContext, tempUri);
-                         file= new File(pathOfImg);
+                        file = new File(pathOfImg);
 
 
                         Toast.makeText(mContext, "GalleryHerePath " + pathOfImg, Toast.LENGTH_LONG).show();
@@ -887,7 +728,7 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();
         inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes);
         String path = MediaStore.Images.Media.insertImage(inContext.getContentResolver(), inImage,
-                "Title"+System.currentTimeMillis(), null);
+                "Title" + System.currentTimeMillis(), null);
         return Uri.parse(path);
     }
 

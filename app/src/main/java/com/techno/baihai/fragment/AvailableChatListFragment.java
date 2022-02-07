@@ -81,7 +81,7 @@ public class AvailableChatListFragment extends Fragment {
 
         User user = PrefManager.getInstance(getActivity()).getUser();
         uid = String.valueOf(user.getId());
-      //  Log.i("TAG", "user_id: " + uid);
+        //  Log.i("TAG", "user_id: " + uid);
 
         //Log.e("SellerId=>", PrefManager.getString("SellerId"));
         txt_availableChat = view.findViewById(R.id.txt_availableChat);
@@ -176,7 +176,7 @@ public class AvailableChatListFragment extends Fragment {
                                                         chat_username, sellerchat_img, status_id, "",
                                                         product_name, product_imgUrl,
                                                         product_desc));
-                                            }catch(JSONException e){
+                                            } catch (JSONException e) {
                                                 Log.e("jsonEx", Objects.requireNonNull(e.getMessage()));
                                             }
                                         }
@@ -206,7 +206,7 @@ public class AvailableChatListFragment extends Fragment {
                             availablechat_mAdapter = new AvailableChatAdapter(getActivity(), acceptedChatModals);
                             availableChat_recyclerview.removeAllViews();
                             availableChat_recyclerview.setAdapter(availablechat_mAdapter);
-                        }catch(Exception e){
+                        } catch (Exception e) {
                             Log.e("adapter", String.valueOf(e));
 
                         }
@@ -218,7 +218,6 @@ public class AvailableChatListFragment extends Fragment {
                     public void Failed(String error) {
 
                         progressDialog.dismiss();
-                        //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
                         Toast.makeText(mContext, "Check Your Network: " + error, Toast.LENGTH_LONG).show();
                     }
                 });

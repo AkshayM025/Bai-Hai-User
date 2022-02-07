@@ -83,15 +83,14 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
 
         alertDialog = new AlertDialog.Builder(DonateToFoundationFragment.this);
 
-        orgId=getIntent().getStringExtra("orgId");
-        orgName=getIntent().getStringExtra("orgName");
-        seletedFoundation=findViewById(R.id.foundationSpinner);
-        if (orgName!=null&&!orgName.equalsIgnoreCase("")){
-        seletedFoundation.setText("Foundation: "+orgName);}
-        else{
+        orgId = getIntent().getStringExtra("orgId");
+        orgName = getIntent().getStringExtra("orgName");
+        seletedFoundation = findViewById(R.id.foundationSpinner);
+        if (orgName != null && !orgName.equalsIgnoreCase("")) {
+            seletedFoundation.setText("Foundation: " + orgName);
+        } else {
             Toast.makeText(mContext, "Foundation not found...!!", Toast.LENGTH_SHORT).show();
         }
-
 
 
         productId = findViewById(R.id.productId);
@@ -101,89 +100,7 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
 
         SizeId = findViewById(R.id.SizeId);
         mobileId = findViewById(R.id.mobileId);
- /*
 
-        foundationsSpinner.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-              // TODO Auto-generated method stub
-
-                AlertDialog.Builder alertDialog = new AlertDialog.Builder(
-
-                        WantToDonateFragment.this);
-
-                LayoutInflater inflater = getLayoutInflater();
-
-                // create view for add item in dialog
-
-                View convertView = (View) inflater.inflate(R.layout.listview, null);
-
-                // on dialog cancel button listner
-
-                alertDialog.setNegativeButton("Cancel",
-
-                        new DialogInterface.OnClickListener() {
-
-                            @Override
-
-                            public void onClick(DialogInterface dialog, int which) {
-
-                                // TODO Auto-generated method stub
-
-                            }
-
-                        });
-
-                // add custom view in dialog
-
-                alertDialog.setView(convertView);
-
-                lv = (ListView) convertView.findViewById(R.id.mylistview);
-                GetFoundations();
-
-                final AlertDialog alert = alertDialog.create();
-
-                alert.setTitle(" Select Foundation"); // Title
-
-
-                lv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-
-                    @Override
-
-                    public void onItemClick(AdapterView<?> arg0, View arg1, int position, long arg3) {
-
-                        // TODO Auto-generated method stub
-
-                        Toast.makeText(WantToDonateFragment.this,
-
-                                "You have selected -: " + foundations.get(position),
-
-                                Toast.LENGTH_SHORT).show();
-                        foundationsSpinner.setText(foundations.get(position));
-                        String getFoundationId=String.valueOf(arg0.getSelectedItemId());
-                        Toast.makeText(mContext, "Id=> "+getFoundationId, Toast.LENGTH_SHORT).show();
-
-
-
-
-
-                        alert.cancel();
-
-                    }
-
-                });
-
-                // show dialog
-
-                alert.show();
-            }
-        });*/
-        //Initializing Spinner
-       // spinner1 = findViewById(R.id.spinner1);
-
-        //Adding an Item Selected Listener to our Spinner
-        //As we have implemented the class Spinner.OnItemSelectedListener to this class iteself we are passing this to setOnItemSelectedListener
-      //  spinner1.setOnItemSelectedListener(this);
 
         img_locationId.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -203,89 +120,8 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
         } else {
             PrefManager prefManager = new PrefManager(mContext);
             PrefManager.showSettingsAlert(mContext);
-            /*AlertConnection.showAlertDialog(mContext, "No Internet Connection",
-                    "You don't have internet connection.", false);*/
         }
 
-
-     /*   try {
-
-
-//        places=(AutoCompleteTextView)view.findViewById(R.id.places);
-            adapter = new MyPlacesAdapter(this);
-
-            addressId.setAdapter(adapter);
-// text changed listener to get results precisely according to our search
-            addressId.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (count > 0) {
-//calling getfilter to filter the results
-                        adapter.getFilter().filter(s);
-//notify the adapters after results changed
-                        adapter.notifyDataSetChanged();
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-            });
-
-// handling click of autotextcompleteview items
-
-            addressId.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    MyGooglePlaces googlePlaces = (MyGooglePlaces) parent.getItemAtPosition(position);
-                    addressId.setText(googlePlaces.getAddress());
-                    p_lat = String.valueOf(googlePlaces.getLatitude());
-                    p_lng = String.valueOf(googlePlaces.getLongitude());
-                }
-            });
-        }
-        catch (Exception e){
-            Toast.makeText(mContext, "Not Found....Try Again..!!"+e, Toast.LENGTH_SHORT).show();
-        }*/
-
-      /*  adapter2=new MyPlacesAdapter(getActivity());
-
-        addressId.setAdapter(adapter2);
-// text changed listener to get results precisely according to our search
-
-        et_drop_point.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            }
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                if(count>0) {
-//calling getfilter to filter the results
-                    adapter2.getFilter().filter(s);
-//notify the adapters after results changed
-                    adapter2.notifyDataSetChanged();
-                }
-            }
-            @Override
-            public void afterTextChanged(Editable s) {
-            }
-        });
-
-// handling click of autotextcompleteview items
-        et_drop_point.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                MyGooglePlaces googlePlaces=(MyGooglePlaces)parent.getItemAtPosition(position);
-                et_drop_point.setText(googlePlaces.getName());
-                d_lat = String.valueOf(googlePlaces.getLatitude());
-                d_lng = String.valueOf(googlePlaces.getLongitude());
-            }
-        });
-*/
 
     }
 
@@ -294,7 +130,6 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
     public void onItemSelected(AdapterView<?> adapterView, View view, int poistion, long l) {
 
 
-        //  Toast.makeText(mContext, "Select: "+adapterView.getItemIdAtPosition(poistion), Toast.LENGTH_SHORT).show();
         foundationId = String.valueOf(adapterView.getSelectedItemId());
         Log.i(TAG, "foundationId=>" + foundationId);
         Toast.makeText(mContext, "foundationId=>" + foundationId, Toast.LENGTH_SHORT).show();
@@ -303,78 +138,8 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
 
-        //textViewName.setText(getName(position));
-
 
     }
-
-
-/*
-    class MainListHolder {
-
-        private TextView tvText;
-
-    }
-
-
-    private class ViewHolder {
-
-        TextView tvSname;
-
-    }
-
-    class MyAdapter extends ArrayAdapter<String> {
-
-        LayoutInflater inflater;
-
-        Context myContext;
-
-        List<String> newList;
-
-        public MyAdapter(Context context, int resource, List<String> list) {
-
-            super(context, resource, list);
-
-            // TODO Auto-generated constructor stub
-
-            myContext = context;
-
-            newList = list;
-
-            inflater = LayoutInflater.from(context);
-
-        }
-
-        @Override
-
-        public View getView(final int position, View view, ViewGroup parent) {
-
-            final ViewHolder holder;
-
-            if (view == null) {
-
-                holder = new ViewHolder();
-
-                view = inflater.inflate(R.layout.listview_item, null);
-
-                holder.tvSname = (TextView) view.findViewById(R.id.tvtext_item);
-
-                view.setTag(holder);
-
-            } else {
-
-                holder = (ViewHolder) view.getTag();
-
-            }
-
-            holder.tvSname.setText(newList.get(position).toString());
-
-
-            return view;
-
-        }
-
-    }*/
 
 
     private void GetFoundations() {
@@ -419,7 +184,7 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
                                         JSONObject object1 = result.getJSONObject(i);
 
 
-                                       // Log.e(TAG, "resulti=>" + i);
+                                        // Log.e(TAG, "resulti=>" + i);
                                         String org_name = object1.getString("org_name");
                                         String org_id = object1.getString("id");
 
@@ -432,7 +197,6 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
 
 
                                         foundations.add(object1.getString("org_name"));
-                                        // foundations.add(object1.getString("org_name"));
 
                                         Log.e(TAG, "foundId=>" + org_name);
 
@@ -456,13 +220,6 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
 
 
                         }
-                       /* lv.setAdapter(new MyAdapter(WantToDonateFragment.this,
-                                R.layout.listview_item, foundations));
-
-
-*/
-
-                        //spinner1.setAdapter(new ArrayAdapter<String>(getApplicationContext(), R.layout.custom_spinner_item,R.id.tvCustName, foundations));
 
 
                     }
@@ -542,19 +299,6 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
             mobileId.requestFocus();
         } else {
 
-
-            // http://bai-hai.com/webservice/donate_product?
-            // user_id=1&
-            // driver_id=1&
-            // organization_id=1&
-            // product=tets&
-            // address=nknk&
-            // lat=946.465&
-            // lon=45425&
-            // size=10*20*20&
-            // mobile=4946
-
-
             progressBar.setVisibility(View.VISIBLE);
             HashMap<String, String> parms = new HashMap<>();
             parms.put("user_id", uid);
@@ -596,17 +340,13 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
                                     mobileId.setText("");
                                     SizeId.setText("");
 
-                                    PrefManager.setString(PrefManager.Key_FoundatonId,orgId);
-                                    PrefManager.setString(PrefManager.Key_DonateProductId,request_id);
-                                    PrefManager.setString(PrefManager.Key_AmountId,amount);
-
+                                    PrefManager.setString(PrefManager.Key_FoundatonId, orgId);
+                                    PrefManager.setString(PrefManager.Key_DonateProductId, request_id);
+                                    PrefManager.setString(PrefManager.Key_AmountId, amount);
 
 
                                     Toast.makeText(mContext, "First You Make a Payment...!!", Toast.LENGTH_LONG).show();
-                                   // startActivity(new Intent(DonateToFoundationFragment.this, ThankyouPointActivity.class));
-                                    //startActivity(new Intent(DonateToFoundationFragment.this, DeliveryFragment.class));
-                                   // Animatoo.animateInAndOut(mContext);
-                                    //finish();
+
                                     DialogConfirmPayment(amount);
 
 
@@ -635,8 +375,7 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
                     });
 
 
-
-           // startActivity(new Intent(this, DeliveryFragment.class));
+            // startActivity(new Intent(this, DeliveryFragment.class));
 
 
         }
@@ -657,7 +396,7 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
     }
 
 
-    private void DialogConfirmPayment(String amount){
+    private void DialogConfirmPayment(String amount) {
         final AlertDialog.Builder alert = new AlertDialog.Builder(DonateToFoundationFragment.this);
 
         View mView = getLayoutInflater().inflate(R.layout.dialog_payment_confirmation, null);
@@ -671,12 +410,12 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
         final AlertDialog alertDialog = alert.create();
         alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         alertDialog.setCanceledOnTouchOutside(false);
-        paid_paymentsID.setText("$"+amount);
+        paid_paymentsID.setText("$" + amount);
         btn_cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 alertDialog.dismiss();
-                PrefManager.setBoolean(PrefManager.KEY_BaiHai_Status,false);
+                PrefManager.setBoolean(PrefManager.KEY_BaiHai_Status, false);
 
 
             }
@@ -685,11 +424,10 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
             @Override
             public void onClick(View v) {
                 alertDialog.dismiss();
-                PrefManager.setBoolean(PrefManager.KEY_BaiHai_Status,true);
+                PrefManager.setBoolean(PrefManager.KEY_BaiHai_Status, true);
                 finish();
                 startActivity(new Intent(DonateToFoundationFragment.this, StripePaymentActivity.class));
                 Animatoo.animateZoom(mContext);
-
 
 
             }
@@ -698,14 +436,13 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
             @Override
             public void onClick(View v) {
                 alertDialog.dismiss();
-                PrefManager.setBoolean(PrefManager.KEY_BaiHai_Status,false);
+                PrefManager.setBoolean(PrefManager.KEY_BaiHai_Status, false);
 
 
             }
         });
         alertDialog.show();
     }
-
 
 
 }

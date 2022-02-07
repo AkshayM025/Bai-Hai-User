@@ -33,7 +33,6 @@ public interface APIInterface {
                                @Query("product_id") String product_id);
 
 
-
     @GET("social_login?")
     Call<ResponseBody> socialLogin(@Query("name") String name,
                                    @Query("email") String email,

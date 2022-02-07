@@ -42,7 +42,7 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
     double lat, lng;
     String latitude, longitude;
     String regID;
-    private EditText et_orgname, et_contact, et_desc, et_email, et_number,et_mobileId,et_webpage;
+    private EditText et_orgname, et_contact, et_desc, et_email, et_number, et_mobileId, et_webpage;
     private final Context mContext = this;
     private ProgressBar progressBar;
     private Boolean isInternetPresent = false;
@@ -78,8 +78,8 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
         et_contact = findViewById(R.id.et_contact);
         et_desc = findViewById(R.id.et_desc);
 
-        et_mobileId=findViewById(R.id.et_mobileId);
-        et_webpage=findViewById(R.id.et_webpage);
+        et_mobileId = findViewById(R.id.et_mobileId);
+        et_webpage = findViewById(R.id.et_webpage);
         et_locationIcon = findViewById(R.id.et_locationIcon);
 
 
@@ -110,8 +110,6 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
             longitude = String.valueOf(track.getLongitude());
             Log.e("lon=>", "-------->" + longitude);
 
-            //latLng = new LatLng(latitude, longitude);
-
         } else {
             track.showSettingsAlert();
         }
@@ -124,8 +122,6 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
             registerOrganizationApi(view);
         } else {
             PrefManager.showSettingsAlert(mContext);
-           /* AlertConnection.showAlertDialog(mContext, "No Internet Connection",
-                    "You don't have internet connection.", false);*/
         }
     }
 
@@ -138,8 +134,8 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
         final String location_address = et_location.getText().toString().trim();
         final String contat_name = et_contact.getText().toString().trim();
         final String description = et_desc.getText().toString().trim();
-        final String mobile =et_mobileId.getText().toString().trim();
-        final String webpage =et_webpage.getText().toString().trim();
+        final String mobile = et_mobileId.getText().toString().trim();
+        final String webpage = et_webpage.getText().toString().trim();
 
         progressBar = findViewById(R.id.progressBar);
 
@@ -149,20 +145,14 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
         if (org_name.equalsIgnoreCase("")) {
             CustomSnakbar.showSnakabar(mContext, view, "Please Enter Organization Name!");
             et_orgname.requestFocus();
-        }/* else if (email.equalsIgnoreCase("")) {
-            CustomSnakbar.showSnakabar(mContext, view, "Please Enter Email!");
-            et_email.requestFocus();
-        } else if (number.equalsIgnoreCase("")) {
-            CustomSnakbar.showSnakabar(mContext, view, "Please Enter Number!");
-            et_number.requestFocus();
 
-        }*/else if(mobile.equalsIgnoreCase("")){
+        } else if (mobile.equalsIgnoreCase("")) {
             CustomSnakbar.showSnakabar(mContext, view, "Please Enter PhoneNumber!");
             et_mobileId.requestFocus();
-        }else if(webpage.equalsIgnoreCase("")){
+        } else if (webpage.equalsIgnoreCase("")) {
             CustomSnakbar.showSnakabar(mContext, view, "Please Enter Webpage!");
             et_webpage.requestFocus();
-        }else if (location_address.equalsIgnoreCase("")) {
+        } else if (location_address.equalsIgnoreCase("")) {
             CustomSnakbar.showSnakabar(mContext, view, "Please Enter Location!");
             et_location.requestFocus();
         } else if (contat_name.equalsIgnoreCase("")) {
@@ -217,27 +207,6 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
                                     et_number.setText("");
                                     CustomSnakbar.showSnakabar(mContext, view, "Thankyou for registering\nplease check your email for further instructions!");
                                     RegisterFoundationDailog();
-                                   /* AlertDialog.Builder builder = new AlertDialog.Builder(
-                                            SubscribeFoundationActivity.this);
-                                    builder.setTitle("Donation");
-                                    builder.setMessage("Thankyou for registering\nplease check your email for further instructions!");
-                                    builder.setPositiveButton("OK",
-                                            new DialogInterface.OnClickListener() {
-                                                public void onClick(DialogInterface dialog,
-                                                                    int which) {
-                                                    finish();
-                                                    startActivity(new Intent(mContext, HomeActivity.class));
-                                                    Animatoo.animateInAndOut(mContext);
-                                                }
-                                            });
-                                    builder.show();
-*/
-
-                                    //JSONObject result = object.getJSONObject("result");
-
-
-                                    //SharedPrefManager.getInstance(getApplicationContext()).userLogin(user);
-
 
                                 } else if (status.equals("0")) {
 
@@ -257,7 +226,6 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
 
                         @Override
                         public void Failed(String error) {
-                            //CustomSnakbar.showSnakabar(mContext, tv_Skip, "" + error);
                             Toast.makeText(mContext, "check your network" + error, Toast.LENGTH_SHORT).show();
 
                         }
@@ -269,19 +237,18 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
 
     }
 
-    private void RegisterFoundationDailog(){
+    private void RegisterFoundationDailog() {
 
         final AlertDialog.Builder alert = new AlertDialog.Builder(SubscribeFoundationActivity.this);
 
-        View mView = getLayoutInflater().inflate(R.layout.custom_foundation_dailog,null);
-        final RoundButton bt = (RoundButton)mView.findViewById(R.id.registerFndId);
+        View mView = getLayoutInflater().inflate(R.layout.custom_foundation_dailog, null);
+        final RoundButton bt = (RoundButton) mView.findViewById(R.id.registerFndId);
         final ImageView fond_cancelId = mView.findViewById(R.id.fond_cancelId);
         alert.setView(mView);
         final AlertDialog alertDialog = alert.create();
         alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         alertDialog.setCanceledOnTouchOutside(false);
         alertDialog.setCancelable(false);
-
 
 
         bt.setOnClickListener(new View.OnClickListener() {
@@ -300,8 +267,7 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
                         alertDialog.dismiss();
                         bt.revertAnimation();
                         finish();
-                        //startActivity(new Intent(StripePaymentActivity.this, ThankyouPointActivity.class));
-                    }
+                        }
                 }, 2000);
 
             }
@@ -318,7 +284,6 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
 
         alertDialog.show();
     }
-
 
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {

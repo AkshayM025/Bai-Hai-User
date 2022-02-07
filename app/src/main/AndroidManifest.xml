@@ -294,10 +294,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/picker_provider_paths" />
         </provider>
-        <receiver
-            android:name="com.techno.baihai.activity.BroadcastManager" >
-
-        </receiver>
 
     </application>
 

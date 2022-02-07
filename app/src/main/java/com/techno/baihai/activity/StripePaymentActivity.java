@@ -111,18 +111,8 @@ public class StripePaymentActivity extends AppCompatActivity {
 
 
 
-        // done=findViewById(R.id.done);
         cardForm = (CardForm) findViewById(R.id.card_form);
-      /*  cardForm.cardRequired(true)
-                .expirationRequired(true)
-                .cvvRequired(true)
-                .cardholderName(CardForm.FIELD_REQUIRED)
-                .postalCodeRequired(false)
-                .mobileNumberRequired(false)
-                // .mobileNumberExplanation("SMS is required on this number")
-                .actionLabel("Purchase")
-                .setup(this);
-*/
+
 
         initView();
 
@@ -132,8 +122,6 @@ public class StripePaymentActivity extends AppCompatActivity {
 
     private void initView() {
         cardForm = findViewById(R.id.card_form);
-        // ivBack = findViewById(R.id.ivBack);
-        //tvTitle = findViewById(R.id.tvTitle);
         bt_Paymentsuccess = findViewById(R.id.bt_Paymentsuccess);
 
 
@@ -155,7 +143,6 @@ public class StripePaymentActivity extends AppCompatActivity {
                         @Override
                         public void run() {
                             validation();
-                            // bt.revertAnimation();
                         }
                     }, 1300);
 
@@ -177,7 +164,6 @@ public class StripePaymentActivity extends AppCompatActivity {
                 .cardholderName(CardForm.FIELD_REQUIRED)
                 .postalCodeRequired(false)
                 .mobileNumberRequired(false)
-                // .mobileNumberExplanation("SMS is required on this number")
                 .setup(this);
 
         cardForm.getCvvEditText().setInputType(InputType.TYPE_CLASS_NUMBER | InputType.TYPE_NUMBER_VARIATION_PASSWORD);
@@ -288,35 +274,7 @@ public class StripePaymentActivity extends AppCompatActivity {
                                     }
                                 });
                                 alertDialog.show();
-                           /* AlertDialog.Builder alertDialog = new AlertDialog.Builder(StripePaymentActivity.this);
-                            alertDialog.setCancelable(false);
-                            alertDialog.setTitle("Bai-Hai");
-                            alertDialog.setMessage("Ammount");
 
-                            final EditText input = new EditText(StripePaymentActivity.this);
-                            LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(
-                                    LinearLayout.LayoutParams.MATCH_PARENT,
-                                    LinearLayout.LayoutParams.MATCH_PARENT);
-                            input.setLayoutParams(lp);
-                            alertDialog.setView(input);
-                            alertDialog.setIcon(R.drawable.ic_right_arrow);
-
-                            alertDialog.setPositiveButton("YES",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-
-
-                                        }
-                                    });
-
-                            alertDialog.setNegativeButton("NO",
-                                    new DialogInterface.OnClickListener() {
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            dialog.cancel();
-                                        }
-                                    });
-
-                            alertDialog.show();*/
 
                             }
                         }
@@ -537,8 +495,7 @@ private void SuccessPaymentDailog(){
                     alertDialog.dismiss();
                      bt.revertAnimation();
                     finish();
-                    //startActivity(new Intent(StripePaymentActivity.this, ThankyouPointActivity.class));
-                }
+                   }
             }, 2000);
 
         }

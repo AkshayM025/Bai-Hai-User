@@ -29,7 +29,7 @@ public class RewardPointsActivity extends AppCompatActivity {
     private Boolean isInternetPresent = false;
     private final Context mContext = this;
     private String uid;
-    private String TAG="RewardPointsActivity";
+    private String TAG = "RewardPointsActivity";
     ActivityRewardPointsBinding binding;
 
     @Override
@@ -57,10 +57,8 @@ public class RewardPointsActivity extends AppCompatActivity {
         if (isInternetPresent) {
             GetRewardPoints();
         } else {
-            //PrefManager prefManager = new PrefManager(mContext);
             PrefManager.showSettingsAlert(mContext);
-            /*AlertConnection.showAlertDialog(mContext, "No Internet Connection",
-                    "You don't have internet connection.", false);*/
+
         }
         Log.i(TAG, "user_id: " + uid);
     }
@@ -94,8 +92,6 @@ public class RewardPointsActivity extends AppCompatActivity {
                                 //   https://www.shipit.ng/BaiHai/webservice/get_profile?user_id=1
 
                                 JSONObject result = object.optJSONObject("result");
-                                //String id = result.optString("id");
-                                //Log.e("resultt=>", "" + response);
 
 
                                 String rewardPoints = "null";
@@ -103,10 +99,6 @@ public class RewardPointsActivity extends AppCompatActivity {
                                     rewardPoints = result.optString("total_coins");
                                     binding.rewardsPointsID.setText(rewardPoints);
                                 }
-
-
-
-
 
 
                             } else {
@@ -121,16 +113,13 @@ public class RewardPointsActivity extends AppCompatActivity {
                             progressDialog.dismiss();
 
                             Log.i(TAG, "error: " + e);
-                            //Toast.makeText(EditAccountActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void Failed(String error) {
-                        // progess.dismiss();
                         progressDialog.dismiss();
 
-                        // CustomSnakbar.showDarkSnakabar(EditAccountActivity.this, mview, "" + error);
                         Toast.makeText(mContext, "Failed" + error, Toast.LENGTH_SHORT).show();
                     }
                 });

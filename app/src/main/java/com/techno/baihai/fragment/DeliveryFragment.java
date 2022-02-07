@@ -16,7 +16,6 @@ import com.techno.baihai.utils.PrefManager;
 public class DeliveryFragment extends AppCompatActivity {
 
     Context mContext;
-    // FragmentListener listener;
     ImageView iv_back, check, uncheck;
     private Boolean baihaiStatus=false;
 

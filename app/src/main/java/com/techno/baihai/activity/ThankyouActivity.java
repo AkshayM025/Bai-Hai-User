@@ -24,11 +24,11 @@ public class ThankyouActivity extends AppCompatActivity {
         setContentView(R.layout.activity_thankyou);
 
 
-        org_address=getIntent().getStringExtra("org_address");
-        locatioID=findViewById(R.id.locatioID);
-        if(org_address!=null){
+        org_address = getIntent().getStringExtra("org_address");
+        locatioID = findViewById(R.id.locatioID);
+        if (org_address != null) {
             locatioID.setText(org_address);
-        }else{
+        } else {
             Toast.makeText(this, "Address Not Found..!!", Toast.LENGTH_SHORT).show();
         }
 

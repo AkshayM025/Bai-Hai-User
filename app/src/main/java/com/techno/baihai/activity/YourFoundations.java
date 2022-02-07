@@ -71,9 +71,7 @@ public class YourFoundations extends AppCompatActivity {
             GetFoundations();
         } else {
             PrefManager.showSettingsAlert(mcontext);
-            /*AlertConnection.showAlertDialog(mContext, "No Internet Connection",
-                    "You don't have internet connection.", false);*/
-        }
+            }
 
 
     }
@@ -152,7 +150,6 @@ public class YourFoundations extends AppCompatActivity {
                     @Override
                     public void Failed(String error) {
                         progressDialog.dismiss();
-                        //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
                     }
                 });
 

@@ -15,17 +15,14 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.TextView;
 import android.widget.Toast;
 
-import com.bumptech.glide.Glide;
 import com.marozzi.roundbutton.RoundButton;
 import com.techno.baihai.R;
 import com.techno.baihai.adapter.AdapterCoinModel;
 import com.techno.baihai.api.APIClient;
 import com.techno.baihai.api.APIInterface;
 import com.techno.baihai.api.Constant;
-import com.techno.baihai.model.CoinHistoryModel;
 import com.techno.baihai.model.RewardsHistoryModel;
 import com.techno.baihai.model.User;
 import com.techno.baihai.utils.DataManager;
@@ -77,7 +74,6 @@ public class AwardDialog extends Dialog {
         apiInterface = APIClient.getClient().create(APIInterface.class);
 
 
-
         User user = PrefManager.getInstance(mContext).getUser();
         uid = String.valueOf(user.getId());
         Log.e("user_id: ", uid);
@@ -87,35 +83,6 @@ public class AwardDialog extends Dialog {
         recycleViewbaihaiId.setLayoutManager(new LinearLayoutManager(mContext));
 
 
-
-
-
-
-
-/*
-        bt = (RoundButton) findViewById(R.id.bt_awardedsuccess);
-*/
-/*        bt.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                bt.startAnimation();
-                bt.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        bt.setResultState(RoundButton.ResultState.SUCCESS);
-                    }
-                }, 1000);
-                bt.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        dismiss();
-                        // bt.revertAnimation();
-                    }
-                }, 2000);
-
-            }
-        });*/
         award_cancelId = (ImageView) findViewById(R.id.award_cancelId);
         award_cancelId.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -126,22 +93,17 @@ public class AwardDialog extends Dialog {
 
         if (isInternetPresent) {
             GetLevelsApi(uid);
-        }
-        else {
-            // PrefManager prefManager = new PrefManager(mContext);
+        } else {
             PrefManager.showSettingsAlert(mContext);
 
         }
 
         if (isInternetPresent) {
             GetBaiHaiPaymentTransactionApi();
-        }
-        else {
-            // PrefManager prefManager = new PrefManager(mContext);
+        } else {
             PrefManager.showSettingsAlert(mContext);
 
         }
-
 
 
     }
@@ -179,14 +141,9 @@ public class AwardDialog extends Dialog {
                             if (status.equals("1")) {
                                 progressDialog.dismiss();
 
-
-                                //Toast.makeText(mContext, "" + message, Toast.LENGTH_SHORT).show();
-
                                 //   https://www.shipit.ng/BaiHai/webservice/get_profile?user_id=1
 
                                 JSONObject result = object.optJSONObject("result");
-                                //String id = result.optString("id");
-                                //Log.e("resultt=>", "" + response);
                                 String awardId = "null";
                                 String awardName = "null";
                                 String awardMinCoin = "null";
@@ -202,20 +159,8 @@ public class AwardDialog extends Dialog {
                                     awardImage = result.optString("image");
                                     awardMessage = result.optString("message");
 
-                                    //ImageView award_levelsImg = (ImageView) findViewById(R.id.award_levelsImg);
-                                    //TextView award_levelsId = (TextView) findViewById(R.id.award_levelsId);
-                                    //TextView award_levelsMsg = (TextView) findViewById(R.id.award_levelsMsg);
-                                    //TextView award_levelsMaxCoin = (TextView) findViewById(R.id.award_levelsMaxCoin);
-
-                                    //Glide.with(mContext).load(awardImage).error(R.drawable.rewards).into(award_levelsImg);
-                                    //award_levelsId.setText(awardName);
-                                    //award_levelsMsg.setText(awardMessage+"\n"+"You Reached a "+awardMinCoin+" Coins..!!");
-                                   // award_levelsMaxCoin.setText("Get a "+awardMaxCoin+" Coins, And earn a new Rewards..!!");
-
 
                                 }
-
-
 
 
                             } else {
@@ -246,7 +191,7 @@ public class AwardDialog extends Dialog {
 
         DataManager.getInstance().showProgressMessage(mContext, "Please wait...");
 
-        Call<RewardsHistoryModel> call = apiInterface.get_coin_history (uid);
+        Call<RewardsHistoryModel> call = apiInterface.get_coin_history(uid);
 
 
         call.enqueue(new Callback<RewardsHistoryModel>() {
@@ -260,32 +205,26 @@ public class AwardDialog extends Dialog {
                     if (commentModel != null) {
                         if (commentModel.getStatus().equals("1")) {
 
+                            list = (ArrayList<RewardsHistoryModel.Result>) commentModel.getResult();
 
-                            //  list.add(commentModel.getResult());
-                            list= (ArrayList<RewardsHistoryModel.Result>) commentModel.getResult();
-
-
-
-                            // madapter = new DailyDoseAdapter(mContext,list,DailyDoseFragment.this);
-                            // binding.recyclerDailyId.setAdapter(madapter);
-                            madapter = new AdapterCoinModel(mContext,list);
+                            madapter = new AdapterCoinModel(mContext, list);
 
                             recycleViewbaihaiId.removeAllViews();
                             recycleViewbaihaiId.setAdapter(madapter);
 
-                        }else {
-                           recycleViewbaihaiId.removeAllViews();
+                        } else {
+                            recycleViewbaihaiId.removeAllViews();
 
                         }
 
-                    }else {
+                    } else {
                         DataManager.getInstance().hideProgressMessage();
 
                     }
 
                 } catch (Exception e) {
                     DataManager.getInstance().hideProgressMessage();
-                    Toast.makeText(mContext, ""+e, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
 
                     e.printStackTrace();
                 }
@@ -295,13 +234,12 @@ public class AwardDialog extends Dialog {
             @Override
             public void onFailure(Call<RewardsHistoryModel> call, Throwable t) {
                 DataManager.getInstance().hideProgressMessage();
-                Toast.makeText(mContext, ""+call, Toast.LENGTH_SHORT).show();
+                Toast.makeText(mContext, "" + call, Toast.LENGTH_SHORT).show();
 
             }
         });
 
     }
-
 
 
 }

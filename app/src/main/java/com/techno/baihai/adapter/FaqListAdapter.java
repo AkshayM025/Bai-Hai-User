@@ -1,5 +1,6 @@
 package com.techno.baihai.adapter;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -45,11 +46,10 @@ public class FaqListAdapter extends RecyclerView.Adapter<FaqListAdapter.ViewHold
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, @SuppressLint("RecyclerView") int position) {
         holder.itemView.setTag(productPickupLists.get(position));
 
         FAQModelList faqModelList = productPickupLists.get(position);
-        //Glide.with(context).load(pu.)
         holder.faq_Name.setText(faqModelList.getFaq_id()+" "+faqModelList.getFaq_name());
 
         holder.faq_cardid.setOnClickListener(new View.OnClickListener() {

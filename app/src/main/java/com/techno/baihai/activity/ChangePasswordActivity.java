@@ -66,8 +66,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
         } else {
             PrefManager prefManager = new PrefManager(mContext);
             PrefManager.showSettingsAlert(mContext);
-            /*AlertConnection.showAlertDialog(mContext, "No Internet Connection",
-                    "You don't have internet connection.", false);*/
         }
 
     }
@@ -117,7 +115,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 .isShowProgressBar(false)
                 .setUrl(Constant.BASE_URL + "change_password?")
                 .setParam(parms)
-//                    .setFile("image", "file_path")
                 .execute(new ApiCallBuilder.onResponse() {
                     @Override
                     public void Success(String response) {

@@ -54,13 +54,13 @@ public class AvailableChatAdapter extends RecyclerView.Adapter<AvailableChatAdap
         AcceptedChatModal pu = acceptedChatModalList.get(position);
 
 
-        holder.item_chatUserName.setText("Name: "+pu.getSellerchat_name());
-        holder.item_chatUserId.setText("ID:545697890"+pu.getSeller_id());
+        holder.item_chatUserName.setText("Name: " + pu.getSellerchat_name());
+        holder.item_chatUserId.setText("ID:545697890" + pu.getSeller_id());
         holder.item_chatUserAddress.setVisibility(View.GONE);
 
 
-        holder.productNameId.setText("Product: "+pu.getProduct_name());
-        holder.productDescId.setText("Description: "+pu.getProduct_desc());
+        holder.productNameId.setText("Product: " + pu.getProduct_name());
+        holder.productDescId.setText("Description: " + pu.getProduct_desc());
         Glide.with(context)
                 .load(pu.getProduct_imgUrl()).error(R.drawable.papaya)
                 .into(holder.productImgUrl);
@@ -121,8 +121,7 @@ public class AvailableChatAdapter extends RecyclerView.Adapter<AvailableChatAdap
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
 
-
-        public TextView  item_chatUserAddress, item_chatUserName,
+        public TextView item_chatUserAddress, item_chatUserName,
                 item_chatUserId, productNameId, productDescId;
 
         public CircleImageView item_availableImg;

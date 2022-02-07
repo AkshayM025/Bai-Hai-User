@@ -105,8 +105,6 @@ public class SignUpActivity extends AppCompatActivity {
             longitude = String.valueOf(track.getLongitude());
             Log.e("lon=>", "-------->" + longitude);
 
-            //latLng = new LatLng(latitude, longitude);
-
         } else {
             track.showSettingsAlert();
         }
@@ -119,8 +117,6 @@ public class SignUpActivity extends AppCompatActivity {
         } else {
             PrefManager prefManager = new PrefManager(mContext);
             PrefManager.showSettingsAlert(mContext);
-            /*AlertConnection.showAlertDialog(mContext, "No Internet Connection",
-                    "You don't have internet connection.", false);*/
         }
 
     }
@@ -134,7 +130,6 @@ public class SignUpActivity extends AppCompatActivity {
         final String confirm_password = et_Cpassword.getText().toString().trim();
 
         String MobilePattern = "[0-9]{10}";
-        //String email1 = email.getText().toString().trim();
         String emailPattern = "[a-zA-Z0-9._-]+@[a-z]+\\.+[a-z]+";
         progressBar = findViewById(R.id.progressBar);
 
@@ -156,9 +151,9 @@ public class SignUpActivity extends AppCompatActivity {
         } else if (!password.equals(confirm_password)) {
             CustomSnakbar.showSnakabar(mContext, view, "Please Confirm Password!");
             et_Cpassword.requestFocus();
-        }   else if(!number.matches(MobilePattern)) {
+        } else if (!number.matches(MobilePattern)) {
 
-                Toast.makeText(getApplicationContext(), "Please enter valid 10 digit phone number", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(), "Please enter valid 10 digit phone number", Toast.LENGTH_SHORT).show();
         } else {
 
             progressBar.setVisibility(View.VISIBLE);
@@ -201,18 +196,6 @@ public class SignUpActivity extends AppCompatActivity {
                                     JSONObject result = object.getJSONObject("result");
 
 
-                          /*          User user = new User(
-                                            result.getString("id"),
-                                            result.getString("name"),
-                                            result.getString("email"),
-                                            result.getString("password"),
-                                            result.getString("mobile"),
-                                            result.getString("image"));
-
-                                    PrefManager.setString(Constant.USER_ID, result.optString("id"));
-
-
-                                    PrefManager.getInstance(getApplicationContext()).userLogin(user);*/
                                     startActivity(new Intent(mContext, LoginActivity.class).
                                             setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
                                                     Intent.FLAG_ACTIVITY_NEW_TASK));

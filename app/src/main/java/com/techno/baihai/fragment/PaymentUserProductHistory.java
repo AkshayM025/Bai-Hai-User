@@ -58,12 +58,11 @@ public class PaymentUserProductHistory extends Fragment {
     }
 
 
-
     @Override
     public View onCreateView(@NotNull LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        binding= DataBindingUtil.inflate(inflater,R.layout.fragment_payment_user_product_history,
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_payment_user_product_history,
                 container, false);
 
 
@@ -80,7 +79,6 @@ public class PaymentUserProductHistory extends Fragment {
         Log.e("", "user_id: " + uid);
 
 
-
         binding.rvProduct.setLayoutManager(new LinearLayoutManager(mContext));
 
 
@@ -95,7 +93,6 @@ public class PaymentUserProductHistory extends Fragment {
                     "You don't have internet connection.", false);*/
         }
         // SubCatApi();
-
 
 
         return binding.getRoot();
@@ -122,19 +119,14 @@ public class PaymentUserProductHistory extends Fragment {
                         if (commentModel.getStatus().equals("1")) {
 
                             binding.tvNotTranUserProId.setVisibility(View.GONE);
-
-                            //  list.add(commentModel.getResult());
-                            list= (ArrayList<GetUserFoundnTransDataModel>) commentModel.getResult();
+                            list = (ArrayList<GetUserFoundnTransDataModel>) commentModel.getResult();
 
 
-
-                            // madapter = new DailyDoseAdapter(mContext,list,DailyDoseFragment.this);
-                            // binding.recyclerDailyId.setAdapter(madapter);
-                            madapter = new AdapterUserFoundnTransaction(mContext,list);
+                            madapter = new AdapterUserFoundnTransaction(mContext, list);
                             binding.rvProduct.removeAllViews();
                             binding.rvProduct.setAdapter(madapter);
 
-                        }else {
+                        } else {
                             binding.rvProduct.removeAllViews();
                             DataManager.getInstance().hideProgressMessage();
                             binding.swipeUserProductId.setRefreshing(false);
@@ -145,7 +137,7 @@ public class PaymentUserProductHistory extends Fragment {
 
                         DataManager.getInstance().hideProgressMessage();
                         binding.swipeUserProductId.setRefreshing(false);
-                    }else {
+                    } else {
                         DataManager.getInstance().hideProgressMessage();
                         binding.swipeUserProductId.setRefreshing(false);
                         binding.tvNotTranUserProId.setVisibility(View.VISIBLE);
@@ -156,7 +148,7 @@ public class PaymentUserProductHistory extends Fragment {
                 } catch (Exception e) {
                     DataManager.getInstance().hideProgressMessage();
                     binding.swipeUserProductId.setRefreshing(false);
-                    Toast.makeText(mContext, ""+e, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
 
                     e.printStackTrace();
                 }
@@ -167,8 +159,8 @@ public class PaymentUserProductHistory extends Fragment {
             public void onFailure(Call<GetUserFoundnTransModel> call, Throwable t) {
                 DataManager.getInstance().hideProgressMessage();
                 binding.swipeUserProductId.setRefreshing(false);
-                Toast.makeText(mContext, ""+call, Toast.LENGTH_SHORT).show();
-                CustomSnakbar.showSnakabar(mContext, v,call.toString());
+                Toast.makeText(mContext, "" + call, Toast.LENGTH_SHORT).show();
+                CustomSnakbar.showSnakabar(mContext, v, call.toString());
 
             }
         });

@@ -106,11 +106,8 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
         } else {
             PrefManager prefManager = new PrefManager(mContext);
             PrefManager.showSettingsAlert(mContext);
-            /*AlertConnection.showAlertDialog(mContext, "No Internet Connection",
-                    "You don't have internet connection.", false);*/
         }
         Log.i(TAG, "user_id: " + uid);
-       // regID = getData(getApplicationContext(), "regId", null);
 
         getCurrentLocation();
 
@@ -181,11 +178,7 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
                             String message = object.optString("message");
                             if (status.equals("1")) {
 
-                                //   https://www.shipit.ng/BaiHai/webservice/get_profile?user_id=1
-
                                 JSONObject result = object.optJSONObject("result");
-                                //String id = result.optString("id");
-                                //Log.e("resultt=>", "" + response);
 
 
                                 String user_ID = "null";
@@ -228,10 +221,9 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
                                 if (result != null) {
                                     guide_give_free = result.optString("guide_give_free");
                                 }
-                               // Log.e("image=>", "-------->" + image);
 
 
-                                User user = new User(user_ID, username, email, password,mobile,image,legal_info,guide,guide_free,guide_give_free);
+                                User user = new User(user_ID, username, email, password, mobile, image, legal_info, guide, guide_free, guide_give_free);
                                 Picasso.get().load(image).placeholder(R.drawable.profile_img).into(civ_User);
 
                                 PrefManager.getInstance(getApplicationContext()).userLogin(user);
@@ -239,8 +231,6 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
                                 et_firstnameID.setText(user.getUsername());
                                 et_numberID.setText(mobile);
                                 et_emailID.setText(user.getEmail());
-                                //et_passwordID.setText(user.getPassword());
-                                //Glide.with(mContext).load(image).error(R.drawable.profile_img).into(civ_User);
                                 Picasso.get().load(image).placeholder(R.drawable.profile_img).into(civ_User);
 
 
@@ -256,16 +246,13 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
                             progressDialog.dismiss();
 
                             Log.i(TAG, "error: " + e);
-                            //Toast.makeText(EditAccountActivity.this, "" + e.getMessage(), Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void Failed(String error) {
-                        // progess.dismiss();
                         progressDialog.dismiss();
 
-                        // CustomSnakbar.showDarkSnakabar(EditAccountActivity.this, mview, "" + error);
                         Toast.makeText(mContext, "Failed" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -307,18 +294,17 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
         } else if (number.equalsIgnoreCase("")) {
             CustomSnakbar.showDarkSnakabar(this, view, "Please Email Can't Empty!");
             et_numberID.requestFocus();
-         }   else if(!number.matches(MobilePattern)) {
+        } else if (!number.matches(MobilePattern)) {
 
             Toast.makeText(getApplicationContext(), "Please enter valid 10 digit phone number", Toast.LENGTH_SHORT).show();
-        }else
-        {
+        } else {
 
-               UpdateAProfo(uid, name, email, number, view);
+            UpdateAProfo(uid, name, email, number, view);
 
         }
     }
 
-    private void UpdateAProfo(final String uid, String name, String email, String number, final View view){
+    private void UpdateAProfo(final String uid, String name, String email, String number, final View view) {
 
 
         final ProgressDialog progressDialog;
@@ -335,13 +321,9 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
         parms.put("lat", latitude);
         parms.put("lon", longitude);
 
-       // Compress.get(this).setQuality(40).execute(this).CompressedImage(String.valueOf(file));
-        HashMap<String, File> fileHashMap = new HashMap<String,File>();
-        fileHashMap.put("image",file);
+        HashMap<String, File> fileHashMap = new HashMap<String, File>();
+        fileHashMap.put("image", file);
 
-        // *http://bai-hai.com/webservice/update_product?product_id=1&user_id=71&name=this%20is%20tes&
-        // category_id=21&description=this%20is%20tes&price=10&address=12hd&lat=78.12&lon=4615.45&
-        // used=Yes&status=Active
 
         AndroidNetworking.upload(Constant.BASE_URL + "update_profile?")
                 .addMultipartParameter(parms)
@@ -388,7 +370,7 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
                                 if (result != null) {
                                     password = result.optString("password");
                                 }
-                               String image = "null";
+                                String image = "null";
                                 if (result != null) {
                                     image = result.optString("image");
                                 }
@@ -408,10 +390,9 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
                                 if (result != null) {
                                     guide_give_free = result.optString("guide_give_free");
                                 }
-                               // Log.e("image=>", "-------->" + image);
 
 
-                                User user = new User(user_ID,username,email,password,mobile,image,legal_info,guide,guide_free,guide_give_free);
+                                User user = new User(user_ID, username, email, password, mobile, image, legal_info, guide, guide_free, guide_give_free);
                                 Picasso.get().load(image).placeholder(R.drawable.profile_img).into(civ_User);
 
                                 PrefManager.getInstance(getApplicationContext()).userLogin(user);
@@ -419,8 +400,6 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
                                 et_firstnameID.setText(user.getUsername());
                                 et_numberID.setText(mobile);
                                 et_emailID.setText(user.getEmail());
-                                //et_passwordID.setText(user.getPassword());
-                                //Glide.with(mContext).load(image).error(R.drawable.profile_img).into(civ_User);
                                 Picasso.get().load(image).placeholder(R.drawable.profile_img).into(civ_User);
 
                                 CustomSnakbar.showDarkSnakabar(EditAccountActivity.this, view, "Profile Updated Successfully!");
@@ -437,7 +416,6 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
                                         startActivity(intent);
                                         Animatoo.animateZoom(mContext);
                                         finish();
-                                       // PrefManager.getInstance(getApplicationContext()).logout();
 
 
                                     }
@@ -449,11 +427,9 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
                                 CustomSnakbar.showDarkSnakabar(EditAccountActivity.this, view, "" + message);
                             }
 
-                        }
-                        catch (JSONException e) {
+                        } catch (JSONException e) {
 
                             progressDialog.dismiss();
-                            // Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
 
@@ -467,105 +443,6 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
                     }
                 });
     }
-
-
-/*
-    private void UpdateProfile(final String uid, String name, String email, String number, final View view) {
-
-
-        // https://www.shipit.ng/BaiHai/webservice/update_profile?user_id=1&name=ritesh&email=ritesh1.tec53hnorizen@gmail.com&
-        // mobile=789456123&image=tezt.png&lat=&lon=&register_id=4946464
-
-
-        try {
-            if (pathOfImg == null) {
-                CustomSnakbar.showSnakabar(mContext, view, "You not select a new imagePath");
-
-            } else {
-                final ProgressDialog progressDialog;
-                progressDialog = new ProgressDialog(EditAccountActivity.this);
-                progressDialog.setMessage("Please wait...");
-                progressDialog.show();
-
-
-                HashMap<String, String> parms = new HashMap<>();
-                parms.put("user_id", uid);
-                parms.put("name", name);
-                parms.put("email", email);
-                parms.put("mobile", number);
-                parms.put("register_id", Preference.get(EditAccountActivity.this, Preference.REGISTER_ID));
-                parms.put("lat", latitude);
-                parms.put("lon", longitude);
-
-                ApiCallBuilder.build(this)
-                        .isShowProgressBar(false)
-                        .setUrl(Constant.BASE_URL + "update_profile?")
-                        .setParam(parms)
-                        .setFile("image", pathOfImg)
-                        .execute(new ApiCallBuilder.onResponse() {
-                            @Override
-                            public void Success(String response) {
-                                progressDialog.dismiss();
-
-                                Log.e("selectedImagePath=>", "-------->" + pathOfImg);
-
-
-                                try {
-
-                                    JSONObject object = new JSONObject(response);
-                                    String status = object.optString("status");
-                                    String message = object.optString("message");
-                                    if (status.equals("1")) {
-                                        CustomSnakbar.showDarkSnakabar(EditAccountActivity.this, view, "Profile Updated Successfully!");
-                                        GetProfile(view);
-
-                                        Handler handler = new Handler();
-                                        handler.postDelayed(new Runnable() {
-                                            @Override
-                                            public void run() {
-                                                Intent intent = new Intent(mContext, AccountActivity.class);
-                                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                                intent.putExtra("imagePath", image);
-                                                startActivity(intent);
-                                                Animatoo.animateZoom(mContext);
-                                                finish();
-                                            }
-                                        }, 1000);
-
-                                    } else {
-                                        progressDialog.dismiss();
-
-                                        CustomSnakbar.showDarkSnakabar(EditAccountActivity.this, view, "" + message);
-                                    }
-
-                                }
-                                catch (JSONException e) {
-
-                                    progressDialog.dismiss();
-                                    // Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
-                                    e.printStackTrace();
-                                }
-
-
-                            }
-
-                            @Override
-                            public void Failed(String error) {
-                                progressDialog.dismiss();
-                                Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-            }
-        } catch (Exception e) {
-
-            Toast.makeText(mContext, "Error=>" + e, Toast.LENGTH_SHORT).show();
-        }
-
-
-    }
-*/
-
-
 
 
     private void showPictureDialog() {
@@ -616,12 +493,6 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
             case 0:
                 if (resultCode == RESULT_OK) {
 
-//                    Uri selectedImage = data.getData();
-//
-//                    Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-//
-//                    user_profile.setImageBitmap(bitmap);
-
                     try {
                         Bundle extras = data.getExtras();
                         Bitmap imageBitmap = (Bitmap) extras.get("data");
@@ -632,11 +503,9 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
                         Uri tempUri = getImageUri(mContext, imageBitmap);
 
                         // CALL THIS METHOD TO GET THE ACTUAL PATH
-//                        Toast.makeText(SignUpActivity.this,"Here "+ getRealPathFromURI(tempUri), Toast.LENGTH_LONG).show();
-
 
                         pathOfImg = RealPathUtil.getRealPath(mContext, tempUri);
-                        file= new File(pathOfImg);
+                        file = new File(pathOfImg);
 
 
                         Toast.makeText(mContext, "HerePath=>  " + pathOfImg, Toast.LENGTH_LONG).show();
@@ -663,12 +532,9 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
                         // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
                         Uri tempUri = getImageUri(mContext, bitmap);
 
-                        // CALL THIS METHOD TO GET THE ACTUAL PATH
-//                        Toast.makeText(SignUpActivity.this,"Here "+ getRealPathFromURI(tempUri), Toast.LENGTH_LONG).show();
-
 
                         pathOfImg = RealPathUtil.getRealPath(mContext, tempUri);
-                        file= new File(pathOfImg);
+                        file = new File(pathOfImg);
 
 
                         Toast.makeText(mContext, "Here " + pathOfImg, Toast.LENGTH_LONG).show();
@@ -768,7 +634,7 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
     public void response(boolean status, String message, File file) {
 
         Log.e("imageStatus: ", String.valueOf(status));
-        Log.e("imageMessage",message);
+        Log.e("imageMessage", message);
         Log.e("ImageFile: ", String.valueOf(file));
     }
 }

@@ -126,7 +126,7 @@ public class MyProductListAdapter extends RecyclerView.Adapter<MyProductListAdap
 
         public ImageView product_Icon;
         public CardView card_productListId;
-        public TextView product_name, product_desc, product_sellerName,product_dateTimeId;
+        public TextView product_name, product_desc, product_sellerName, product_dateTimeId;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -139,7 +139,6 @@ public class MyProductListAdapter extends RecyclerView.Adapter<MyProductListAdap
             product_desc = itemView.findViewById(R.id.product_descriptionId);
             product_sellerName = itemView.findViewById(R.id.product_sellerName);
             product_dateTimeId = itemView.findViewById(R.id.product_dateTimeId);
-
 
 
         }

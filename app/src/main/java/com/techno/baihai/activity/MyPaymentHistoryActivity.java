@@ -36,7 +36,7 @@ public class MyPaymentHistoryActivity extends AppCompatActivity {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         setContentView(R.layout.activity_my_payment_history);
-        mContext =MyPaymentHistoryActivity.this;
+        mContext = MyPaymentHistoryActivity.this;
 
         utils = new Utils(mContext);
         apiInterface = APIClient.getClient().create(APIInterface.class);

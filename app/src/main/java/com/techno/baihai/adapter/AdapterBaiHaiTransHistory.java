@@ -75,40 +75,7 @@ public class AdapterBaiHaiTransHistory extends RecyclerView.Adapter<AdapterBaiHa
         return transactionDataModels.size();
     }
 
-/*    @Override
-    public Filter getFilter() {
-        return new Filter() {
-            @Override
-            protected FilterResults performFiltering(CharSequence charSequence) {
-                String charString = charSequence.toString();
-                if (charString.isEmpty()) {
-                    contactListFiltered = catModelLists;
-                } else {
-                    List<SubjCatModelList> filteredList = new ArrayList<>();
-                    for (SubjCatModelList row : catModelLists) {
 
-                        // name match condition. this might differ depending on your requirement
-                        // here we are looking for name or phone number match
-                        if (row.getSubcategory_name().toLowerCase().contains(charString.toLowerCase())) {
-                            filteredList.add(row);
-                        }
-                    }
-
-                    contactListFiltered = filteredList;
-                }
-
-                FilterResults filterResults = new FilterResults();
-                filterResults.values = contactListFiltered;
-                return filterResults;
-            }
-
-            @Override
-            protected void publishResults(CharSequence charSequence, FilterResults filterResults) {
-                contactListFiltered = (ArrayList<SubjCatModelList>) filterResults.values;
-                notifyDataSetChanged();
-            }
-        };
-    }*/
 
     public static class MyView extends RecyclerView.ViewHolder {
         AdapterBaihaiTransactionBinding itemDoseBinding;

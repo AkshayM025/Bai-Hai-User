@@ -41,7 +41,7 @@ import www.develpoeramit.mapicall.ApiCallBuilder;
 public class AccountActivity extends AppCompatActivity {
 
     private static final String TAG = "AccountActivity";
-    TextView tv_cancel, tv_edit_account, tv_signout;
+    TextView tv_cancel, tv_edit_account;
     LinearLayout tv_aboutus, tv_support;
     CardView setting;
     CircleImageView profile_imgId;
@@ -52,7 +52,7 @@ public class AccountActivity extends AppCompatActivity {
     private Boolean isInternetPresent = false;
     private LinearLayout tv_shareApp;
     private String uid;
-    private int REQUEST_CODE_MY_PICK= 1;
+    private final int REQUEST_CODE_MY_PICK = 1;
     private ShareDialog shareDialog;
     private CallbackManager callbackManager;
 
@@ -74,75 +74,46 @@ public class AccountActivity extends AppCompatActivity {
 
         tv_cancel = findViewById(R.id.tv_cancel);
 
-        tv_cancel.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AccountActivity.this,HomeActivity.class));
-                Animatoo.animateSlideRight(mContext);
-            }
+        tv_cancel.setOnClickListener(v -> {
+            startActivity(new Intent(AccountActivity.this, HomeActivity.class));
+            Animatoo.animateSlideRight(mContext);
         });
 
         tv_edit_account = findViewById(R.id.tv_edit_account);
 
-        tv_edit_account.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AccountActivity.this, EditAccountActivity.class));
-            }
-        });
+        tv_edit_account.setOnClickListener(v -> startActivity(new Intent(AccountActivity.this, EditAccountActivity.class)));
 
         setting = findViewById(R.id.setting);
 
-        setting.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AccountActivity.this, SettingActivity.class));
-            }
-        });
+        setting.setOnClickListener(v -> startActivity(new Intent(AccountActivity.this, SettingActivity.class)));
 
 
         tv_aboutus = findViewById(R.id.tv_aboutus);
 
-        tv_aboutus.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AccountActivity.this, AboutUsActivity.class));
-            }
-        });
+        tv_aboutus.setOnClickListener(v -> startActivity(new Intent(AccountActivity.this, AboutUsActivity.class)));
 
 
         tv_support = findViewById(R.id.tv_support);
 
-        tv_support.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(AccountActivity.this, SupportActivity.class));
-            }
-        });
+        tv_support.setOnClickListener(v -> startActivity(new Intent(AccountActivity.this, SupportActivity.class)));
 
         tv_shareApp = findViewById(R.id.tv_shareApp);
 
-        tv_shareApp.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-             //   ShareApp();
-
-                if (ShareDialog.canShow(ShareLinkContent.class)) {
-                    ShareLinkContent linkContent = new ShareLinkContent.Builder()
-                            .setQuote("Hey check out my app at:")
-                            .setContentUrl(Uri.parse("https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID))
-                            .build();
-                    shareDialog.show(linkContent);
-                }
-
-
+        tv_shareApp.setOnClickListener(v -> {
+            if (ShareDialog.canShow(ShareLinkContent.class)) {
+                ShareLinkContent linkContent = new ShareLinkContent.Builder()
+                        .setQuote("Hey check out my app at:")
+                        .setContentUrl(Uri.parse("https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID))
+                        .build();
+                shareDialog.show(linkContent);
             }
+
+
         });
 
         User user = PrefManager.getInstance(this).getUser();
         uid = String.valueOf(user.getId());
         Log.e(TAG, "user_id: " + uid);
-
 
 
         getUserName();
@@ -153,98 +124,53 @@ public class AccountActivity extends AppCompatActivity {
         shareDialog.registerCallback(callbackManager, new FacebookCallback<Sharer.Result>() {
             @Override
             public void onSuccess(Sharer.Result result) {
-                Log.e("TAG","Facebook Share Success");
+                Log.e("TAG", "Facebook Share Success");
                 //logoutFacebook();
 
             }
 
             @Override
             public void onCancel() {
-                Log.e("TAG","Facebook Sharing Cancelled by User");
+                Log.e("TAG", "Facebook Sharing Cancelled by User");
             }
 
             @Override
             public void onError(FacebookException error) {
-                Log.e("TAG","Facebook Share Success: Error: " + error.getLocalizedMessage());
+                Log.e("TAG", "Facebook Share Success: Error: " + error.getLocalizedMessage());
             }
         });
 
     }
 
 
-    private void ShareApp(){
+    private void ShareApp() {
 
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT,
                 "Hey check out my app at:\n https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID);
         sendIntent.setType("text/plain");
-        setResult(RESULT_OK,sendIntent);
-       // startActivity(sendIntent);
+        setResult(RESULT_OK, sendIntent);
         startActivityForResult(Intent.createChooser(sendIntent, "Share with"), REQUEST_CODE_MY_PICK);
-
-      //  startActivityForResult(sendIntent, );
-
 
 
     }
 
 
-
-
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-       // Toast.makeText(AccountActivity.this.getApplicationContext(),"onActivityResult..:",Toast.LENGTH_SHORT).show();
-        //Toast.makeText(mContext, "resultCode"+data, Toast.LENGTH_SHORT).show();
-        if(requestCode == REQUEST_CODE_MY_PICK) {
+        if (requestCode == REQUEST_CODE_MY_PICK) {
             Toast.makeText(AccountActivity.this.getApplicationContext(), "Got Callback yeppeee...:", Toast.LENGTH_SHORT).show();
 
-        }else {
+        } else {
             Toast.makeText(AccountActivity.this.getApplicationContext(), "Got", Toast.LENGTH_SHORT).show();
 
         }
     }
 
 
-
-/*    // This method is called when the second activity finishes
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        // check that it is the SecondActivity with an OK result
-        if (requestCode == REQUEST_CODE_MY_PICK) {
-            if (resultCode == RESULT_OK) { // Activity.RESULT_OK
-
-                // get String data from Intent
-                //String returnString = data.getStringExtra("keyName");
-
-                // set text view with string
-              //  TextView textView = (TextView) findViewById(R.id.textView);
-                //textView.setText(returnString);
-
-
-                if (isInternetPresent) {
-                    UpdateProfilePoints();
-                } else {
-                   // PrefManager prefManager = new PrefManager(mContext);
-                    PrefManager.showSettingsAlert(mContext);
-
-                }
-            }
-            if (isInternetPresent) {
-                UpdateProfilePoints();
-            } else {
-                //PrefManager prefManager = new PrefManager(mContext);
-                PrefManager.showSettingsAlert(mContext);
-
-            }
-        }
-    }*/
-
-
-        private void UpdateProfilePoints() {
+    private void UpdateProfilePoints() {
 
         final ProgressDialog progressDialog;
         progressDialog = new ProgressDialog(AccountActivity.this);
@@ -271,8 +197,6 @@ public class AccountActivity extends AppCompatActivity {
                                 Toast.makeText(mContext, "You get +3Coins, Check Your Wallet...!!" + message, Toast.LENGTH_LONG).show();
 
 
-
-
                             } else {
                                 progressDialog.dismiss();
 
@@ -291,19 +215,14 @@ public class AccountActivity extends AppCompatActivity {
 
                     @Override
                     public void Failed(String error) {
-                        // progess.dismiss();
                         progressDialog.dismiss();
 
-                        // CustomSnakbar.showDarkSnakabar(EditAccountActivity.this, mview, "" + error);
                         Toast.makeText(mContext, "Failed" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 
 
     }
-
-
-
 
 
     @Override
@@ -314,7 +233,7 @@ public class AccountActivity extends AppCompatActivity {
 
     public void getUserName() {
 
-         user = PrefManager.getInstance(this).getUser();
+        user = PrefManager.getInstance(this).getUser();
 
         acc_nameId.setText(String.valueOf(user.getUsername()));
 
@@ -327,7 +246,7 @@ public class AccountActivity extends AppCompatActivity {
 
     public void LogoutBtn(View view) {
 
-        String uid=user.getId();
+        String uid = user.getId();
 
 
         Toast.makeText(mContext, "You Are Logout Succesfully", Toast.LENGTH_SHORT).show();
@@ -339,19 +258,8 @@ public class AccountActivity extends AppCompatActivity {
         startActivity(intent);
         Animatoo.animateSlideDown(mContext);
 
-        /*if (isInternetPresent) {
-            LogoutApi(uid);
-
-        } else {
-           // PrefManager prefManager = new PrefManager(mContext);
-            PrefManager.showSettingsAlert(mContext);
-            *//*AlertConnection.showAlertDialog(mContext, "No Internet Connection",
-                    "You don't have internet connection.", false);*//*
-        }*/
-
 
     }
-
 
 
     private void LogoutApi(String Uid) {
@@ -363,65 +271,62 @@ public class AccountActivity extends AppCompatActivity {
         progressDialog.show();
 
 
-                HashMap<String, String> parms = new HashMap<>();
-                parms.put("user_id", Uid);
+        HashMap<String, String> parms = new HashMap<>();
+        parms.put("user_id", Uid);
 
 
-                ApiCallBuilder.build(this)
-                        .isShowProgressBar(false)
-                        .setUrl(Constant.BASE_URL + "logout_register?")
-                        .setParam(parms)
-                        .execute(new ApiCallBuilder.onResponse() {
-                            @Override
-                            public void Success(String response) {
+        ApiCallBuilder.build(this)
+                .isShowProgressBar(false)
+                .setUrl(Constant.BASE_URL + "logout_register?")
+                .setParam(parms)
+                .execute(new ApiCallBuilder.onResponse() {
+                    @Override
+                    public void Success(String response) {
 
 
-                                Log.e("selectedresponse=>", "-------->" + response);
+                        Log.e("selectedresponse=>", "-------->" + response);
 
 
-                                try {
+                        try {
 
-                                    JSONObject object = new JSONObject(response);
-                                    String status = object.optString("status");
-                                    String message = object.optString("message");
-                                    if (status.equals("1")) {
-                                        progressDialog.dismiss();
-
-
-                                        Toast.makeText(mContext, "You Are Logout "+ message, Toast.LENGTH_SHORT).show();
-                                        PrefManager.getInstance(getApplicationContext()).logout();
-                                        Intent intent = new Intent(mContext, LoginActivity.class);
-                                        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
-                                        startActivity(intent);
-                                        finish();
-                                        Animatoo.animateSlideDown(mContext);
-
-                                    } else {
-                                        progressDialog.dismiss();
-
-                                        Toast.makeText(mContext, ""+message, Toast.LENGTH_SHORT).show();
-
-                                    }
-
-                                }
-                                catch (JSONException e) {
-                                    progressDialog.dismiss();
-
-                                     Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
-                                    e.printStackTrace();
-                                }
-
-                            }
-
-                            @Override
-                            public void Failed(String error) {
+                            JSONObject object = new JSONObject(response);
+                            String status = object.optString("status");
+                            String message = object.optString("message");
+                            if (status.equals("1")) {
                                 progressDialog.dismiss();
-                                Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
+
+
+                                Toast.makeText(mContext, "You Are Logout " + message, Toast.LENGTH_SHORT).show();
+                                PrefManager.getInstance(getApplicationContext()).logout();
+                                Intent intent = new Intent(mContext, LoginActivity.class);
+                                intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                                startActivity(intent);
+                                finish();
+                                Animatoo.animateSlideDown(mContext);
+
+                            } else {
+                                progressDialog.dismiss();
+
+                                Toast.makeText(mContext, "" + message, Toast.LENGTH_SHORT).show();
+
                             }
-                        });
-            }
 
+                        } catch (JSONException e) {
+                            progressDialog.dismiss();
 
+                            Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    @Override
+                    public void Failed(String error) {
+                        progressDialog.dismiss();
+                        Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
 
 
     public void changePasswordInit(View view) {

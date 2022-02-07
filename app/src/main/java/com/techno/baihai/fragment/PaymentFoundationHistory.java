@@ -58,16 +58,14 @@ public class PaymentFoundationHistory extends Fragment {
     FragmentPaymentFoundationHistoryBinding binding;
 
 
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-        binding= DataBindingUtil.inflate(inflater,R.layout.fragment_payment_foundation_history,
+        binding = DataBindingUtil.inflate(inflater, R.layout.fragment_payment_foundation_history,
                 container, false);
-
 
 
         mContext = getActivity();
@@ -83,7 +81,6 @@ public class PaymentFoundationHistory extends Fragment {
         Log.e("", "user_id: " + uid);
 
 
-
         binding.recycleViewbaihaiId.setLayoutManager(new LinearLayoutManager(mContext));
 
 
@@ -94,17 +91,13 @@ public class PaymentFoundationHistory extends Fragment {
         } else {
             PrefManager prefManager = new PrefManager(mContext);
             PrefManager.showSettingsAlert(mContext);
-            /*AlertConnection.showAlertDialog(mContext, "No Internet Connection",
-                    "You don't have internet connection.", false);*/
         }
         // SubCatApi();
 
 
-
-
-
-        return  binding.getRoot();
+        return binding.getRoot();
     }
+
     private void GetBaiHaiPaymentTransactionApi(final View v) {
 
         DataManager.getInstance().showProgressMessage(getActivity(), "Please wait...");
@@ -128,17 +121,16 @@ public class PaymentFoundationHistory extends Fragment {
 
 
                             //  list.add(commentModel.getResult());
-                            list= (ArrayList<BaiHaiTransactionDataModel>) commentModel.getResult();
-
+                            list = (ArrayList<BaiHaiTransactionDataModel>) commentModel.getResult();
 
 
                             // madapter = new DailyDoseAdapter(mContext,list,DailyDoseFragment.this);
                             // binding.recyclerDailyId.setAdapter(madapter);
-                            madapter = new AdapterBaiHaiTransHistory(mContext,list);
+                            madapter = new AdapterBaiHaiTransHistory(mContext, list);
                             binding.recycleViewbaihaiId.removeAllViews();
                             binding.recycleViewbaihaiId.setAdapter(madapter);
 
-                        }else {
+                        } else {
                             binding.recycleViewbaihaiId.removeAllViews();
                             DataManager.getInstance().hideProgressMessage();
                             binding.foundationSwipeId.setRefreshing(false);
@@ -149,7 +141,7 @@ public class PaymentFoundationHistory extends Fragment {
 
                         DataManager.getInstance().hideProgressMessage();
                         binding.foundationSwipeId.setRefreshing(false);
-                    }else {
+                    } else {
                         DataManager.getInstance().hideProgressMessage();
                         binding.foundationSwipeId.setRefreshing(false);
                         binding.tvNotTranfoundnId.setVisibility(View.VISIBLE);
@@ -160,7 +152,7 @@ public class PaymentFoundationHistory extends Fragment {
                 } catch (Exception e) {
                     DataManager.getInstance().hideProgressMessage();
                     binding.foundationSwipeId.setRefreshing(false);
-                    Toast.makeText(mContext, ""+e, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
 
                     e.printStackTrace();
                 }
@@ -171,8 +163,8 @@ public class PaymentFoundationHistory extends Fragment {
             public void onFailure(Call<GetBaiHaiTransactionModel> call, Throwable t) {
                 DataManager.getInstance().hideProgressMessage();
                 binding.foundationSwipeId.setRefreshing(false);
-                Toast.makeText(mContext, ""+call, Toast.LENGTH_SHORT).show();
-                CustomSnakbar.showSnakabar(mContext, v,call.toString());
+                Toast.makeText(mContext, "" + call, Toast.LENGTH_SHORT).show();
+                CustomSnakbar.showSnakabar(mContext, v, call.toString());
 
             }
         });

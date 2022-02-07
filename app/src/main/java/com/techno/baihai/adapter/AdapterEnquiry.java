@@ -85,8 +85,6 @@ public class AdapterEnquiry extends RecyclerView.Adapter<AdapterEnquiry.ViewHold
             Log.e("context", String.valueOf(context));
         }
 
-        //   Picasso.get().load(pu.getEnquiry_productImageUrl()).placeholder(R.drawable.profile_img).into(holder.item_enquiryImg);
-
 
         holder.item_statusAccepted.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -108,7 +106,6 @@ public class AdapterEnquiry extends RecyclerView.Adapter<AdapterEnquiry.ViewHold
                 param.put("status", "Accepted");
 
                 Log.e("request_id=>", String.valueOf(chatEnquiryModelList.get(position).getRequestId()));
-                //  Log.e("seller_id=>", String.valueOf(PrefManager.getString(Preference.KEY_getSellerId)));
 
                 ApiCallBuilder.build(context)
                         .isShowProgressBar(false)        // http://bai-hai.com/webservice/update_chat_status?

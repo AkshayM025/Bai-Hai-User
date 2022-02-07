@@ -102,12 +102,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private ProgressBar progressBar;
     private Boolean isInternetPresent = false;
 
-  /*  private InstagramApp mApp;
-
-    public static final String CLIENT_ID = "2606163513004882";
-    public static final String CLIENT_SECRET = "2cba71d50a8dae0f7552f9ff66965cde";
-    public static final String CALLBACK_URL = "https://trsa.me/contact/";
-*/
 
     @SuppressLint("WrongViewCast")
     @Override
@@ -124,10 +118,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
 
-
-
         setContentView(R.layout.activity_login);
-
 
 
         FirebaseAuth.getInstance().signOut();
@@ -148,9 +139,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         et_Email = findViewById(R.id.et_email);
         et_Password = findViewById(R.id.et_password);
         progressBar = findViewById(R.id.progressBar);
-
-
-        //login_button= findViewById(R.id.login_button);
 
 
         regID = getData(getApplicationContext(), "regId", null);
@@ -239,37 +227,10 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 md.update(signature.toByteArray());
                 Log.d("KeyHash:", Base64.encodeToString(md.digest(), Base64.DEFAULT));
             }
-        }
-        catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e)
-        {
+        } catch (PackageManager.NameNotFoundException | NoSuchAlgorithmException e) {
 
         }
 
-
-
-   /*     //**************************Instagram*********************************************
-
-        iv_insta=findViewById(R.id.iv_insta);
-        iv_insta.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                mApp.authorize();
-            }
-        });
-
-        mApp = new InstagramApp(LoginActivity.this, CLIENT_ID, CLIENT_SECRET, CALLBACK_URL);
-        mApp.setListener(new InstagramApp.OAuthAuthenticationListener() {
-            @Override
-            public void onSuccess(String id, String Name) {
-//                Toast.makeText(LoginActivity.this, id+""+Name, Toast.LENGTH_SHORT).show();
-                socialLoginApi(Name, "","" , id);
-            }
-
-            @Override
-            public void onFail(String error) {
-                Toast.makeText(LoginActivity.this, error, Toast.LENGTH_SHORT).show();
-            }
-        });*/
 
         findViewById(R.id.btn_login).setOnClickListener(this::doLoginIn);
 
@@ -284,8 +245,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         } else {
             PrefManager prefManager = new PrefManager(mContext);
             PrefManager.showSettingsAlert(mContext);
-            /*    AlertConnection.showAlertDialog(mContext, "No Internet Connection",
-                    "You don't have internet connection.", false);*/
         }
     }
 
@@ -306,59 +265,60 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             track.showSettingsAlert();
         }
     }
- private void sendNotification(){
-     User user = PrefManager.getInstance(this).getUser();
-     progressBar.setVisibility(View.VISIBLE);
-     HashMap<String, String> parms = new HashMap<>();
-     parms.put("id_user", user.getId());
-     parms.put("message", "message user");
-     ApiCallBuilder.build(this)
-             .isShowProgressBar(false)
-             .setUrl(Constant.BASE_URL + "notify_donate?")
-             .setParam(parms)
+
+    private void sendNotification() {
+        User user = PrefManager.getInstance(this).getUser();
+        progressBar.setVisibility(View.VISIBLE);
+        HashMap<String, String> parms = new HashMap<>();
+        parms.put("id_user", user.getId());
+        parms.put("message", "message user");
+        ApiCallBuilder.build(this)
+                .isShowProgressBar(false)
+                .setUrl(Constant.BASE_URL + "notify_donate?")
+                .setParam(parms)
 //                    .setFile("image", "file_path")
-             .execute(new ApiCallBuilder.onResponse() {
-                 @Override
-                 public void Success(String response) {
-                     Log.d(TAG, "respoLogin:" + response);
+                .execute(new ApiCallBuilder.onResponse() {
+                    @Override
+                    public void Success(String response) {
+                        Log.d(TAG, "respoLogin:" + response);
 
 
-                     try {
-                         JSONObject object = new JSONObject(response);
-                         String status = object.getString("status");
-                         String message = object.getString("message");
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            String message = object.getString("message");
 
-                         Log.e(TAG, "STATUS_:" + status);
+                            Log.e(TAG, "STATUS_:" + status);
 
-                         if (status.equals("1")) {
-                             progressBar.setVisibility(View.GONE);
+                            if (status.equals("1")) {
+                                progressBar.setVisibility(View.GONE);
 
-                             Toast.makeText(mContext, "Notification sended",
-                                     Toast.LENGTH_SHORT).show();
-
-
-
-                         }
+                                Toast.makeText(mContext, "Notification sended",
+                                        Toast.LENGTH_SHORT).show();
 
 
-                     } catch (JSONException e) {
-
-                         progressBar.setVisibility(View.GONE);
-                         Log.i(TAG, "errorL", e);
-                         Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
-                         e.printStackTrace();
-                     }
+                            }
 
 
-                 }
+                        } catch (JSONException e) {
 
-                 @Override
-                 public void Failed(String error) {
-                     progressBar.setVisibility(View.GONE);
-                     Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
-                 }
-             });
- }
+                            progressBar.setVisibility(View.GONE);
+                            Log.i(TAG, "errorL", e);
+                            Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+
+
+                    }
+
+                    @Override
+                    public void Failed(String error) {
+                        progressBar.setVisibility(View.GONE);
+                        Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+
     private void userLoginIn(View view) {
 
         final String email = et_Email.getText().toString();
@@ -380,8 +340,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             parms.put("password", pass);
             parms.put("type", "User");
             parms.put("register_id", Preference.get(LoginActivity.this, Preference.REGISTER_ID));
-            parms.put("lat", ""+latitude);
-            parms.put("lon", ""+longitude);
+            parms.put("lat", "" + latitude);
+            parms.put("lon", "" + longitude);
             ApiCallBuilder.build(this)
                     .isShowProgressBar(false)
                     .setUrl(Constant.BASE_URL + Constant.LOGIN)
@@ -431,7 +391,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 } else if (status.equals("0")) {
 
                                     progressBar.setVisibility(View.GONE);
-                                    Toast.makeText(mContext, ""+message, Toast.LENGTH_SHORT).show();
+                                    Toast.makeText(mContext, "" + message, Toast.LENGTH_SHORT).show();
                                 }
 
 
@@ -458,7 +418,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
     }
-
 
 
     public void RegisterUserBtn(View view) {
@@ -490,8 +449,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         Forgot_call(f_email, view, dialog);
                     }
 
-                }
-                else {
+                } else {
                     AlertConnection.showAlertDialog(LoginActivity.this, "No Internet Connection",
                             "You don't have internet connection.", false);
                 }
@@ -549,56 +507,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     }
 
 
-
-/*
-    //**************************GOOGLE Login *********************************************
-    private void googleSignIn() {
-        Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-        startActivityForResult(signInIntent, RC_SIGN_IN);
-    }
-
-
-    private void googleSignOut(){
-        mGoogleSignInClient.signOut()
-                .addOnCompleteListener(this, new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        // ...
-                    }
-                });
-    }
-
-
-    //******************Google Account Info fetch*****************************************
-    private void handleSignInResult(Task<GoogleSignInAccount> completedTask) {
-        try {
-            GoogleSignInAccount account = completedTask.getResult(ApiException.class);
-            try {
-
-                Log.e(TAG, "display name: " + account.getDisplayName()+"    "+account.getEmail()+"    "+ account.getId());
-                String personName = account.getDisplayName();
-//                String personPhotoUrl;
-//                try {
-//                    personPhotoUrl = account.getPhotoUrl().toString();
-//                } catch (Exception e) {
-//                    e.printStackTrace();
-//                    personPhotoUrl = "";
-//                }
-                String email = account.getEmail();
-                String socialId = account.getId();
-
-                socialLoginApi(personName,"", email, socialId);
-            }catch (Exception e){
-
-            }
-        } catch (ApiException e) {
-            // The ApiException status code indicates the detailed failure reason.
-            // Please refer to the GoogleSignInStatusCodes class reference for more information.
-            Log.w(TAG, "signInResult:failed code=" + e.getStatusCode());
-        }
-    }*/
-
-
     @Override
     public void onStart() {
         super.onStart();
@@ -648,27 +556,21 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             if (user != null) {
 
                                 try {
-
-
-                                  //  user.getPhoneNumber();
                                     socialLoginApi(user.getDisplayName(), String.valueOf(user.getPhotoUrl()),
-                                            user.getEmail(),"", user.getUid());
-                                }catch (Exception exception){
+                                            user.getEmail(), "", user.getUid());
+                                } catch (Exception exception) {
                                     exception.printStackTrace();
                                     System.out.println(exception);
 
-                                    Toast.makeText(mContext, ""+exception, Toast.LENGTH_LONG).show();
+                                    Toast.makeText(mContext, "" + exception, Toast.LENGTH_LONG).show();
                                 }
 
                             }
 
-// updateUI(user);
-
                         } else {
 // If sign in fails, display a message to the user.
                             Toast.makeText(mContext, "Authentication Failed.", Toast.LENGTH_SHORT).show();
-// Snackbar.make(mBinding.mainLayout, "Authentication Failed.", Snackbar.LENGTH_SHORT).show();
-// updateUI(null);
+
                         }
 
 // ...
@@ -687,8 +589,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         if (requestCode == GOOGLE_SIGN_IN_REQUEST_CODE) {
 // The Task returned from this call is always completed, no need to attach
 // a listener.
-/* Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
-handleSignInResult(task);*/
             Task<GoogleSignInAccount> task = GoogleSignIn.getSignedInAccountFromIntent(data);
             try {
 // Google Sign In was successful, authenticate with Firebase
@@ -709,7 +609,6 @@ handleSignInResult(task);*/
     public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.d(TAG, "onConnectionFailed:" + connectionResult);
     }
-
 
 
     //**********************Facebook Integration******************************************
@@ -749,7 +648,7 @@ handleSignInResult(task);*/
                             Log.e("username---->", "" + username);
                             Log.e("email---->", "" + email);
 
-                            socialLoginApi(username, imageUrl, email,"", socialId);
+                            socialLoginApi(username, imageUrl, email, "", socialId);
 
                         } catch (Exception e) {
 
@@ -766,7 +665,7 @@ handleSignInResult(task);*/
 
     }
 
-    private void socialLoginApi(String firstName, String imageUrl, String email,String mobile, String socialId) {
+    private void socialLoginApi(String firstName, String imageUrl, String email, String mobile, String socialId) {
 
         final ProgressDialog progressDialog;
         progressDialog = new ProgressDialog(LoginActivity.this);
@@ -788,9 +687,6 @@ handleSignInResult(task);*/
                         if (object.optString("status").equals("1")) {
                             JSONObject userData = object.optJSONObject("result");
                             Log.e("responseData", responseData);
-
-//                            PrefManager.setString(Constant.USER_ID, userData.optString("entity_id"));
-//                            PrefManager.setBoolean(Constant.IS_LOGIN, true);
 
                             User user = null;
                             if (userData != null) {

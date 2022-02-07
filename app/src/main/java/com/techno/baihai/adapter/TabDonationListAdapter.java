@@ -31,8 +31,6 @@ public class TabDonationListAdapter extends RecyclerView.Adapter<com.techno.baih
         this.myProductModeListls = MyProductModeListl;
     }
 
-//#f3fcff
-
 
     @NonNull
     @Override
@@ -60,7 +58,7 @@ public class TabDonationListAdapter extends RecyclerView.Adapter<com.techno.baih
             public void onClick(View view) {
 
 
-               // Toast.makeText(context, "Click:" + myProductModeListls.get(position).getProduct_name(), Toast.LENGTH_SHORT).show();
+                // Toast.makeText(context, "Click:" + myProductModeListls.get(position).getProduct_name(), Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent();
 
                 if (position == 0) {
@@ -77,8 +75,6 @@ public class TabDonationListAdapter extends RecyclerView.Adapter<com.techno.baih
                     intent.putExtra("productLat", myProductModeListls.get(position).getProduct_lat());
                     intent.putExtra("productLong", myProductModeListls.get(position).getProduct_lon());
                     intent.putExtra("productStatus", myProductModeListls.get(position).getProduct_price());
-
-
 
 
                     context.startActivity(intent);

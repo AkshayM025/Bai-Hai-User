@@ -47,7 +47,8 @@ public class DonationCategoryfragment extends Fragment {
         this.listener = listener;
     }
 
-    public DonationCategoryfragment() {}
+    public DonationCategoryfragment() {
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -61,27 +62,7 @@ public class DonationCategoryfragment extends Fragment {
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         View view = inflater.inflate(R.layout.activity_donation_category, container, false);
 
-     /*   mContext = getActivity();
-        isInternetPresent = SharedPrefManager.isNetworkConnected(mContext);
 
-
-        donation_recyclerView = view.findViewById(R.id.recycleViewCategory);
-        donation_recyclerView.setHasFixedSize(true);
-
-        LinearLayoutManager layoutManager
-                = new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false);
-
-
-        donation_recyclerView.setLayoutManager(layoutManager); // set LayoutManager to RecyclerView
-
-        categoryLists = new ArrayList<>();
-
-        if (isInternetPresent) {
-            GetCategory();
-        } else {
-            SharedPrefManager prefManager = new SharedPrefManager(mContext);
-            prefManager.showSettingsAlert(mContext);
-        }*/
         return view;
 
     }
@@ -94,10 +75,10 @@ public class DonationCategoryfragment extends Fragment {
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
-        String langua="EN";
-        String lang= PrefManager.get(mContext,"lang");
-        if (lang.equals("es")&& lang!=null){
-            langua="ES";
+        String langua = "EN";
+        String lang = PrefManager.get(mContext, "lang");
+        if (lang.equals("es") && lang != null) {
+            langua = "ES";
         }
 
         HashMap<String, String> param = new HashMap<>();
@@ -127,7 +108,7 @@ public class DonationCategoryfragment extends Fragment {
                                         JSONObject object1 = jArray.getJSONObject(i);
 
 
-                                       // Log.e(TAG, "resulti=>" + i);
+                                        // Log.e(TAG, "resulti=>" + i);
                                         String category_id = object1.getString("category_name");
 
                                         String category_name = object1.getString("category_name");

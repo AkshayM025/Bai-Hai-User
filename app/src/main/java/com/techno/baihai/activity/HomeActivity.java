@@ -120,16 +120,6 @@ public class HomeActivity extends AppCompatActivity
     }
 
 
-    /*  public void loadFragment(Fragment fragment) {
-
-        getSupportFragmentManager().beginTransaction().
-
-                replace(R.id.frameContainer, fragment)
-                .addToBackStack("home").commit();
-
-    }*/
-
-
     @SuppressLint("NonConstantResourceId")
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
@@ -145,10 +135,6 @@ public class HomeActivity extends AppCompatActivity
                 }
 
                 break;
-           /* case R.id.search:
-                setColorOnBar(R.color.colorWhite);
-                loadFragment(new SearchFragment(this));
-                break;*/
             case R.id.chat:
                 setColorOnBar(R.color.colorPrimaryDark);
                 loadFragment(new ChatFragment(this));
@@ -157,16 +143,13 @@ public class HomeActivity extends AppCompatActivity
                 setColorOnBar(R.color.colorPrimaryDark);
                 startActivity(new Intent(HomeActivity.this, AccountActivity.class));
                 break;
-           /* case R.id.search:
-                setColorOnBar(R.color.colorPrimaryDark);
-                startActivity(new Intent(HomeActivity.this, DriverInfoActivity.class));
-                break;*/
         }
 
         return true;
 
     }
-    private void sendNotification(){
+
+    private void sendNotification() {
         User user = PrefManager.getInstance(this).getUser();
         HashMap<String, String> parms = new HashMap<>();
         parms.put("id_user", user.getId());
@@ -181,7 +164,7 @@ public class HomeActivity extends AppCompatActivity
                     public void Success(String response) {
                         Log.d(TAG, "respoLogin:" + response);
 
-                        if (!response.equals("\r\n")){
+                        if (!response.equals("\r\n")) {
                             try {
                                 JSONObject object = new JSONObject(response);
                                 String status = object.getString("status");
@@ -205,7 +188,7 @@ public class HomeActivity extends AppCompatActivity
                                 Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             }
-                    }
+                        }
 
                     }
 
@@ -215,23 +198,22 @@ public class HomeActivity extends AppCompatActivity
                     }
                 });
     }
+
     public void LegalInfo(View view) {
-        //progressBar.setVisibility(View.VISIBLE);
         User user = PrefManager.getInstance(this).getUser();
 
 
         String legal = user.getLegalinfo();
 
         if (legal.equals("0")) {
-            String langua="Yes";
-            String langua1="No";
-            String lang=PrefManager.get(mContext,"lang");
-            if (lang.equals("es")&& lang!=null){
-                langua="Si";
-                langua1="No";
+            String langua = "Yes";
+            String langua1 = "No";
+            String lang = PrefManager.get(mContext, "lang");
+            if (lang.equals("es") && lang != null) {
+                langua = "Si";
+                langua1 = "No";
 
             }
-            //  progressBar.setVisibility(View.GONE);
             android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(mContext);
             // Configura el titulo.
             alertDialogBuilder.setTitle(getResources().getString(R.string.legal_information));
@@ -255,7 +237,6 @@ public class HomeActivity extends AppCompatActivity
                     }).create().show();
 
 
-
         }
 
 
@@ -268,10 +249,10 @@ public class HomeActivity extends AppCompatActivity
 
     void setLegal() {
         User user = PrefManager.getInstance(this).getUser();
-        String email=null;
-        if(user.getEmail() == ""){
-           email = user.getPassword();
-        }else{
+        String email = null;
+        if (user.getEmail() == "") {
+            email = user.getPassword();
+        } else {
             email = user.getEmail();
         }
 
@@ -283,24 +264,24 @@ public class HomeActivity extends AppCompatActivity
                 .setParam(parms1)
                 .execute(new ApiCallBuilder.onResponse() {
                     public void Success(String response) {
-                        try{
-                        Log.d(TAG, "respoLogin:" + response);
-                        JSONObject object = new JSONObject(response);
-                        String message = object.getString("message");
-                        User user2 = new User(
-                                user.getId(),
-                                user.getUsername(),
-                                user.getEmail(),
-                                user.getPassword(),
-                                user.getPhone(),
-                                user.getImage(),
-                                "1",
-                                user.getGuide(),
-                                user.getGuideFree(),
-                                user.getGuideGiveFree()
-                        );
+                        try {
+                            Log.d(TAG, "respoLogin:" + response);
+                            JSONObject object = new JSONObject(response);
+                            String message = object.getString("message");
+                            User user2 = new User(
+                                    user.getId(),
+                                    user.getUsername(),
+                                    user.getEmail(),
+                                    user.getPassword(),
+                                    user.getPhone(),
+                                    user.getImage(),
+                                    "1",
+                                    user.getGuide(),
+                                    user.getGuideFree(),
+                                    user.getGuideGiveFree()
+                            );
 
-                        PrefManager.getInstance(getApplicationContext()).userLogin(user2);
+                            PrefManager.getInstance(getApplicationContext()).userLogin(user2);
 
                         } catch (JSONException e) {
 
@@ -329,23 +310,7 @@ public class HomeActivity extends AppCompatActivity
     @Override
     public void onBackPressed() {
         if (getSupportFragmentManager().getBackStackEntryCount() == 1) {
-            //ExitApp();
-            //                super.onBackPressed();
-           /* if (doubleBackToExitPressedOnce) {
-                super.onBackPressed();
-            }
 
-            this.doubleBackToExitPressedOnce = true;
-            Toast.makeText(this, "Please click BACK again to exit", Toast.LENGTH_SHORT).show();
-
-            new Handler().postDelayed(new Runnable() {
-
-                @Override
-                public void run() {
-                    doubleBackToExitPressedOnce=false;
-                }
-            }, 1000);
-*/
             if (getSupportFragmentManager().getBackStackEntryCount() <= 0) {
                 finish();
             }
@@ -368,14 +333,9 @@ public class HomeActivity extends AppCompatActivity
         } else if (getSupportFragmentManager().getBackStackEntryCount() > 1) {
             fragmentManager = getSupportFragmentManager();
             fragmentManager.popBackStack();
-
-            //for (int i = 1; i < fragmentManager.getBackStackEntryCount(); ++i) { }
         }
 
     }
-
-
-
 
 
 }

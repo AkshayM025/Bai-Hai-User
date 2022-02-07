@@ -109,14 +109,7 @@ public class CategoryFragment extends Fragment {
 
         heart_searchfragId = view.findViewById(R.id.heart_searchfragId);
 
-       /* heart_searchfragId.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivityForResult(new Intent(getActivity(), PinLocationActivity.class), AUTOCOMPLETE_REQUEST_CODE);
 
-            }
-        });
-*/
 
 
         category_recyclerView = view.findViewById(R.id.recycleViewCategory);
@@ -152,47 +145,7 @@ public class CategoryFragment extends Fragment {
         }
 
 
-     /*   search_Category = view.findViewById(R.id.search_Category);
 
-        search_Category.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable editable) {
-                if (isInternetPresent) {
-                    GetSearchCategory();
-                } else {
-                    PrefManager prefManager = new PrefManager(mContext);
-                    PrefManager.showSettingsAlert(mContext);
-                }
-
-            }
-        });
-*/
-
-       /* cat_refresh = view.findViewById(R.id.cat_refresh);
-        cat_refresh.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                if (isInternetPresent) {
-                    final Animation myAnim = AnimationUtils.loadAnimation(getActivity(), R.anim.rotate);
-                    cat_refresh.startAnimation(myAnim);
-                    GetCategory();
-                } else {
-                    PrefManager prefManager = new PrefManager(mContext);
-                    PrefManager.showSettingsAlert(mContext);
-                }
-            }
-        });*/
 
 
         sliderView = view.findViewById(R.id.imageSlider);
@@ -225,10 +178,7 @@ public class CategoryFragment extends Fragment {
                 String postalCode = addresses.get(0).getPostalCode();
                 String knownName = addresses.get(0).getFeatureName();
 
-                // result.append(address.getLocality()).append("\n");
-                // result.append(address.getCountryName());
                 Log.e("Addresss===",addressStreet + " " + city + " " + country);
-                // tvServiceLocation.setText(addressStreet + " " + city + " " + country);
                 heart_searchfragId.setText(city+" "+country);
             }
         } catch (IOException e) {
@@ -311,8 +261,6 @@ public class CategoryFragment extends Fragment {
                                         String product_lon=object1.getString("lon");
 
 
-                                        // mSliderItems.add(new SliderItem(category_name, imageUrl));
-                                        //adapter.notifyDataSetChanged();
 
 
                                         myProductModeListls.add(new MyProductModeListl(product_id,seller_id,
@@ -355,7 +303,6 @@ public class CategoryFragment extends Fragment {
                     public void Failed(String error) {
 
                         progressDialog.dismiss();
-                        //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
                         Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
@@ -385,101 +332,6 @@ public class CategoryFragment extends Fragment {
             track.showSettingsAlert();
         }
     }
-
-
-   /* private void GetSearchCategory()   {
-
-
-  */
-    /*      final ProgressDialog progressDialog;
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Please wait...");
-        progressDialog.show();
-*/
-    /*
-        searchTxt = search_Category.getText().toString().trim();
-        Toast.makeText(mContext, "searchTxt=>" + searchTxt, Toast.LENGTH_SHORT).show();
-
-
-        HashMap<String, String> param = new HashMap<>();
-        param.put("name", searchTxt);
-        // param.put("lon",longitude);
-
-        ApiCallBuilder.build(getActivity())
-                .isShowProgressBar(false)
-                .setUrl(Constant.BASE_URL + "category_search?") //http://bai-hai.com/webservice/category_search?
-                .setParam(param)
-                .execute(new ApiCallBuilder.onResponse() {
-                    @Override
-                    public void Success(String response) {
-                        Log.e("ResponseS=>", "" + response);
-                        // progressDialog.dismiss();
-                        try {
-                            JSONObject object = new JSONObject(response);
-                            String status = object.optString("status");
-                            String message = object.optString("message");
-                            if (status.equals("1")) {
-
-                                JSONArray jArray = object.optJSONArray("result");
-                                Log.e(TAG, "result=>" + jArray);
-
-                                categoryLists.clear();
-
-
-                                assert jArray != null;
-                                for (int i = 0; i < jArray.length(); i++) {
-
-
-                                    JSONObject object1 = jArray.getJSONObject(i);
-
-
-                                    Log.e(TAG, "resulti=>" + i);
-                                    final String category_id = object1.getString("id");
-
-                                    final String category_name = object1.getString("category_name");
-                                    final String imageUrl = object1.getString("image");
-                                    Log.e(TAG, "cateSName=>" + category_name);
-
-
-                                    categoryLists.add(new CategoryList(category_id, category_name, imageUrl));
-                                    Toast.makeText(mContext, "cat=> " + category_name, Toast.LENGTH_SHORT).show();
-
-                                    category_mAdapter.notifyDataSetChanged();
-
-                                }
-
-
-                            } else {
-                            categoryLists.clear();
-                            category_recyclerView.removeAllViews();
-                            Toast.makeText(mContext, "Search Not Match", Toast.LENGTH_SHORT).show();
-                        }
-
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                            Toast.makeText(mContext, "Check Your Network: " + e, Toast.LENGTH_SHORT).show();
-
-
-                        }
-                        category_mAdapter = new CategoryAdapter(getActivity(), categoryLists);
-
-                        category_recyclerView.removeAllViews();
-                        category_recyclerView.setAdapter(category_mAdapter);
-
-
-                    }
-
-                    @Override
-                    public void Failed(String error) {
-
-                        //  progressDialog.dismiss();
-                        //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
-                        Toast.makeText(mContext, "check your network" + error, Toast.LENGTH_SHORT).show();
-                    }
-                });
-
-
-    }*/
 
 
     private void GetCategory() {
@@ -579,7 +431,6 @@ public class CategoryFragment extends Fragment {
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
             lat = data.getExtras().getDouble("lat");
             lng = data.getExtras().getDouble("lng");
-            // heart_searchfragId.setText(Tools.getCompleteAddressString(getActivity(),lat,lng));
         }
 
     }

@@ -40,8 +40,6 @@ public class RatingActivity extends AppCompatActivity {
     private Boolean isInternetPresent = false;
 
 
-
-
     private CardView Id_card_submit;
     private RatingBar Id_rating;
     private EditText et_feedbackId;
@@ -68,16 +66,13 @@ public class RatingActivity extends AppCompatActivity {
         getCurrentLocation();
 
 
-
-
-        Id_rating=findViewById(R.id.Id_rating);
-        et_feedbackId=findViewById(R.id.et_feedbackId);
-        Id_card_submit=findViewById(R.id.Id_card_submit);
+        Id_rating = findViewById(R.id.Id_rating);
+        et_feedbackId = findViewById(R.id.et_feedbackId);
+        Id_card_submit = findViewById(R.id.Id_card_submit);
 
 
         //provider_id = getIntent().getStringExtra("driver_id");
-        request_id  = getIntent().getStringExtra("request_id");
-
+        request_id = getIntent().getStringExtra("request_id");
 
 
         Id_card_submit.setOnClickListener(new View.OnClickListener() {
@@ -88,15 +83,12 @@ public class RatingActivity extends AppCompatActivity {
                 } else {
                     PrefManager prefManager = new PrefManager(mContext);
                     PrefManager.showSettingsAlert(mContext);
-            /*AlertConnection.showAlertDialog(mContext, "No Internet Connection",
-                    "You don't have internet connection.", false);*/
                 }
 
             }
         });
 
     }
-
 
 
     private void getCurrentLocation() {
@@ -109,8 +101,6 @@ public class RatingActivity extends AppCompatActivity {
             longitude = String.valueOf(track.getLongitude());
             Log.e("lon=>", "-------->" + longitude);
 
-            //latLng = new LatLng(latitude, longitude);
-
         } else {
             track.showSettingsAlert();
         }
@@ -120,8 +110,7 @@ public class RatingActivity extends AppCompatActivity {
     private void RatingValidateApi(View view) {
 
         String user_rating = String.valueOf(Id_rating.getRating());
-         String user_feedback = et_feedbackId.getText().toString().trim();
-        //String profile_pic = getStringImage(bitmap);
+        String user_feedback = et_feedbackId.getText().toString().trim();
 
 
         if (Id_rating.getRating() == 0.0) {
@@ -139,12 +128,6 @@ public class RatingActivity extends AppCompatActivity {
 
     private void UserFeedbackApi(final String user_rating, String user_feedback, final View view) {
 
-        //* http://bai-hai.com/webservice/add_rating?
-        // user_id=1&
-        // provider_id=1&
-        // request_id=1&
-        // review=good%20service&
-        // rating=5
 
         final ProgressDialog progressDialog;
         progressDialog = new ProgressDialog(mContext);
@@ -208,14 +191,6 @@ public class RatingActivity extends AppCompatActivity {
 
 
     }
-
-
-
-
-
-
-
-
 
 
     public void OnBackRating(View view) {

@@ -235,21 +235,10 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
                 } else {
                     PrefManager prefManager = new PrefManager(mContext);
                     PrefManager.showSettingsAlert(mContext);
-            /*AlertConnection.showAlertDialog(mContext, "No Internet Connection",
-                    "You don't have internet connection.", false);*/
                 }
 
             }
         });
-
-      /*  pickImg = findViewById(R.id.image1);
-
-        pickImg.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-            }
-        });*/
 
 
         if (isInternetPresent) {
@@ -257,58 +246,12 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
         } else {
             PrefManager prefManager = new PrefManager(mContext);
             PrefManager.showSettingsAlert(mContext);
-            /*AlertConnection.showAlertDialog(mContext, "No Internet Connection",
-                    "You don't have internet connection.", false);*/
         }
 
-  /*      try {
-
-
-//        places=(AutoCompleteTextView)view.findViewById(R.id.places);
-            adapter = new MyPlacesAdapter(getActivity());
-
-            et_productLocation.setAdapter(adapter);
-// text changed listener to get results precisely according to our search
-            et_productLocation.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-                    if (count > 0) {
-//calling getfilter to filter the results
-                        adapter.getFilter().filter(s);
-//notify the adapters after results changed
-                        adapter.notifyDataSetChanged();
-                    }
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                }
-            });
-
-// handling click of autotextcompleteview items
-
-            et_productLocation.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    MyGooglePlaces googlePlaces = (MyGooglePlaces) parent.getItemAtPosition(position);
-                    et_productLocation.setText(googlePlaces.getAddress());
-                    p_lat = String.valueOf(googlePlaces.getLatitude());
-                    p_lng = String.valueOf(googlePlaces.getLongitude());
-                }
-            });
-        }
-        catch (Exception e) {
-            Toast.makeText(mContext, "Not Found..Try again..!!"+ e, Toast.LENGTH_SHORT).show();
-        }*/
         image2 = findViewById(R.id.image1);
         photos_viewpager = findViewById(R.id.photos_viewpager);
         rl_Pager = findViewById(R.id.rl_Pager);
         sliderDotspanel = findViewById(R.id.SliderDots);
-
 
 
         image2.setOnClickListener(v -> {
@@ -322,8 +265,6 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
                         public void onPermissionsChecked(MultiplePermissionsReport report) {
                             if (report.areAllPermissionsGranted()) {
 
-                               // showPictureDialog();
-                              //  Pix.start(ProductDonateActivity.this,100);
                                 try {
 
 
@@ -339,13 +280,10 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
                                             .setPath("pix/bai-hai");                                       //Custom Path For media Storage
 
                                     Pix.start(ProductDonateActivity.this, options);
-                                }catch (Exception e){
+                                } catch (Exception e) {
                                     Log.i(TAG, "cdfcsef: " + e.getMessage());
 
                                 }
-
-                                // Pix.start(ProductDonateActivity.this, Options.init().setRequestCode(100));
-
 
 
                             } else {
@@ -366,17 +304,6 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
         });
 
         binding.btnRemoveimage.setVisibility(View.GONE);
- /*       binding.btnRemoveimage.setOnClickListener(v -> {
-            ProSliderAdapter proSliderAdapter= new ProSliderAdapter(this);
-
-                new ProSliderAdapter(this).deleteItem(binding.imageSlider.getCurrentPagePosition());
-                proSliderAdapter.notifyDataSetChanged();
-           *//* }else {
-                binding.imageSlider.setVisibility(View.GONE);
-                binding.btnRemoveimage.setVisibility(View.GONE);
-                binding.image1.setVisibility(View.VISIBLE);
-            }*//*
-        });*/
 
 
     }
@@ -385,7 +312,6 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
     public void onItemSelected(AdapterView<?> adapterView, View view, int poistion, long l) {
 
 
-        //  Toast.makeText(mContext, "Select: "+adapterView.getItemIdAtPosition(poistion), Toast.LENGTH_SHORT).show();
         catid = String.valueOf(adapterView.getSelectedItemId());
         Log.i(TAG, "catId=>" + catid);
     }
@@ -399,52 +325,6 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
     }
 
 
-
-
-
-/*    public File saveBitmapToFile(File file){
-        try {
-
-            // BitmapFactory options to downsize the image
-            BitmapFactory.Options o = new BitmapFactory.Options();
-            o.inJustDecodeBounds = true;
-            o.inSampleSize = 6;
-            // factor of downsizing the image
-
-            FileInputStream inputStream = new FileInputStream(file);
-            //Bitmap selectedBitmap = null;
-            BitmapFactory.decodeStream(inputStream, null, o);
-            inputStream.close();
-
-            // The new size we want to scale to
-            final int REQUIRED_SIZE=75;
-
-            // Find the correct scale value. It should be the power of 2.
-            int scale = 1;
-            while(o.outWidth / scale / 2 >= REQUIRED_SIZE &&
-                    o.outHeight / scale / 2 >= REQUIRED_SIZE) {
-                scale *= 2;
-            }
-
-            BitmapFactory.Options o2 = new BitmapFactory.Options();
-            o2.inSampleSize = scale;
-            inputStream = new FileInputStream(file);
-
-            Bitmap selectedBitmap = BitmapFactory.decodeStream(inputStream, null, o2);
-            inputStream.close();
-
-            // here i override the original image file
-            file.createNewFile();
-            FileOutputStream outputStream = new FileOutputStream(file);
-
-            selectedBitmap.compress(Bitmap.CompressFormat.JPEG, 100 , outputStream);
-
-            return file;
-        } catch (Exception e) {
-            return null;
-        }
-    }*/
-
     private void getCurrentLocation() {
 
         GPSTracker track = new GPSTracker(mContext);
@@ -455,16 +335,15 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
             longitude = String.valueOf(track.getLongitude());
             Log.e("lon=>", "-------->" + longitude);
 
-            //latLng = new LatLng(latitude, longitude);
-
         } else {
             track.showSettingsAlert();
         }
     }
+
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
-        if ( progressDialog!=null && progressDialog.isShowing() ){
+        if (progressDialog != null && progressDialog.isShowing()) {
             progressDialog.cancel();
         }
     }
@@ -480,6 +359,7 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
             }
         }
     }
+
     private void Validate(View view) {
 
         String p_name = et_productName.getText().toString();
@@ -507,121 +387,6 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
         }
     }
 
-
-
-/*
-    private void ProductDonate(final String uid, String p_name, String p_description, String p_location, final View view) {
-        //  http://bai-hai.com/webservice/add_product_by_user?name=testproduct&description=thisis%20test&address=vijay&
-        // lat=789456&lon=5464&category_id=1&user_id=12
-        try {
-            if (pathOfImg == null) {
-                CustomSnakbar.showSnakabar(mContext, view, "Please Select a Product Image");
-
-            } else if (usedTxt == null) {
-                CustomSnakbar.showSnakabar(mContext, view, "Please Select a Product Used");
-
-            } else {
-                final ProgressDialog progressDialog;
-                progressDialog = new ProgressDialog(getActivity());
-                progressDialog.setMessage("Please wait...");
-                progressDialog.show();
-
-
-                HashMap<String, String> parms = new HashMap<>();
-                parms.put("user_id", uid);
-                parms.put("name", p_name);
-                parms.put("description", p_description);
-                parms.put("address", p_location);
-                parms.put("used", usedTxt);
-                parms.put("category_id", catid);
-                parms.put("lat", latitude);
-                parms.put("lon", longitude);
-
-
-                ApiCallBuilder.build(getActivity())
-                        .isShowProgressBar(false)
-                        .setUrl(Constant.BASE_URL + "add_product_by_user?")
-                        .setParam(parms)
-                        .setFile("image1", pathOfImg)
-                        .execute(new ApiCallBuilder.onResponse() {
-                            @Override
-                            public void Success(String response) {
-                                progressDialog.dismiss();
-                                Log.e("Responsep=>", "" + response);
-
-
-                                Log.e("selectedImagePath=>", "-------->" + pathOfImg);
-
-
-                                try {
-
-                                    JSONObject object = new JSONObject(response);
-                                    String status = object.optString("status");
-                                    String message = object.optString("message");
-                                    if (status.equals("1")) {
-
-
-                                        et_productName.setText("");
-                                        et_productDesc.setText("");
-                                        et_productLocation.setText("");
-
-
-    // CustomSnakbar.showSnakabar(mContext, view, "Thankyou for Donation\nplease check your email for further instructions!");
-                                        androidx.appcompat.app.AlertDialog.Builder builder =
-                                                new androidx.appcompat.app.AlertDialog.Builder(getActivity());
-                                        builder.setTitle("Donation");
-                                        builder.setMessage("Your Product Donated\nplease check your email for further instructions!");
-                                        builder.setPositiveButton("OK",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog,
-                                                                        int which) {
-                                                        getActivity().finish();
-
-                                                    }
-                                                });
-                                        builder.show();
-
-                                        startActivity(new Intent(mContext, ThankyouPointActivity.class));
-                                        Animatoo.animateInAndOut(mContext);
-
-
-                                    } else {
-                                        progressDialog.dismiss();
-
-                                        CustomSnakbar.showDarkSnakabar(getContext(), view, "" + message);
-                                    }
-
-                                }
-                                catch (JSONException e) {
-
-                                    progressDialog.dismiss();
-                                    // Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
-                                    e.printStackTrace();
-                                }
-
-
-                            }
-
-                            @Override
-                            public void Failed(String error) {
-                                progressDialog.dismiss();
-                                Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
-                            }
-                        });
-            }
-        } catch (Exception e) {
-            //progressDialog.dismiss();
-
-            Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-
-        }
-
-
-    }
-
-
- */
 
     private void UploadProductToStoreApi(final String uid, String p_name, String p_description,
                                          String p_location, final View view) {
@@ -681,20 +446,6 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
                                     et_productDesc.setText("");
                                     et_productLocation.setText("");
 
-                                    /*    // CustomSnakbar.showSnakabar(mContext, view, "Thankyou for Donation\nplease check your email for further instructions!");
-                                        androidx.appcompat.app.AlertDialog.Builder builder =
-                                                new androidx.appcompat.app.AlertDialog.Builder(getActivity());
-                                        builder.setTitle("Donation");
-                                        builder.setMessage("Your Product Donated\nplease check your email for further instructions!");
-                                        builder.setPositiveButton("OK",
-                                                new DialogInterface.OnClickListener() {
-                                                    public void onClick(DialogInterface dialog,
-                                                                        int which) {
-                                                        getActivity().finish();
-
-                                                    }
-                                                });
-                                        builder.show();*/
 
                                     finish();
                                     startActivity(new Intent(mContext, ThankyouPointActivity.class));
@@ -710,7 +461,6 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
                             } catch (JSONException e) {
 
                                 progressDialog.dismiss();
-                                // Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             }
 
@@ -727,52 +477,16 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
         }
     }
 
-  /*  private void selectImage() {
-        final PickImageDialog dialog = PickImageDialog.build(new PickSetup());
-        dialog.setOnPickCancel(new IPickCancel() {
-            @Override
-            public void onCancelClick() {
-                dialog.dismiss();
-            }
-        }).setOnPickResult(new IPickResult() {
-            @Override
-            public void onPickResult(PickResult r) {
-
-                if (r.getError() == null) {
-                    //If you want the Uri.
-                    //Mandatory to refresh image from Uri.
-                    //getImageView().setImageURI(null);
-                    //Setting the real returned image.
-                    //getImageView().setImageURI(r.getUri());
-                    //If you want the Bitmap.
-                    Glide.with(mContext).load(r.getUri()).error(R.drawable.user).into(pickImg);
-
-//                    binding.image.setImageBitmap(r.getBitmap());
-                    image = r.getPath();
-                    Log.e("Imagepath", image);
-
-                    //r.getPath();
-                } else {
-                    //Handle possible errors
-                    //TODO: do what you have to do with r.getError();
-                    Toast.makeText(mContext, r.getError().getMessage(), Toast.LENGTH_LONG).show();
-                }
-
-            }
-
-        }).show(getActivity());
-    }*/
-
     private void GetCategory() {
 
 
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
-        String langua="EN";
-        String lang=PrefManager.get(mContext,"lang");
-        if (lang.equals("es")&& lang!=null){
-            langua="ES";
+        String langua = "EN";
+        String lang = PrefManager.get(mContext, "lang");
+        if (lang.equals("es") && lang != null) {
+            langua = "ES";
         }
 
         HashMap<String, String> param = new HashMap<>();
@@ -817,13 +531,7 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
                                             String imageUrl = object1.getString("image");
 
 
-                                            //subscriptionsList.add(new CategoryList(category_id,category_name,imageUrl));
-
                                             category.add(category_name);
-
-                                            //Log.i(TAG, "cat=>" + category);
-
-                                            // subscriptionsList.add(new CategoryList(category_id,category_name,imageUrl));
 
 
                                         }
@@ -903,7 +611,7 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
 
     public void choosePhotoFromGallary() {
 
-            Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+        Intent pickPhoto = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(pickPhoto, 1);
     }
@@ -942,58 +650,9 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
                 binding.imageSlider.startAutoCycle();
 
 
-
-     /*       dotscount = myPagerAdapter.getCount();
-            dots = new ImageView[dotscount];
-
-            for (int i = 0; i < dotscount; i++) {
-
-                dots[i] = new ImageView(this);
-                dots[i].setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
-                        R.drawable.non_active_dot));
-
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-
-                params.setMargins(8, 0, 8, 0);
-
-                sliderDotspanel.addView(dots[i], params);
-
-            }
-
-            dots[0].setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
-                    R.drawable.active_dot));
-
-            photos_viewpager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-                @Override
-                public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-                }
-
-                @Override
-                public void onPageSelected(int pos) {
-
-                    for (int i = 0; i < dotscount; i++) {
-                        dots[i].setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
-                                R.drawable.non_active_dot));
-                    }
-
-                    dots[pos].setImageDrawable(ContextCompat.getDrawable(getApplicationContext(),
-                            R.drawable.active_dot));
-
-
-                }
-
-                @Override
-                public void onPageScrollStateChanged(int i) {
-
-                }
-
-
-            });*/
-
                 SharePost();
             }
-        }catch (Exception e){
+        } catch (Exception e) {
             Log.e("TAG", "cdsf" + e.getMessage());
 
         }
@@ -1003,8 +662,6 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
             et_productLocation.setText(Tools.getCompleteAddressString(mContext, lat, lng));
             Log.e("TAG", "latisda" + lat);
             Log.e("TAG", "longidbh" + lng);
-
-            //et_productLocation.setText(test);
         }
     }
 
@@ -1047,23 +704,8 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
                 Log.e("bfgbf", String.valueOf(fileHashMap));
 
 
-
-
-             /*   if (path.equalsIgnoreCase("")) {
-                    System.out.print(path);
-                    MultipartBody.Part body = MultipartBody.Part.createFormData("image[]", "");
-                  //  images.add(body);
-                }
-                else {
-                    System.out.print(path);
-                    File file = new File(path);
-                    RequestBody requestFile = RequestBody.create(MediaType.parse("multipart/form-data"), file);
-                    MultipartBody.Part body = MultipartBody.Part.createFormData("image[]", file.getName(), requestFile);
-                   // images.add(body);
-                }*/
             }
 
-            //  AddPost(uid,postdesc,tags,location,images,v);
 
         } else {
 
@@ -1072,94 +714,6 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
 
 
     }
-
-
-/*
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        switch (requestCode) {
-            case 0:
-                if (resultCode == RESULT_OK) {
-
-//                    Uri selectedImage = data.getData();
-//
-//                    Bitmap bitmap = (Bitmap) data.getExtras().get("data");
-//
-//                    user_profile.setImageBitmap(bitmap);
-
-                    try {
-                        Bundle extras = data.getExtras();
-                        Bitmap imageBitmap = (Bitmap) extras.get("data");
-
-                        pickImg.setImageBitmap(imageBitmap);
-
-                        // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
-                        Uri tempUri = getImageUri(mContext, imageBitmap);
-
-                        // CALL THIS METHOD TO GET THE ACTUAL PATH
-//                        Toast.makeText(SignUpActivity.this,"Here "+ getRealPathFromURI(tempUri), Toast.LENGTH_LONG).show();
-
-
-                        pathOfImg = RealPathUtil.getRealPath(mContext, tempUri);
-                        file1 = new File(pathOfImg);
-                       // Toast.makeText(mContext, "CamHerePath" + pathOfImg, Toast.LENGTH_LONG).show();
-
-                        image = pathOfImg;
-
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        Toast.makeText(mContext, ""+e, Toast.LENGTH_SHORT).show();
-                    }
-                }
-                break;
-            case 1:
-                if (resultCode == RESULT_OK) {
-
-                    Uri selectedImage = data.getData();
-
-                    try {
-
-                        Bitmap bitmap = MediaStore.Images.Media.getBitmap(mContext.getContentResolver(), selectedImage);
-
-                        pickImg.setImageBitmap(bitmap);
-
-
-                        // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
-                        Uri tempUri = getImageUri(mContext, bitmap);
-
-                        // CALL THIS METHOD TO GET THE ACTUAL PATH
-//                        Toast.makeText(SignUpActivity.this,"Here "+ getRealPathFromURI(tempUri), Toast.LENGTH_LONG).show();
-
-
-                        pathOfImg = RealPathUtil.getRealPath(mContext, tempUri);
-                        file1 = new File(pathOfImg);
-
-                       // Toast.makeText(mContext, "galleryHerePath" + pathOfImg, Toast.LENGTH_LONG).show();
-
-                        image = pathOfImg;
-
-                    } catch (IOException e) {
-                        Log.i("TAG", "Some exception " + e);
-                    }
-
-                }
-
-
-        }
-        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
-            lat = data.getExtras().getDouble("lat");
-            lng = data.getExtras().getDouble("lng");
-            et_productLocation.setText(Tools.getCompleteAddressString(mContext, lat, lng));
-            Log.e("TAG", "latisda" + lat);
-            Log.e("TAG", "longidbh" + lng);
-
-            //et_productLocation.setText(test);
-        }
-
-
-    }*/
 
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
@@ -1220,7 +774,6 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
         Context context;
         LayoutInflater layoutInflater;
         ArrayList<String> imgArrayList;
-//        int[] img = {R.drawable.roomimg, R.drawable.img, R.drawable.img};
 
 
         public MyPagerAdapter(Context mContext, ArrayList<String> img) {
@@ -1248,9 +801,6 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
             layoutInflater = (LayoutInflater) context.getSystemService(mContext.LAYOUT_INFLATER_SERVICE);
             View view = layoutInflater.inflate(R.layout.pager_img_layout, null);
             ImageView images = (ImageView) view.findViewById(R.id.imageView);
-            //   ImageView btn_removeimage = (ImageView) view.findViewById(R.id.btn_removeimage);
-
-//            images.setImageResource(imgArrayList.get(position));
             Log.e("image=", "" + imgArrayList.get(position));
             File imgFile = new File(imgArrayList.get(position));
             final int delPosition = position;
@@ -1262,8 +812,7 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
                 images.setImageBitmap(myBitmap);
 
             }
-            ;
-//            Picasso.get().load(imgArrayList.get(position)).into(images);
+
 
             photos_viewpager = (ViewPager) container;
             photos_viewpager.addView(view, 0);

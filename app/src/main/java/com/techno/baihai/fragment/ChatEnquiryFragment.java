@@ -79,7 +79,6 @@ public class ChatEnquiryFragment extends Fragment {
         uid = String.valueOf(user.getId());
         Log.i("TAG", "user_id: " + uid);
 
-        // Log.e("SellerId=>", PrefManager.getString("SellerId"));
         txt_idNodataFound = view.findViewById(R.id.txt_idNodataFound);
 
         chatEnquiry_recyclerView = view.findViewById(R.id.chat_enquiry_recyclerview);
@@ -135,7 +134,6 @@ public class ChatEnquiryFragment extends Fragment {
 
 
                                 JSONArray result = object.optJSONArray("result");
-                                //  Log.e("TAG", "result=>" + result);
 
 
                                 if (result != null) {
@@ -148,7 +146,7 @@ public class ChatEnquiryFragment extends Fragment {
                                             String chat_username = "null";
                                             if (object2 != null) {
                                                 chat_username = object2.getString("name");
-                                                 chat_usernameId = object2.getString("id");
+                                                chat_usernameId = object2.getString("id");
 
                                             }
                                             String chat_imgUrl = "null";
@@ -159,8 +157,8 @@ public class ChatEnquiryFragment extends Fragment {
                                             Log.e("", "name=>" + chat_username);
 
                                             String request_id = object1.optString("id");
-                                            String product_name = object1.optString("name") ;
-                                            String product_message = "Name product: "+object3.optString("name")+"  -   "+object1.optString("message");
+                                            String product_name = object1.optString("name");
+                                            String product_message = "Name product: " + object3.optString("name") + "  -   " + object1.optString("message");
                                             String enquiry_time = object1.optString("date_time");
                                             String enquiry_status = object1.optString("status");
 
@@ -183,13 +181,10 @@ public class ChatEnquiryFragment extends Fragment {
                             } else {
 
                                 txt_idNodataFound.setVisibility(View.VISIBLE);
-                                // Toast.makeText(mContext, "You don't have an any request" + message, Toast.LENGTH_LONG).show();
                             }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            //Toast.makeText(mContext, "Check Your Network: " , Toast.LENGTH_LONG).show();
-
 
                         }
 
@@ -210,14 +205,12 @@ public class ChatEnquiryFragment extends Fragment {
                     public void Failed(String error) {
 
                         progressDialog.dismiss();
-                        //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
                         Toast.makeText(mContext, "Check Your Network: " + error, Toast.LENGTH_LONG).show();
                     }
                 });
 
 
     }
-
 
 
     private void GetProfile(String uid) {
@@ -240,14 +233,11 @@ public class ChatEnquiryFragment extends Fragment {
                             String status = object.optString("status");
                             String message = object.optString("message");
                             if (status.equals("1")) {
-                                //  loading_spinnerId.setVisibility(View.GONE);
 
 
                                 //   https://www.shipit.ng/BaiHai/webservice/get_profile?user_id=1
 
                                 JSONObject result = object.optJSONObject("result");
-                                //String id = result.optString("id");
-                                //Log.e("resultt=>", "" + response);
 
 
                                 String user_ID = "null";
@@ -290,13 +280,10 @@ public class ChatEnquiryFragment extends Fragment {
                                 if (result != null) {
                                     guide_give_free = result.optString("guide_give_free");
                                 }
-                                // Log.e("image=>", "-------->" + image);
 
-
-                                User user = new User(user_ID, username, email, password, mobile, image, legal_info,guide,guide_free,guide_give_free);
+                                User user = new User(user_ID, username, email, password, mobile, image, legal_info, guide, guide_free, guide_give_free);
 
                                 PrefManager.getInstance(mContext.getApplicationContext()).userLogin(user);
-
 
 
                                 final AlertDialog.Builder alert = new AlertDialog.Builder(getActivity());
@@ -315,8 +302,6 @@ public class ChatEnquiryFragment extends Fragment {
                                 alertDialog.setCanceledOnTouchOutside(false);
                                 nameId.setText(user.getUsername());
                                 user_mobileId.setText(mobile);
-                                //et_passwordID.setText(user.getPassword());
-                                //Glide.with(mContext).load(image).error(R.drawable.profile_img).into(civ_User);
                                 Picasso.get().load(image).placeholder(R.drawable.profile_img).into(user_imgId);
                                 img_cancel.setOnClickListener(new View.OnClickListener() {
                                     @Override
@@ -335,12 +320,10 @@ public class ChatEnquiryFragment extends Fragment {
                                 });
 
 
-
                                 alertDialog.show();
 
 
                             } else {
-                                //loading_spinnerId.setVisibility(View.GONE);
 
                                 Toast.makeText(mContext, "" + message, Toast.LENGTH_SHORT).show();
                             }
@@ -357,20 +340,12 @@ public class ChatEnquiryFragment extends Fragment {
 
                     @Override
                     public void Failed(String error) {
-                        // progess.dismiss();
-                        //loading_spinnerId.setVisibility(View.GONE);
-
-
-                        // CustomSnakbar.showDarkSnakabar(EditAccountActivity.this, mview, "" + error);
                         Toast.makeText(mContext, "Failed" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 
 
     }
-
-
-
 
 
 }

@@ -85,55 +85,7 @@ public class SplashActivity extends AppCompatActivity {
             Log.e(TAG, "printHashKey()", e);
         }
     }
-    /*
-    {
-      "project_info": {
-        "project_number": "1034295386036",
-        "firebase_url": "https://baihai-1076b.firebaseio.com",
-        "project_id": "baihai-1076b",
-        "storage_bucket": "baihai-1076b.appspot.com"
-      },
-      "client": [
-        {
-          "client_info": {
-            "mobilesdk_app_id": "1:1034295386036:android:85853e29a8657e795a1ce1",
-            "android_client_info": {
-              "package_name": "com.tech.baihai"
-            }
-          },
-          "oauth_client": [
-            {
-              "client_id": "1034295386036-h62rosilp9h32142uvoslmffgertu4np.apps.googleusercontent.com",
-              "client_type": 1,
-              "android_info": {
-                "package_name": "com.tech.baihai",
-                "certificate_hash": "4c7610922c9efabfb74710a1aa7d8b90e3ff4fbf"
-              }
-            },
-            {
-              "client_id": "1034295386036-kg73a69avp2k4vtssslsp6al8b01mfqq.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ],
-          "api_key": [
-            {
-              "current_key": "AIzaSyBITwIBrC5lyHRR_r7bNBrYYAFg4j5G9is"
-            }
-          ],
-          "services": {
-            "appinvite_service": {
-              "other_platform_oauth_client": [
-                {
-                  "client_id": "1034295386036-kg73a69avp2k4vtssslsp6al8b01mfqq.apps.googleusercontent.com",
-                  "client_type": 3
-                }
-              ]
-            }
-          }
-        }
-      ],
-      "configuration_version": "1"
-    }*/
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -181,16 +133,7 @@ public class SplashActivity extends AppCompatActivity {
                 new Handler().postDelayed(new Runnable() {
                     @Override
                     public void run() {
-                      /*  LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-                        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-                            getCurrentLocation();
-                            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-                            finish();
-
-                        }else{
-                            getCurrentLocation();
-                        }*/
 
                         if (PrefManager.getInstance(SplashActivity.this).isLoggedIn()) {
                             Intent intent= new Intent(SplashActivity.this,HomeActivity.class);
@@ -312,24 +255,7 @@ public class SplashActivity extends AppCompatActivity {
             }
         });
 
-        /*english_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
 
-
-                updateResources(mContext,"en");
-            }
-        });
-        spanish_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                updateResources(mContext,"es");
-
-
-            }
-        });*/
 
         btn_okay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -362,17 +288,7 @@ public class SplashActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
 
-       /* LocationManager locationManager = (LocationManager) getSystemService(LOCATION_SERVICE);
 
-        if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-            getCurrentLocation();
-            startActivity(new Intent(SplashActivity.this, LoginActivity.class));
-            finish();
-
-        }else{
-            getCurrentLocation();
-        }
-*/
         super.onResume();
     }
 
@@ -386,10 +302,8 @@ public class SplashActivity extends AppCompatActivity {
             longitude = String.valueOf(track.getLongitude());
             Log.e("lon=>", "-------->" + longitude);
 
-            //latLng = new LatLng(latitude, longitude);
 
         } else {
-            //track.showSettingsAlert();
         }
     }
 

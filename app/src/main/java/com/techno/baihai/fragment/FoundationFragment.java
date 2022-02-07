@@ -56,8 +56,8 @@ public class FoundationFragment extends Fragment {
     List<FoundationsList> foundationsLists;
     private ProgressBar progressBar1;
     private Boolean isInternetPresent = false;
-    private String latitude="";
-    private String longitude="";
+    private String latitude = "";
+    private String longitude = "";
     private TextView foundation_notFound;
     private SwipeRefreshLayout swipLayout;
 
@@ -66,6 +66,7 @@ public class FoundationFragment extends Fragment {
         // Required empty public constructor
         this.listener = listener;
     }
+
     public FoundationFragment() {
         // Required empty public constructor
     }
@@ -105,7 +106,7 @@ public class FoundationFragment extends Fragment {
         uid = String.valueOf(user.getId());
         Log.i(TAG, "user_id: " + uid);
         getCurrentLocation();
-        swipLayout= view.findViewById(R.id.swipLayoutFoundation);
+        swipLayout = view.findViewById(R.id.swipLayoutFoundation);
 
         swipLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
@@ -121,20 +122,16 @@ public class FoundationFragment extends Fragment {
         });
 
 
-
-
         if (isInternetPresent) {
             GetFoundations();
         } else {
-           // PrefManager prefManager = new PrefManager(mContext);
             PrefManager.showSettingsAlert(mContext);
-            /*AlertConnection.showAlertDialog(mContext, "No Internet Connection",
-                    "You don't have internet connection.", false);*/
         }
 
-        foundation_notFound=view.findViewById(R.id.foundation_notFound);
+        foundation_notFound = view.findViewById(R.id.foundation_notFound);
         return view;
     }
+
     private void getCurrentLocation() {
 
         GPSTracker track = new GPSTracker(getActivity());
@@ -155,17 +152,12 @@ public class FoundationFragment extends Fragment {
 
     private void GetFoundations() {
 
-/*
-        final ProgressDialog progressDialog;
-        progressDialog = new ProgressDialog(getActivity());
-        progressDialog.setMessage("Please wait...");
-        progressDialog.show();*/
         swipLayout.setRefreshing(true);
 
 
         HashMap<String, String> param = new HashMap<>();
-        param.put("lat",latitude);
-        param.put("lon",longitude);
+        param.put("lat", latitude);
+        param.put("lon", longitude);
 
         ApiCallBuilder.build(getActivity())
                 .isShowProgressBar(false)
@@ -186,9 +178,8 @@ public class FoundationFragment extends Fragment {
                             if (status.equals("1")) {
 
 
-
                                 JSONArray result = object.optJSONArray("result");
-                               // Log.e(TAG, "result=>" + result);
+                                // Log.e(TAG, "result=>" + result);
                                 foundationsLists.clear();
 
                                 if (result != null) {
@@ -197,7 +188,7 @@ public class FoundationFragment extends Fragment {
                                         JSONObject object1 = result.getJSONObject(i);
 
 
-                                       // Log.e(TAG, "resulti=>" + i);
+                                        // Log.e(TAG, "resulti=>" + i);
                                         String org_id = object1.getString("id");
                                         String org_name = object1.getString("org_name");
                                         String contact_name = object1.getString("contact_name");
@@ -208,18 +199,18 @@ public class FoundationFragment extends Fragment {
                                         String description = object1.getString("description");
 
 
-                                        foundationsLists.add(new FoundationsList(org_id,org_name, contact_name, email, mobile,webpage, location, description));
+                                        foundationsLists.add(new FoundationsList(org_id, org_name, contact_name, email, mobile, webpage, location, description));
 
 
                                     }
                                 }
 
 
-                            }else{
+                            } else {
                                 swipLayout.setRefreshing(false);
 
                                 foundation_notFound.setVisibility(VISIBLE);
-                                Toast.makeText(mContext, "Data Not Found"+message, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, "Data Not Found" + message, Toast.LENGTH_SHORT).show();
 
                             }
 
@@ -227,7 +218,7 @@ public class FoundationFragment extends Fragment {
                             swipLayout.setRefreshing(false);
 
                             e.printStackTrace();
-                            Toast.makeText(mContext, "ee"+e, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(mContext, "ee" + e, Toast.LENGTH_SHORT).show();
 
 
                         }
@@ -244,9 +235,7 @@ public class FoundationFragment extends Fragment {
                         swipLayout.setRefreshing(false);
 
                         //progressDialog.dismiss();
-                        Toast.makeText(mContext, "e"+error, Toast.LENGTH_SHORT).show();
-
-                        //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
+                        Toast.makeText(mContext, "e" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 

@@ -67,18 +67,16 @@ public class ProSliderAdapter extends SliderViewAdapter<ProSliderAdapter.SliderA
 
         }
         viewHolder.btn_removeimage.setOnClickListener(v -> {
-            if (getCount()!=-1) {
+            if (getCount() != -1) {
                 deleteItem(position);
                 notifyDataSetChanged();
-                if (getCount()==0) {
+                if (getCount() == 0) {
                     ProductDonateActivity donateActivity = new ProductDonateActivity();
                     donateActivity.Task();
                     notifyDataSetChanged();
                 }
-            }else {
-              //  ProductDonateActivity donateActivity = new ProductDonateActivity();
+            } else {
                 ProductDonateActivity.Task();
-               // notifyDataSetChanged();
             }
         });
 

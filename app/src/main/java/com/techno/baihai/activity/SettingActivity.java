@@ -27,7 +27,7 @@ public class SettingActivity extends AppCompatActivity {
 
     TextView tv_about_us, tv_account, tv_support;
     ImageView iv_back;
-    private final Context mContext=SettingActivity.this;
+    private final Context mContext = SettingActivity.this;
     private RadioGroup radioGroup;
     private RadioButton spanish_btn;
     private RadioButton english_btn;
@@ -50,13 +50,7 @@ public class SettingActivity extends AppCompatActivity {
         });
 
 
-
-
-
-
-
     }
-
 
 
     private static void updateResources(Context context, String language) {
@@ -77,10 +71,9 @@ public class SettingActivity extends AppCompatActivity {
 
         CardView btn_okay = mView.findViewById(R.id.btn_okay);
 
-         english_btn = mView.findViewById(R.id.english_btn);
-         spanish_btn = mView.findViewById(R.id.spanish_btn);
-         radioGroup = mView.findViewById(R.id.radio);
-
+        english_btn = mView.findViewById(R.id.english_btn);
+        spanish_btn = mView.findViewById(R.id.spanish_btn);
+        radioGroup = mView.findViewById(R.id.radio);
 
 
         alert.setView(mView);
@@ -88,59 +81,20 @@ public class SettingActivity extends AppCompatActivity {
         alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         alertDialog.setCanceledOnTouchOutside(false);
 
-/*
-        radioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(RadioGroup group, int checkedId) {
 
-                View radioButton = radioGroup.findViewById(checkedId);
-                int index = radioGroup.indexOfChild(radioButton);
+        String lang = PrefManager.get(mContext, "lang");
+        Log.e("lang", lang);
 
-                // Add logic here
-
-                switch (index) {
-                    case 0: // first button
-
-                        Toast.makeText(getApplicationContext(), "Selected button number " + index, Toast.LENGTH_LONG).show();
-                        updateResources(mContext,"en");
-                        PrefManager.save(mContext,"language","en");
-                        english_btn.setChecked(true);
-                        spanish_btn.setChecked(false);
-
-
-                        break;
-                    case 1: // secondbutton
-
-                        Toast.makeText(getApplicationContext(), "Selected button number " + index, Toast.LENGTH_LONG).show();
-                        updateResources(mContext,"es");
-                        PrefManager.save(mContext,"english","es");
-                        english_btn.setChecked(false);
-                        spanish_btn.setChecked(true);
-
-
-                        break;
-                }
-
-            }
-        });
-*/
-
-        String lang=PrefManager.get(mContext,"lang");
-        Log.e("lang",lang);
-
-        if (lang.equals("es")&&lang!=null){
+        if (lang.equals("es") && lang != null) {
             english_btn.setChecked(false);
             spanish_btn.setChecked(true);
-        }else
-        {
-            PrefManager.save(mContext,"lang","en");
+        } else {
+            PrefManager.save(mContext, "lang", "en");
             english_btn.setChecked(true);
             spanish_btn.setChecked(false);
-            updateResources(mContext,"en");
+            updateResources(mContext, "en");
 
         }
-
-
 
 
         english_btn.setOnClickListener(new View.OnClickListener() {
@@ -149,8 +103,8 @@ public class SettingActivity extends AppCompatActivity {
 
 
                 Toast.makeText(getApplicationContext(), "Select English", Toast.LENGTH_LONG).show();
-                updateResources(mContext,"en");
-                PrefManager.save(mContext,"lang","en");
+                updateResources(mContext, "en");
+                PrefManager.save(mContext, "lang", "en");
                 english_btn.setChecked(true);
                 spanish_btn.setChecked(false);
             }
@@ -160,9 +114,9 @@ public class SettingActivity extends AppCompatActivity {
             public void onClick(View v) {
 
 
-                Toast.makeText(getApplicationContext(), "Select Spanish" , Toast.LENGTH_LONG).show();
-                updateResources(mContext,"es");
-                PrefManager.save(mContext,"lang","es");
+                Toast.makeText(getApplicationContext(), "Select Spanish", Toast.LENGTH_LONG).show();
+                updateResources(mContext, "es");
+                PrefManager.save(mContext, "lang", "es");
                 english_btn.setChecked(false);
                 spanish_btn.setChecked(true);
 
@@ -174,7 +128,7 @@ public class SettingActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 alertDialog.dismiss();
-                startActivity(new Intent(mContext,HomeActivity.class));
+                startActivity(new Intent(mContext, HomeActivity.class));
             }
         });
 

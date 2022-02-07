@@ -49,7 +49,7 @@ public class PersonalDonateFragment extends AppCompatActivity {
 
         setContentView(R.layout.fragment_personal_donate);
 
-        mContext=PersonalDonateFragment.this;
+        mContext = PersonalDonateFragment.this;
 
         PrefManager.isConnectingToInternet(mContext);
         isInternetPresent = PrefManager.isNetworkConnected(mContext);
@@ -62,21 +62,18 @@ public class PersonalDonateFragment extends AppCompatActivity {
         iv_back = findViewById(R.id.iv_back);
 
 
-
-         org_name = getIntent().getStringExtra("org_name");
+        org_name = getIntent().getStringExtra("org_name");
 
         TextView foundationNameId = findViewById(R.id.foundationNameId);
         foundationNameId.setText(org_name);
 
-         org_id=getIntent().getStringExtra("org_id");
-
-
+        org_id = getIntent().getStringExtra("org_id");
 
 
     }
 
     public void cardOne(View view) {
-        if(org_id!=null) {
+        if (org_id != null) {
 
             if (isInternetPresent) {
                 GetFoundations(org_id);
@@ -86,10 +83,9 @@ public class PersonalDonateFragment extends AppCompatActivity {
 
             }
 
-        }else{
+        } else {
             Toast.makeText(mContext, "Non Profit Not Found..!!", Toast.LENGTH_SHORT).show();
         }
-       // startActivity(new Intent(this, ThankyouActivity.class));
     }
 
     public void iv_back(View view) {
@@ -99,9 +95,8 @@ public class PersonalDonateFragment extends AppCompatActivity {
 
     public void cardTwo(View view) {
 
-        startActivity(new Intent(this, DonateToFoundationFragment.class).putExtra("orgName",org_name).putExtra("orgId",org_id));
+        startActivity(new Intent(this, DonateToFoundationFragment.class).putExtra("orgName", org_name).putExtra("orgId", org_id));
     }
-
 
 
     private void GetFoundations(String org_id) {
@@ -115,7 +110,7 @@ public class PersonalDonateFragment extends AppCompatActivity {
         //http://bai-hai.com/webservice/get_organization_details?organization_id=1
 
         HashMap<String, String> param = new HashMap<>();
-        param.put("organization_id",org_id);
+        param.put("organization_id", org_id);
 
         ApiCallBuilder.build(PersonalDonateFragment.this)
                 .isShowProgressBar(false)
@@ -159,21 +154,18 @@ public class PersonalDonateFragment extends AppCompatActivity {
                                 startActivity(intent);
 
 
-
-                            }else{
+                            } else {
                                 progressDialog.dismiss();
-                                Toast.makeText(mContext, "Data Not Found"+message, Toast.LENGTH_SHORT).show();
+                                Toast.makeText(mContext, "Data Not Found" + message, Toast.LENGTH_SHORT).show();
 
                             }
 
                         } catch (JSONException e) {
                             progressDialog.dismiss();
-                            Toast.makeText(PersonalDonateFragment.this, ""+e, Toast.LENGTH_SHORT).show();
+                            Toast.makeText(PersonalDonateFragment.this, "" + e, Toast.LENGTH_SHORT).show();
 
                             e.printStackTrace();
                         }
-
-
 
 
                     }
@@ -181,9 +173,7 @@ public class PersonalDonateFragment extends AppCompatActivity {
                     @Override
                     public void Failed(String error) {
                         progressDialog.dismiss();
-                        Toast.makeText(PersonalDonateFragment.this, ""+error, Toast.LENGTH_SHORT).show();
-
-                        //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
+                        Toast.makeText(PersonalDonateFragment.this, "" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 
