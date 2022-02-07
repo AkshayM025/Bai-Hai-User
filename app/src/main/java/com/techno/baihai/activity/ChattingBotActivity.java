@@ -1,18 +1,26 @@
 package com.techno.baihai.activity;
 
+import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.appcompat.widget.PopupMenu;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -21,6 +29,7 @@ import com.techno.baihai.R;
 import com.techno.baihai.adapter.ChatAdapter;
 import com.techno.baihai.api.APIClient;
 import com.techno.baihai.api.APIInterface;
+import com.techno.baihai.api.Constant;
 import com.techno.baihai.model.ChatModel;
 import com.techno.baihai.model.User;
 import com.techno.baihai.utils.PrefManager;
@@ -32,17 +41,19 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import www.develpoeramit.mapicall.ApiCallBuilder;
 
 public class ChattingBotActivity extends AppCompatActivity implements View.OnClickListener {
 
     Context mContext = this;
-    String getProductId,getChatSellerId,getRecieverId,getStatusUpdate;
+    String getProductId,getChatSellerId,getRecieverId,getStatusUpdate,alertStatus;
     List<ChatModel> list;
     private RecyclerView recycler_view;
     private APIInterface apiInterface;
@@ -61,24 +72,26 @@ public class ChattingBotActivity extends AppCompatActivity implements View.OnCli
     private ImageView iv_receiverImg;
     private TextView tv_name_receiver;
     private String statusss="";
-
+    private String popupFillter;
+    private static final String TAG = LoginActivity.class.getSimpleName();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         setContentView(R.layout.activity_chatting_bot);
-
+        alertStatus="false";
         utils = new Utils(ChattingBotActivity.this);
         apiInterface = APIClient.getClient().create(APIInterface.class);
         PrefManager.isConnectingToInternet(this);
         isInternetPresent = PrefManager.isNetworkConnected(this);
 
+
         User user = PrefManager.getInstance(this).getUser();
         uid = String.valueOf(user.getId());
         Log.e("red_ID", "-------->" + uid);
 
-
+        ImageView drop = findViewById(R.id.drop_downProductId);
         iv_send = findViewById(R.id.iv_send);
         iv_back = findViewById(R.id.iv_back);
 
@@ -127,6 +140,24 @@ public class ChattingBotActivity extends AppCompatActivity implements View.OnCli
             Glide.with(mContext).load(getChatImgUrl).error(R.drawable.profile_img).into(iv_receiverImg);
 
             tv_name_receiver.setText(getChatName);
+            drop.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View view) {
+            //Creating the instance of PopupMenu
+            PopupMenu popup = new PopupMenu(mContext, drop);
+            //Inflating the Popup using xml file
+            popup.getMenuInflater().inflate(R.menu.poupup_menu3, popup.getMenu());
+            popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                public boolean onMenuItemClick(MenuItem item) {
+                    Toast.makeText(mContext, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                    showCustomDialog(getRecieverId);
+                        return true;
+                }
+            });
+
+            popup.show();//showing popup menu
+                                        }
+            });
 
         }catch (Exception e){
             Log.e("chateee",e.getMessage());
@@ -166,7 +197,49 @@ public class ChattingBotActivity extends AppCompatActivity implements View.OnCli
             super.onBackPressed();
         }
     }*/
+  private void showCustomDialog(String reciver) {
 
+      ViewGroup viewGroup = findViewById(android.R.id.content);
+      View dialogView = LayoutInflater.from(this).inflate(R.layout.activity_popup, viewGroup, false);
+      final EditText etproductDesc = (EditText)dialogView.findViewById(R.id.et_productDesc);
+      AlertDialog.Builder builder = new AlertDialog.Builder(this);
+      builder.setView(dialogView);
+      builder.setNeutralButton("Submit",new DialogInterface.OnClickListener() { // define the 'Cancel' button
+          public void onClick(DialogInterface dialog, int which) {
+              //Either of the following two lines should work.
+              reportSubmit(etproductDesc,reciver);
+              dialog.cancel();
+
+          }
+      });
+      AlertDialog alertDialog = builder.create();
+      alertDialog.show();
+  }
+  private void reportSubmit(EditText etproductDesc,String reciver){
+      User user = PrefManager.getInstance(this).getUser();
+      HashMap<String, String> parms1 = new HashMap<>();
+      parms1.put("user_id_reported", user.getId());
+      parms1.put("user_id_to_report", reciver);
+      parms1.put("report",etproductDesc.getText().toString());
+
+      ApiCallBuilder.build(this)
+              .setUrl(Constant.BASE_URL + Constant.REPORT)
+              .setParam(parms1)
+              .execute(new ApiCallBuilder.onResponse() {
+                  public void Success(String response) {
+
+                      Log.d(TAG, "respoLogin:" + response);
+                      Toast.makeText(mContext, "The  report  was  sended " , Toast.LENGTH_SHORT).show();
+                  }
+
+                  public void Failed(String error) {
+
+                  }
+              });
+
+
+
+  }
     private void sendMessage() {
         if (et_text_messgae.getText().toString().equals("")) {
            Utils.showToast("");
@@ -551,6 +624,7 @@ public class ChattingBotActivity extends AppCompatActivity implements View.OnCli
             case R.id.iv_send:
                 sendMessage();
                 break;
+
 
 
         }

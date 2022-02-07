@@ -203,11 +203,12 @@ public class FoundationFragment extends Fragment {
                                         String contact_name = object1.getString("contact_name");
                                         String email = object1.getString("email");
                                         String mobile = object1.getString("phone_no");
+                                        String webpage = object1.getString("webpage");
                                         String location = object1.getString("location");
                                         String description = object1.getString("description");
 
 
-                                        foundationsLists.add(new FoundationsList(org_id,org_name, contact_name, email, mobile, location, description));
+                                        foundationsLists.add(new FoundationsList(org_id,org_name, contact_name, email, mobile,webpage, location, description));
 
 
                                     }

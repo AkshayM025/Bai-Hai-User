@@ -2,6 +2,8 @@ package com.techno.baihai.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -10,21 +12,29 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.appcompat.widget.PopupMenu;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
 import com.techno.baihai.R;
+import com.techno.baihai.adapter.CategoryAdapter;
 import com.techno.baihai.adapter.MyProductListAdapter;
 import com.techno.baihai.api.Constant;
+import com.techno.baihai.model.CategoryList;
 import com.techno.baihai.model.MyProductModeListl;
 import com.techno.baihai.model.User;
 import com.techno.baihai.utils.GPSTracker;
@@ -41,6 +51,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import smartdevelop.ir.eram.showcaseviewlib.GuideView;
+import smartdevelop.ir.eram.showcaseviewlib.config.DismissType;
+import smartdevelop.ir.eram.showcaseviewlib.config.Gravity;
+import smartdevelop.ir.eram.showcaseviewlib.listener.GuideListener;
 import www.develpoeramit.mapicall.ApiCallBuilder;
 
 
@@ -49,12 +63,14 @@ public class MyProductListActivity extends AppCompatActivity {
 
     private static final String TAG = "MyProductListActivity";
     EditText search_Product;
-    ImageView product_refresh;
+    Spinner spinner;
+    //ImageView product_refresh;
     String popupDistance;
     private Boolean isInternetPresent = false;
     private Context mContext;
     private RecyclerView product_recyclerView;
     private RecyclerView.Adapter product_mAdapter;
+    private CardView card_view,card_view1,card_view2,card_view3;
     //    private static final int AUTOCOMPLETE_REQUEST_CODE = 111;
 //    private double lat, lng;
     private String latitude, longitude;
@@ -63,11 +79,12 @@ public class MyProductListActivity extends AppCompatActivity {
     private String uid, CatId, searchProductTxt;
     private String distance;
     private String catImag;
-    private ImageView cat_ImgId;
-    private TextView cat_TxtId;
+   // private ImageView cat_ImgId;
+   // private TextView cat_TxtId;
     private String catName;
     private String popupFillter;
     private String fillte;
+    List<String> categoryLists;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -77,9 +94,13 @@ public class MyProductListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_my_product_list);
 
         mContext = this;
+        categoryLists= new ArrayList<String>();
         isInternetPresent = PrefManager.isNetworkConnected(mContext);
         location_productId = findViewById(R.id.location_productId);
-
+        card_view = findViewById(R.id.card_view);
+        card_view1 = findViewById(R.id.card_view1);
+        card_view2 = findViewById(R.id.card_view2);
+        card_view3 = findViewById(R.id.card_view3);
 
         User user = PrefManager.getInstance(this).getUser();
         uid = String.valueOf(user.getId());
@@ -87,23 +108,23 @@ public class MyProductListActivity extends AppCompatActivity {
 
         getCurrentLocation();
 
-        cat_ImgId = findViewById(R.id.cat_ImgId);
-        cat_TxtId = findViewById(R.id.cat_TxtId);
+        //cat_ImgId = findViewById(R.id.cat_ImgId);
+        //cat_TxtId = findViewById(R.id.cat_TxtId);
 
 
         ImageView drop = findViewById(R.id.drop_downProductId);
 
-        CatId = getIntent().getStringExtra("categoryId");
+       // CatId = getIntent().getStringExtra("categoryId");
 
-        String catImgUrl = getIntent().getStringExtra("categoryImage");
-        String catName = getIntent().getStringExtra("categoryName");
+        //String catImgUrl = getIntent().getStringExtra("categoryImage");
+        //String catName = getIntent().getStringExtra("categoryName");
 
-        Preference.save(mContext, "categoryId", CatId);
-        Preference.save(mContext, "categoryName", catName);
-        Preference.save(mContext, "categoryImage", catImgUrl);
+       // Preference.save(mContext, "categoryId", CatId);
+        //Preference.save(mContext, "categoryName", catName);
+        //Preference.save(mContext, "categoryImage", catImgUrl);
 
 
-        Log.i(TAG, "cetId: " + CatId);
+       // Log.i(TAG, "cetId: " + CatId);
 
         //Toast.makeText(mContext, "categoryId=:" + CatId, Toast.LENGTH_SHORT).show();
 
@@ -188,8 +209,8 @@ public class MyProductListActivity extends AppCompatActivity {
         }
 
 
-        product_refresh = findViewById(R.id.product_refresh);
-        product_refresh.setOnClickListener(new View.OnClickListener() {
+       // product_refresh = findViewById(R.id.product_refresh);
+       /* product_refresh.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -220,15 +241,57 @@ public class MyProductListActivity extends AppCompatActivity {
                 popup.show();//showing popup menu
             }
         });
+        */
+        categoryLists.add("");
+        categoryLists.add("Technology");
+        categoryLists.add("Sport");
+        categoryLists.add("Furniture");
+        categoryLists.add("Tools");
+        categoryLists.add("Toys");
+        categoryLists.add("Cutlery");
+        categoryLists.add("Vehicle");
+        categoryLists.add("Pets");
+        categoryLists.add("Clothes");
 
+         spinner = (Spinner) findViewById(R.id.spinner);
+        ArrayAdapter ad
+                = new ArrayAdapter(
+                this, android.R.layout.simple_spinner_item, categoryLists);
+
+        ad.setDropDownViewResource(
+                android.R.layout
+                        .simple_spinner_dropdown_item);
+        spinner.setAdapter(ad);
+        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView adapterView, View view, int position, long id)
+            {
+
+                String item = adapterView.getItemAtPosition(position).toString();
+                Log.e("spinner=>", "" + item);
+                 GetSearchProduct();
+                Toast.makeText(adapterView.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+
+                //set as selected item.
+                spinner.setSelection(position);
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent)
+            {
+                // vacio
+
+            }
+        });
 
         noDataList = findViewById(R.id.not_DataList);
 
-        Glide.with(mContext)
-                .load(catImgUrl).error(R.drawable.profile_img)
-                .into(cat_ImgId);
+        //Glide.with(mContext)
+        //        .load(catImgUrl).error(R.drawable.profile_img)
+        //        .into(cat_ImgId);
         // Picasso.get().load(catImag).placeholder(R.drawable.unnamed).into(cat_ImgId);
-        cat_TxtId.setText(catName);
+        //  cat_TxtId.setText(catName);
 
 
     }
@@ -272,6 +335,7 @@ public class MyProductListActivity extends AppCompatActivity {
 
         return result.toString();
     }
+
 
 
     private void getCurrentLocation() {
@@ -417,7 +481,16 @@ public class MyProductListActivity extends AppCompatActivity {
 
     }
 */
+   @Override
+   public void onStart() {
+       super.onStart();
+       User user = PrefManager.getInstance(this).getUser();
+       if(!user.getGuideFree().equals("1") ){
+           ShowIntro("Filters", "Filter products  by distance", card_view, 1);
 
+       }
+
+   }
     private void GetProductList() {
 
 
@@ -428,20 +501,22 @@ public class MyProductListActivity extends AppCompatActivity {
 
                 distance = "10000";
             }else {
-                distance = PrefManager.get(mContext, PrefManager.KEY_DISTANCE);
+                distance = PrefManager.get(mContext, PrefManager.KEY_DISTANCE).split(" ")[0];
+
             }
         } else {
             distance = "10";
         }
-        if (popupFillter!=null&&popupFillter.equals("Old Product"))
+        /*if (popupFillter!=null&&popupFillter.equals("Old Product"))
         {
             fillte="ASC";
 
         }else{
             fillte="DESC";
-        }
+        }*/
+        fillte="DESC";
         Log.e("distance", distance);
-
+        Log.e("latitude", latitude);
 
         final ProgressDialog progressDialog;
         progressDialog = new ProgressDialog(this);
@@ -457,7 +532,7 @@ public class MyProductListActivity extends AppCompatActivity {
         param.put("user_id", uid);
         param.put("lat", latitude);
         param.put("lon", longitude);
-        param.put("category_id", CatId);
+        param.put("category_id", "1");
         param.put("distance", distance);
         param.put("sort_by", fillte);
 
@@ -472,7 +547,7 @@ public class MyProductListActivity extends AppCompatActivity {
                 .execute(new ApiCallBuilder.onResponse() {
                     @Override
                     public void Success(String response) {
-                        Log.e("Response==>", "" + response);
+                        Log.e("ResponseList==>", "" + response);
                         progressDialog.dismiss();
                         noDataList.setVisibility(View.GONE);
 
@@ -599,6 +674,13 @@ public class MyProductListActivity extends AppCompatActivity {
 
         HashMap<String, String> param = new HashMap<>();
         String productStxt = search_Product.getText().toString().trim();
+        if(spinner.getSelectedItemPosition()!=0){
+            CatId=""+spinner.getSelectedItemPosition()+"";
+        }else{
+            CatId="0";
+        }
+        Log.e("Spinner==>", "" + spinner.getSelectedItemPosition());
+
         Toast.makeText(mContext, "productTxt=> " + productStxt, Toast.LENGTH_SHORT).show();
         param.put("category_id", CatId);
         param.put("name", productStxt);
@@ -614,7 +696,7 @@ public class MyProductListActivity extends AppCompatActivity {
                 .execute(new ApiCallBuilder.onResponse() {
                     @Override
                     public void Success(String response) {
-                        Log.e("Response==>", "" + response);
+                        Log.e("ResponseSearch==>", "" + response);
                         // progressDialog.dismiss();
                         noDataList.setVisibility(View.GONE);
 
@@ -656,7 +738,7 @@ public class MyProductListActivity extends AppCompatActivity {
 
                                         String seller_id = object1.getString("user_id");
 
-                                        String product_id = object1.getString("category_id");
+                                        String product_id = object1.getString("id");
 
 
                                         String category_id = object1.getString("category_id");
@@ -725,6 +807,172 @@ public class MyProductListActivity extends AppCompatActivity {
 
 
     }
+    private   List<String> GetCategory() {
 
+
+        List<String> categoryProd= new ArrayList<String>();
+        String langua="EN";
+        String lang=PrefManager.get(mContext,"lang");
+        if (lang.equals("es")&& lang!=null){
+            langua="ES";
+        }
+
+        HashMap<String, String> param = new HashMap<>();
+        param.put("lat", latitude);
+        param.put("lon", longitude);
+        param.put("language", langua);
+
+
+        ApiCallBuilder.build(this)
+                .isShowProgressBar(false)
+                .setUrl(Constant.BASE_URL + "get_category") //http://bai-hai.com/webservice/get_category
+                .setParam(param)
+                .execute(new ApiCallBuilder.onResponse() {
+                    @Override
+                    public void Success(String response) {
+                        Log.e("ResponseCategory=>", "" + response);
+
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            String status = object.optString("status");
+                            String message = object.optString("message");
+                            if (status.equals("1")) {
+
+
+                                JSONArray jArray = object.optJSONArray("result");
+                                //Log.e(TAG, "result=>" + jArray);
+
+                                if (jArray != null) {
+                                    for (int i = 0; i < jArray.length(); i++) {
+
+
+                                        JSONObject object1 = jArray.getJSONObject(i);
+
+
+                                        // Log.e(TAG, "resulti=>" + i);
+                                        final String category_id = object1.getString("id");
+
+                                        final String category_name = object1.getString("category_name");
+                                        final String imageUrl = object1.getString("image");
+
+
+                                        categoryProd.add(category_name);
+
+
+                                    }
+                                }
+
+
+                            } else {
+
+                                Toast.makeText(mContext, "Not Match", Toast.LENGTH_SHORT).show();
+                            }
+
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
+
+
+                        }
+
+
+
+                    }
+
+                    @Override
+                    public void Failed(String error) {
+
+                        //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
+                        Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+
+return categoryProd;
+    }
+
+    private void ShowIntro(String title, String text, CardView viewId, final int type) {
+
+        new GuideView.Builder(mContext)
+                .setTitle(title)
+                .setContentText(text)
+                .setGravity(Gravity.center)
+                .setContentTextSize(12)//optional
+                .setTitleTextSize(14)//optional
+                .setDismissType(DismissType.anywhere) //optional - default dismissible by TargetView
+                .setTargetView(viewId)
+                .setGuideListener(new GuideListener() {
+                    @Override
+                    public void onDismiss(View view) {
+                        if (type == 1) {
+                            ShowIntro("Filters", "Filter  products by name", card_view1, 6);
+                        } else if (type == 6) {
+                            ShowIntro("Filters", "Filter products by category", card_view2, 5);
+                        }  else if (type == 5) {
+                            card_view3.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, 750));
+                            ShowIntro("Products List", "Here you can see pictures and information about products and  contact the donator", card_view3, 4);
+                        }else if (type == 4)  {
+                            setGuideProducts();
+                            card_view3.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.MATCH_PARENT));
+
+                            SharedPreferences.Editor sharedPreferencesEditor = mContext.getSharedPreferences("show_case_pref",
+                                    Context.MODE_PRIVATE).edit();
+                            sharedPreferencesEditor.putBoolean("showcase", false);
+                        }
+                    }
+                })
+                .build()
+                .show();
+    }
+
+     private void setGuideProducts() {
+        User user = PrefManager.getInstance(this).getUser();
+        String id=null;
+        if(user.getId() == ""){
+            id = user.getId();
+        }else{
+            id = user.getId();
+        }
+
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", "0");
+        ApiCallBuilder.build(this)
+                .setUrl(Constant.BASE_URL + Constant.GUIDE_FREE)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try{
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String message = object.getString("message");
+                            User user2 = new User(
+                                    user.getId(),
+                                    user.getUsername(),
+                                    user.getEmail(),
+                                    user.getPassword(),
+                                    user.getPhone(),
+                                    user.getImage(),
+                                    user.getLegalinfo(),
+                                    user.getGuide(),
+                                    "1",
+                                    user.getGuideGiveFree()
+                            );
+
+                            PrefManager.getInstance(mContext).userLogin(user2);
+
+
+
+                        } catch (JSONException e) {
+
+
+                            Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
+    }
 
 }

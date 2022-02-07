@@ -1,7 +1,9 @@
 package com.techno.baihai.activity;
 
+import android.app.AlertDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.net.Uri;
@@ -139,6 +141,25 @@ AboutUsActivity extends AppCompatActivity {
 
     public void RateOnPlayStoreInit(View view) {
         launchMarket();
+    }
+
+    public void LegalInfo(View view){
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+        // Configura el titulo.
+        alertDialogBuilder.setTitle(getResources().getString(R.string.legal_information));
+
+// Configura el mensaje.
+        alertDialogBuilder
+                .setMessage(getResources().getString(R.string.legal_mesagge))
+                .setCancelable(false)
+                .setNeutralButton(getResources().getString(R.string.legal_cancel),new DialogInterface.OnClickListener() { // define the 'Cancel' button
+                    public void onClick(DialogInterface dialog, int which) {
+                        //Either of the following two lines should work.
+                        dialog.cancel();
+                        //dialog.dismiss();
+                    }
+                }).create().show();
+
     }
 
     private void ShareApp(){

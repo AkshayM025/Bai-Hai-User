@@ -6,6 +6,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorWhite"
     tools:context=".activity.SplashActivity">
+
     <ImageView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -37,12 +38,14 @@
     </androidx.cardview.widget.CardView>-->
 
     <ImageView
-        android:layout_width="150dp"
-        android:layout_height="wrap_content"
+        android:layout_width="133dp"
+        android:layout_height="121dp"
         android:layout_centerInParent="true"
         android:adjustViewBounds="true"
         android:scaleType="fitCenter"
-        android:src="@drawable/logo" />
+        android:src="@drawable/bye_hi_logo"
+        app:srcCompat="@drawable/bye_hi_logo"
+        tools:srcCompat="@drawable/bye_hi_logo" />
 
 
 

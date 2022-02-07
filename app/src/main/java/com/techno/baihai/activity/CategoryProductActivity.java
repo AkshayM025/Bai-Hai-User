@@ -47,10 +47,12 @@ import com.smarteist.autoimageslider.SliderView;
 import com.squareup.picasso.Picasso;
 import com.techno.baihai.R;
 import com.techno.baihai.adapter.ProSliderAdapter;
+import com.techno.baihai.adapter.SliderAdapter;
 import com.techno.baihai.api.Constant;
 import com.techno.baihai.databinding.FragmentProductCategoryBinding;
 import com.techno.baihai.listner.FragmentListener;
 import com.techno.baihai.model.GetProDetailModel;
+import com.techno.baihai.model.MyProductModeListl;
 import com.techno.baihai.model.User;
 import com.techno.baihai.utils.GPSTracker;
 import com.techno.baihai.utils.PrefManager;
@@ -79,7 +81,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
     TextView catTxtViewId, details_locationId, product_DricrptionId;
     LinearLayout layout_status;
     RoundedImageView iv_Img_product;
-    TextView iv_txt_product, iv_txtstatus_product;
+    TextView iv_txt_product;
     private String latitude, longitude;
     private String uid;
     private String product_SellerId, productId, product_categoryId,
@@ -87,6 +89,8 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
     private String Status, message;
     private String product_categoryImage;
     private String product_categoryName;
+    private SliderAdapter adapter;
+    private List<MyProductModeListl> myProductModeListls;
 
 
     private Circle mCircle;
@@ -117,7 +121,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
         super.onCreate(savedInstanceState);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
-        binding= DataBindingUtil.setContentView(this,R.layout.fragment_product_category);
+        binding = DataBindingUtil.setContentView(this,R.layout.fragment_product_category);
       //  setContentView(R.layout.fragment_product_category);
         PrefManager.isConnectingToInternet(this);
         isInternetPresent = PrefManager.isNetworkConnected(this);
@@ -179,7 +183,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
             Toast.makeText(mContext, "" + exception, Toast.LENGTH_LONG).show();
         }
 
-     //   GetSliderProductList(productId);
+       GetSliderProductList(productId);
 
     /*
         PrefManager.setString(Preference.KEY_getProductCategoryId,product_categoryId);
@@ -192,13 +196,13 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 */
 
 
-        product_ImgdetailsId = findViewById(R.id.product_ImgdetailsId);
+       // product_ImgdetailsId = findViewById(R.id.product_ImgdetailsId);
         product_DricrptionId = findViewById(R.id.product_DricrptionId);
 
         product_DricrptionId.setText(productDescrip);
 
 
-        Picasso.get().load(productImgUrl).placeholder(R.drawable.product_placeholder).into(product_ImgdetailsId);
+       // Picasso.get().load(productImgUrl).placeholder(R.drawable.product_placeholder).into(product_ImgdetailsId);
 
 
         Picasso.get().load(product_categoryImage).placeholder(R.drawable.unnamed).into(catImageView);
@@ -262,21 +266,59 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                         progressDialog.dismiss();
                         try {
                             GetProDetailModel  commentModel = new Gson().fromJson(response, GetProDetailModel.class);
+
                             JSONObject object = new JSONObject(response);
                             String status = object.optString("status");
                             String message = object.optString("message");
+                            String result = object.optString("result");
+                            JSONObject object1 = new JSONObject(result);
                             if (status.equals("1")) {
-
+                                Log.e("get_image_2=>", "" + object1.optString("image1").split("images/").length);
                                 binding.imageSlider.setVisibility(View.VISIBLE);
-                                returnValue.add(commentModel.getResult().getImage1());
-                                returnValue.add(commentModel.getResult().getImage2());
-                                returnValue.add(commentModel.getResult().getImage3());
-                                returnValue.add(commentModel.getResult().getImage4());
-                                returnValue.add(commentModel.getResult().getImage5());
-                                proSliderAdapter = new ProSliderAdapter(getApplicationContext(), returnValue);
+                                myProductModeListls = new ArrayList<>();
+                                if( object1.optString("image1").split("images/").length == 2){
+                                    myProductModeListls.add(new MyProductModeListl(productId,commentModel.getResult().getUserId(),
+                                            commentModel.getResult().getUserDetails().getUserName(),commentModel.getResult().getCategoryId(),commentModel.getResult().getName(),commentModel.getResult().getDescription(),
+                                            "",commentModel.getResult().getAddress(),commentModel.getResult().getUsed(),commentModel.getResult().getImage1(),
+                                            "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(),  commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
 
-                                binding.imageSlider.setSliderAdapter(proSliderAdapter);
-                                proSliderAdapter.notifyDataSetChanged();
+                                }
+                                if( object1.optString("image2").split("images/").length == 2){
+                                    myProductModeListls.add(new MyProductModeListl(productId,commentModel.getResult().getUserId(),
+                                            commentModel.getResult().getUserDetails().getUserName(),commentModel.getResult().getCategoryId(),commentModel.getResult().getName(),commentModel.getResult().getDescription(),
+                                            "",commentModel.getResult().getAddress(),commentModel.getResult().getUsed(),commentModel.getResult().getImage2(),
+                                            "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(),  commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
+
+                                }
+                                if( object1.optString("image3").split("images/").length == 2){
+                                    myProductModeListls.add(new MyProductModeListl(productId,commentModel.getResult().getUserId(),
+                                            commentModel.getResult().getUserDetails().getUserName(),commentModel.getResult().getCategoryId(),commentModel.getResult().getName(),commentModel.getResult().getDescription(),
+                                            "",commentModel.getResult().getAddress(),commentModel.getResult().getUsed(),commentModel.getResult().getImage3(),
+                                            "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(),  commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
+
+                                }
+                                if( object1.optString("image4").split("images/").length == 2){
+                                    myProductModeListls.add(new MyProductModeListl(productId,commentModel.getResult().getUserId(),
+                                            commentModel.getResult().getUserDetails().getUserName(),commentModel.getResult().getCategoryId(),commentModel.getResult().getName(),commentModel.getResult().getDescription(),
+                                            "",commentModel.getResult().getAddress(),commentModel.getResult().getUsed(),commentModel.getResult().getImage4(),
+                                            "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(),  commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
+
+                                }
+                                if( object1.optString("image5").split("images/").length == 2){
+                                    myProductModeListls.add(new MyProductModeListl(productId,commentModel.getResult().getUserId(),
+                                            commentModel.getResult().getUserDetails().getUserName(),commentModel.getResult().getCategoryId(),commentModel.getResult().getName(),commentModel.getResult().getDescription(),
+                                            "",commentModel.getResult().getAddress(),commentModel.getResult().getUsed(),commentModel.getResult().getImage5(),
+                                            "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(),  commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
+
+                                }
+
+
+
+
+                                adapter = new SliderAdapter(getApplicationContext(), myProductModeListls);
+
+                                binding.imageSlider.setSliderAdapter(adapter);
+                                adapter.notifyDataSetChanged();
                                 binding.imageSlider.setIndicatorAnimation(IndicatorAnimationType.THIN_WORM); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
                                 binding.imageSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
                                 binding.imageSlider.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
@@ -453,10 +495,18 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
         Glide.with(CategoryProductActivity.this).load(productImgUrl).error(R.drawable.unnamed).placeholder(R.drawable.product_placeholder).into(iv_Img_product);
 
         TextView btn_okay = mView.findViewById(R.id.btn_okay);
+        TextView btn_exit = mView.findViewById(R.id.btn_exit);
         alert.setView(mView);
         final AlertDialog alertDialog = alert.create();
         alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        alertDialog.setCanceledOnTouchOutside(false);
+        alertDialog.setCanceledOnTouchOutside(true);
+        btn_exit.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            alertDialog.dismiss();
+
+                                        }
+                                    });
         btn_okay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -841,10 +891,26 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                                 if (result != null) {
                                     image = result.optString("image");
                                 }
+                                String legal_info = "null";
+                                if (result != null) {
+                                    legal_info = result.optString("legal_info");
+                                }
+                                String guide = "null";
+                                if (result != null) {
+                                    guide = result.optString("guide");
+                                }
+                                String guide_free = "null";
+                                if (result != null) {
+                                    guide_free = result.optString("guide_free");
+                                }
+                                String guide_give_free = "null";
+                                if (result != null) {
+                                    guide_give_free = result.optString("guide_give_free");
+                                }
                                 // Log.e("image=>", "-------->" + image);
 
 
-                                User user = new User(user_ID, username, email, password, mobile, image);
+                                User user = new User(user_ID, username, email, password, mobile,image, legal_info,guide,guide_free,guide_give_free);
 
                                 PrefManager.getInstance(getApplicationContext()).userLogin(user);
 

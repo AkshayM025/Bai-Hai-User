@@ -5,12 +5,14 @@ public class FAQModelList {
     private String faq_id;
     private String faq_name;
     private String faq_status;
+    private String faq_language;
 
 
-    public FAQModelList(String faq_id, String faq_name, String faq_status) {
+    public FAQModelList(String faq_id, String faq_name, String faq_status,String faq_language) {
         this.faq_id = faq_id;
         this.faq_name = faq_name;
         this.faq_status = faq_status;
+        this.faq_language = faq_language;
     }
 
 
@@ -36,6 +38,14 @@ public class FAQModelList {
 
     public void setFaq_status(String faq_status) {
         this.faq_status = faq_status;
+    }
+
+    public String getFaq_language() {
+        return faq_language;
+    }
+
+    public void setFaq_language(String faq_language) {
+        this.faq_language = faq_language;
     }
 
 

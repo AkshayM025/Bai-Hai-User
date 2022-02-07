@@ -105,12 +105,17 @@ public class SupportActivity extends AppCompatActivity implements FAQListener {
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
-
+        String langua="EN";
+        String lang=PrefManager.get(mContext,"lang");
+        if (lang.equals("es")&& lang!=null){
+        langua="ES";
+        }
         HashMap<String, String> parms = new HashMap<>();
-        parms.put("", "");
+        parms.put("language", langua);
         ApiCallBuilder.build(this)
                 .isShowProgressBar(false)
                 .setUrl(Constant.BASE_URL + "get_faq_topic")
+                .setParam(parms)
                 .execute(new ApiCallBuilder.onResponse() {
                     @Override
                     public void Success(String response) {
@@ -143,9 +148,10 @@ public class SupportActivity extends AppCompatActivity implements FAQListener {
                                         String faq_id = object1.optString("faq_id");
                                         String faq_Name = object1.optString("faq");
                                         String faq_status = object1.optString("status");
+                                        String faq_language = object1.optString("language");
 
 
-                                        faqModelLists.add(new FAQModelList(faq_id, faq_Name, faq_status));
+                                        faqModelLists.add(new FAQModelList(faq_id, faq_Name, faq_status, faq_language));
 
 
                                     }

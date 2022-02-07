@@ -50,7 +50,7 @@ public class AdapterUserFoundnTransaction  extends RecyclerView.Adapter<AdapterU
 try {
     holder.itemDoseBinding.foundationOrderid.setText("OrderNo: " + dataModel.getId());
     holder.itemDoseBinding.foundationAmount.setText("$ " + dataModel.getAmount());
-    holder.itemDoseBinding.foundationOrgname.setText("Foundation: " + dataModel.getFoundationDetails().getOrgName());
+    holder.itemDoseBinding.foundationOrgname.setText("Non profit: " + dataModel.getFoundationDetails().getOrgName());
     holder.itemDoseBinding.foundationProductname.setText("Product: " + dataModel.getProductDetails().product);
     holder.itemDoseBinding.foundationDateTimeId.setText("Date&Time: " + dataModel.getDateTime());
     holder.itemDoseBinding.foundationStatusId.setText(dataModel.getStatus());

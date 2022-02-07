@@ -19,11 +19,16 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.techno.baihai.activity.ChattingBotActivity;
 import com.techno.baihai.activity.DriverInfoActivity;
 import com.techno.baihai.activity.HomeActivity;
+import com.techno.baihai.activity.LoginActivity;
+import com.techno.baihai.activity.ProductDonateActivity;
 import com.techno.baihai.activity.RatingActivity;
+import com.techno.baihai.activity.StripePaymentActivity;
 import com.techno.baihai.utils.PrefManager;
 
 import org.json.JSONObject;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.Map;
 import java.util.Random;
 
@@ -141,11 +146,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
 
-
+            if (status.equals("Rejected")) {
+                title = object.optString("title");
+                msg =  object.optString("key");
+            }
 
             if (status.equals("Accept")) {
                 try {
-
 
                     msg = object.getString("key");
                     driver_id = object.getString("driver_id");
@@ -174,7 +181,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
                 try {
 
-
+                    title = object.optString("key");
                     msg = object.getString("key");//  * http://bai-hai.com/webservice/add_rating?
                     // user_id=1&provider_id=1&request_id=1&review=good%20service&rating=5
                     //driver_id = object.getString("driver_id");
@@ -195,9 +202,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             } else if (chatRequestStatus.equals("Chat request")) {
 
                 try {
-                    msg = object.getString("key");
-
-                    intent = new Intent(this, HomeActivity.class);
+                    msg = object.optString("key1");
+                    title = object.optString("key4");
+                    intent = new Intent(this, LoginActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("Chatrequest", "1");
 
@@ -269,6 +276,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 
             }
+            Date currentTime = new Date();
+//
+            if(messageBody.equals("message user") && (currentTime.getDate()== 16 && currentTime.getHours() == 13 && currentTime.getMinutes() == 49) ){
+                msg="Necesitas algo o quieres donarlo? Es momento de hacerlo en bye-hi :) ";
+                title="Donate to Bye - hi";
+                intent = new Intent(this, HomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+
+                pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                        PendingIntent.FLAG_ONE_SHOT);
+            }
 
 
             // msg = object.getString("key");
@@ -280,37 +299,46 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 , intent,
                 PendingIntent.FLAG_ONE_SHOT);*/
+if((messageBody.equals("message user") && (currentTime.getDate()== 16 ))
+        || Chatresult.equals("insert_chat") ||
+        chatStatus.equals("Your Chat request is Accepted") ||
+        chatRequestStatus.equals("Chat request") ||
+        status.equals("Complete") ||
+        status.equals("Accept") ||
+        status.equals("Rejected")){
+    String channelId = getString(R.string.default_notification_channel_id);
+    Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+    NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)
+            .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
+            .setSmallIcon(R.drawable.noti_icon)
+            // .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.drawable.noti_icon))
+            .setContentTitle(title)
+            .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+            .setContentText(msg)
+            .setAutoCancel(true)
+            .setSound(defaultSoundUri)
+            .setContentIntent(pendingIntent);
 
-            String channelId = getString(R.string.default_notification_channel_id);
-            Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)
-                    .setStyle(new NotificationCompat.BigTextStyle().bigText(msg))
-                    .setSmallIcon(R.drawable.noti_icon)
-                   // .setLargeIcon(BitmapFactory.decodeResource(this.getResources(), R.drawable.noti_icon))
-                    .setContentTitle(title)
-                    .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
-                    .setContentText(msg)
-                    .setAutoCancel(true)
-                    .setSound(defaultSoundUri)
-                    .setContentIntent(pendingIntent);
 
 
 
 
+    NotificationManager notificationManager = (NotificationManager)
+            getSystemService(Context.NOTIFICATION_SERVICE);
+    // Since android Oreo notification channel is needed.
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+        // Channel human readable title
+        NotificationChannel channel = new NotificationChannel(channelId,
+                "Cloud Messaging Service",
+                NotificationManager.IMPORTANCE_DEFAULT);
 
-            NotificationManager notificationManager = (NotificationManager)
-                    getSystemService(Context.NOTIFICATION_SERVICE);
-            // Since android Oreo notification channel is needed.
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                // Channel human readable title
-                NotificationChannel channel = new NotificationChannel(channelId,
-                        "Cloud Messaging Service",
-                        NotificationManager.IMPORTANCE_DEFAULT);
+        notificationManager.createNotificationChannel(channel);
+    }
 
-                notificationManager.createNotificationChannel(channel);
-            }
+    notificationManager.notify(getNotificationId(), notificationBuilder.build());
 
-            notificationManager.notify(getNotificationId(), notificationBuilder.build());
+}
+
         }
 
         else {

@@ -2,11 +2,14 @@ package com.techno.baihai.fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
@@ -15,8 +18,21 @@ import androidx.fragment.app.Fragment;
 import com.techno.baihai.R;
 import com.techno.baihai.activity.ProductDonateActivity;
 import com.techno.baihai.activity.StripePaymentActivity;
+import com.techno.baihai.api.Constant;
 import com.techno.baihai.listner.FragmentListener;
+import com.techno.baihai.model.User;
 import com.techno.baihai.utils.PrefManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
+import smartdevelop.ir.eram.showcaseviewlib.GuideView;
+import smartdevelop.ir.eram.showcaseviewlib.config.DismissType;
+import smartdevelop.ir.eram.showcaseviewlib.config.Gravity;
+import smartdevelop.ir.eram.showcaseviewlib.listener.GuideListener;
+import www.develpoeramit.mapicall.ApiCallBuilder;
 
 public class DonationFragment extends Fragment implements View.OnClickListener {
 
@@ -37,7 +53,7 @@ public class DonationFragment extends Fragment implements View.OnClickListener {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-
+        mContext = getActivity();
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         View view = inflater.inflate(R.layout.fragment_donation, container, false);
 
@@ -92,4 +108,96 @@ public class DonationFragment extends Fragment implements View.OnClickListener {
 
         }
     }
+
+    public void onStart() {
+        super.onStart();
+        User user = PrefManager.getInstance(getActivity()).getUser();
+        if(!user.getGuideGiveFree().equals("1") ){
+            ShowIntro("Donate", "Help others. Give free stuff", iv_card2, 1);
+
+        }
+
+    }
+
+    private void ShowIntro(String title, String text, CardView viewId, final int type) {
+
+        new GuideView.Builder(mContext)
+                .setTitle(title)
+                .setContentText(text)
+                .setGravity(Gravity.center)
+                .setIndicatorHeight(25)
+                .setContentTextSize(12)//optional
+                .setTitleTextSize(14)//optional
+                .setDismissType(DismissType.anywhere) //optional - default dismissible by TargetView
+                .setTargetView(viewId)
+                .setGuideListener(new GuideListener() {
+                    @Override
+                    public void onDismiss(View view) {
+                        if (type == 1) {
+                            ShowIntro("Non profit", "Here you have the  possibility to send money to fundation", iv_card1, 6);
+                        } else if (type == 6) {
+                            ShowIntro("Non profit", "Here you have the  possibility to help bye-hi", iv_card3, 5);
+                        } else if (type == 5)  {
+                            setGuideDonation();
+                            SharedPreferences.Editor sharedPreferencesEditor = mContext.getSharedPreferences("show_case_pref",
+                                    Context.MODE_PRIVATE).edit();
+                            sharedPreferencesEditor.putBoolean("showcase", false);
+                        }
+                    }
+                })
+                .build()
+                .show();
+    }
+
+    private void setGuideDonation() {
+        User user = PrefManager.getInstance(getActivity()).getUser();
+        String id=null;
+        if(user.getId() == ""){
+            id = user.getId();
+        }else{
+            id = user.getId();
+        }
+
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", "0");
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.GUIDE_GIVE_FREE)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try{
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String message = object.getString("message");
+                            User user2 = new User(
+                                    user.getId(),
+                                    user.getUsername(),
+                                    user.getEmail(),
+                                    user.getPassword(),
+                                    user.getPhone(),
+                                    user.getImage(),
+                                    user.getLegalinfo(),
+                                    user.getGuide(),
+                                    user.getGuideFree(),
+                                    "1"
+                            );
+
+                            PrefManager.getInstance(getActivity()).userLogin(user2);
+
+
+
+                        } catch (JSONException e) {
+
+
+                            Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
+    }
+
 }

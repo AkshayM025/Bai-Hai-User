@@ -144,6 +144,7 @@ public class ChatEnquiryFragment extends Fragment {
 
                                             JSONObject object1 = result.getJSONObject(i);
                                             JSONObject object2 = object1.optJSONObject("user_details");
+                                            JSONObject object3 = object1.optJSONObject("product_details");
                                             String chat_username = "null";
                                             if (object2 != null) {
                                                 chat_username = object2.getString("name");
@@ -158,10 +159,11 @@ public class ChatEnquiryFragment extends Fragment {
                                             Log.e("", "name=>" + chat_username);
 
                                             String request_id = object1.optString("id");
-                                            String product_name = object1.optString("name");
-                                            String product_message = object1.optString("message");
+                                            String product_name = object1.optString("name") ;
+                                            String product_message = "Name product: "+object3.optString("name")+"  -   "+object1.optString("message");
                                             String enquiry_time = object1.optString("date_time");
                                             String enquiry_status = object1.optString("status");
+
                                             String enquiry_productImageUrl = object1.optString("image1");
 
 
@@ -174,6 +176,7 @@ public class ChatEnquiryFragment extends Fragment {
 
 
                                     }
+
                                 }
 
 
@@ -189,6 +192,7 @@ public class ChatEnquiryFragment extends Fragment {
 
 
                         }
+
                         try {
 
 
@@ -213,7 +217,6 @@ public class ChatEnquiryFragment extends Fragment {
 
 
     }
-
 
 
 
@@ -271,10 +274,26 @@ public class ChatEnquiryFragment extends Fragment {
                                 if (result != null) {
                                     image = result.optString("image");
                                 }
+                                String legal_info = "null";
+                                if (result != null) {
+                                    legal_info = result.optString("legal_info");
+                                }
+                                String guide = "null";
+                                if (result != null) {
+                                    guide = result.optString("guide");
+                                }
+                                String guide_free = "null";
+                                if (result != null) {
+                                    guide_free = result.optString("guide_free");
+                                }
+                                String guide_give_free = "null";
+                                if (result != null) {
+                                    guide_give_free = result.optString("guide_give_free");
+                                }
                                 // Log.e("image=>", "-------->" + image);
 
 
-                                User user = new User(user_ID, username, email, password, mobile, image);
+                                User user = new User(user_ID, username, email, password, mobile, image, legal_info,guide,guide_free,guide_give_free);
 
                                 PrefManager.getInstance(mContext.getApplicationContext()).userLogin(user);
 

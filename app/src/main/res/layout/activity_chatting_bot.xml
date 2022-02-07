@@ -44,6 +44,18 @@
                 android:text="@string/test"
                 android:textColor="@color/colorBlack"
                 android:textSize="20sp" />
+            <ImageView
+                android:id="@+id/drop_downProductId"
+                android:layout_width="20dp"
+                android:layout_height="15dp"
+                android:layout_margin="16dp"
+                android:adjustViewBounds="true"
+                android:scaleType="fitCenter"
+                android:src="@drawable/drop_down"
+                android:visibility="visible" />
+
+
+
 
         </LinearLayout>
         <View
@@ -173,6 +185,10 @@
                         android:padding="50dp"
                         android:src="@drawable/radio"
                         android:visibility="gone" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent" />
                 </RelativeLayout>
 
 

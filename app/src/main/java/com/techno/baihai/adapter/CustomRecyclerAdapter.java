@@ -49,8 +49,9 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
         holder.org_name.setText(pu.getOrganizationName());
         holder.contact_name.setText(pu.getContactName());
-      //  holder.email.setText(pu.getEmail());
-     //   holder.mobile.setText(pu.getMobile());
+        holder.email.setText(pu.getEmail());
+        holder.mobile.setText(pu.getMobile());
+        holder.webpage.setText(pu.getWebpage());
         holder.location.setText(pu.getLocation());
         holder.description.setText(pu.getDescription());
         holder.foundationCardId.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +91,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
 
         public TextView org_name;
         public CardView foundationCardId;
-        public TextView contact_name, email, mobile, location, description;
+        public TextView contact_name, email, mobile, location, description,webpage;
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -101,6 +102,7 @@ public class CustomRecyclerAdapter extends RecyclerView.Adapter<CustomRecyclerAd
             mobile = itemView.findViewById(R.id.mobile);
             location = itemView.findViewById(R.id.address);
             description = itemView.findViewById(R.id.description);
+            webpage = itemView.findViewById(R.id.webpage);
             foundationCardId = itemView.findViewById(R.id.foundationCardId);
 
 

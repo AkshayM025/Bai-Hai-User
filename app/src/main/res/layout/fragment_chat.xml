@@ -62,18 +62,21 @@
 
                 <TextView
                     android:id="@+id/chat_txtEnquiry"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="fill_vertical"
+                    android:autoSizeMaxTextSize="13sp"
+                    android:autoSizeMinTextSize="11sp"
+                    android:autoSizeStepGranularity="1sp"
+                    android:autoSizeTextType="uniform"
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
                     android:padding="8dp"
-                    android:singleLine="true"
+                    android:singleLine="false"
                     android:text="@string/chat_enquiry"
                     android:textAllCaps="false"
                     android:textColor="@color/colorWhite"
-                    android:textSize="13sp"
                     android:textStyle="bold" />
             </androidx.cardview.widget.CardView>
 
@@ -92,18 +95,21 @@
 
                 <TextView
                     android:id="@+id/accepted_txtchatId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="fill_vertical"
+                    android:autoSizeMaxTextSize="13sp"
+                    android:autoSizeMinTextSize="11sp"
+                    android:autoSizeStepGranularity="1sp"
+                    android:autoSizeTextType="uniform"
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
                     android:padding="8dp"
-                    android:singleLine="true"
+                    android:singleLine="false"
                     android:text="@string/seller_chat"
                     android:textAllCaps="false"
                     android:textColor="@color/colorBlack"
-                    android:textSize="13sp"
                     android:textStyle="bold" />
             </androidx.cardview.widget.CardView>
 
@@ -121,18 +127,21 @@
 
                 <TextView
                     android:id="@+id/available_txtchatId"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="fill_vertical"
+                    android:autoSizeMaxTextSize="13sp"
+                    android:autoSizeMinTextSize="11sp"
+                    android:autoSizeStepGranularity="1sp"
+                    android:autoSizeTextType="uniform"
                     android:clickable="true"
                     android:focusable="true"
                     android:gravity="center"
                     android:padding="8dp"
-                    android:singleLine="true"
+                    android:singleLine="false"
                     android:text="@string/buyer_chat"
                     android:textAllCaps="false"
                     android:textColor="@color/colorBlack"
-                    android:textSize="13sp"
                     android:textStyle="bold" />
             </androidx.cardview.widget.CardView>
 

@@ -1,16 +1,19 @@
 package com.techno.baihai.adapter;
 
 import android.content.Context;
+import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
 import androidx.databinding.DataBindingUtil;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.techno.baihai.R;
 import com.techno.baihai.databinding.AdapterBaihaiTransactionBinding;
 import com.techno.baihai.databinding.ItemCoinhistoryBinding;
 import com.techno.baihai.model.CoinHistoryModel;
+import com.techno.baihai.model.RewardsHistoryModel;
 
 import java.util.ArrayList;
 
@@ -20,10 +23,10 @@ public class AdapterCoinModel  extends RecyclerView.Adapter<AdapterCoinModel.MyV
 
     // private final List<SubjCatModelList> catModelLists;
     private final Context context;
-    private ArrayList<CoinHistoryModel.Result> transactionDataModels;
+    private ArrayList<RewardsHistoryModel.Result> transactionDataModels;
 
 
-    public AdapterCoinModel(Context context, ArrayList<CoinHistoryModel.Result> models) {
+    public AdapterCoinModel(Context context, ArrayList<RewardsHistoryModel.Result> models) {
         this.transactionDataModels = models;
         this.context = context;
         //  this.contactListFiltered = list;
@@ -46,9 +49,13 @@ public class AdapterCoinModel  extends RecyclerView.Adapter<AdapterCoinModel.MyV
     public void onBindViewHolder(final AdapterCoinModel.MyView holder, final int position) {
 
 
-        CoinHistoryModel.Result dataModel = transactionDataModels.get(position);
+        RewardsHistoryModel.Result dataModel = transactionDataModels.get(position);
 
-        holder.itemDoseBinding.coinId.setText("You get a "+dataModel.getCoin());
+        holder.itemDoseBinding.coinId.setText(dataModel.getName());
+        //Uri image = Uri.parse(dataModel.getImage());
+        Glide.with(this.context).load(dataModel.getImage()).error(R.drawable.rewards).into( holder.itemDoseBinding.myDonationImglistId);
+        //holder.itemDoseBinding.myDonationImglistId.setImageURI(image);
+
 
        /* holder.itemDoseBinding.foundationOrderid.setText("OrderNo: "+dataModel.getId());
         holder.itemDoseBinding.foundationAmount.setText("$ "+dataModel.getAmount());

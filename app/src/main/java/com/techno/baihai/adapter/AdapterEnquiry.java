@@ -1,11 +1,13 @@
 package com.techno.baihai.adapter;
 
+import android.app.MediaRouteButton;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -69,6 +71,9 @@ public class AdapterEnquiry extends RecyclerView.Adapter<AdapterEnquiry.ViewHold
 
 
         holder.item_status.setText(pu.getStatus());
+        if(pu.getStatus().equals("In Progress")){
+            holder.item_buttonsEnquery.setVisibility(View.INVISIBLE);
+        }
         // holder.item_EnquiryproductName.setText(pu.getProduct_name());
         holder.item_enquiryTime.setText(pu.getDate_time());
         holder.item_EnquiryproductName.setText(pu.getChat_username());
@@ -244,6 +249,7 @@ public class AdapterEnquiry extends RecyclerView.Adapter<AdapterEnquiry.ViewHold
                 item_enquiryTime,txt_messageId;
 
         public CircleImageView item_enquiryImg;
+        public LinearLayout item_buttonsEnquery;
 
 
         public ViewHolder(@NonNull View itemView) {
@@ -253,6 +259,7 @@ public class AdapterEnquiry extends RecyclerView.Adapter<AdapterEnquiry.ViewHold
             item_status = itemView.findViewById(R.id.item_statusId);
             item_statusAccepted = itemView.findViewById(R.id.item_statusAccepted);
             item_statusRejected = itemView.findViewById(R.id.item_statusRejected);
+            item_buttonsEnquery = itemView.findViewById(R.id.item_buttonsEnquery);
             item_EnquiryproductName = itemView.findViewById(R.id.item_EnquiryproductName);
             item_enquiryTime = itemView.findViewById(R.id.item_enquiryTime);
             txt_messageId = itemView.findViewById(R.id.txt_messageId);

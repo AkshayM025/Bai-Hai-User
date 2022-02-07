@@ -49,7 +49,9 @@
                     android:layout_marginBottom="16dp"
                     android:adjustViewBounds="true"
                     android:scaleType="fitCenter"
-                    android:src="@drawable/logo" />
+                    android:src="@drawable/bye_hi_logo"
+                    app:srcCompat="@drawable/bye_hi_logo"
+                    tools:srcCompat="@drawable/bye_hi_logo" />
 
                 <TextView
                     android:layout_width="wrap_content"

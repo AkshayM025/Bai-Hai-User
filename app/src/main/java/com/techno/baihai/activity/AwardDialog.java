@@ -26,6 +26,7 @@ import com.techno.baihai.api.APIClient;
 import com.techno.baihai.api.APIInterface;
 import com.techno.baihai.api.Constant;
 import com.techno.baihai.model.CoinHistoryModel;
+import com.techno.baihai.model.RewardsHistoryModel;
 import com.techno.baihai.model.User;
 import com.techno.baihai.utils.DataManager;
 import com.techno.baihai.utils.PrefManager;
@@ -54,7 +55,7 @@ public class AwardDialog extends Dialog {
     private String uid;
     private APIInterface apiInterface;
 
-    ArrayList<CoinHistoryModel.Result> list = new ArrayList<>();
+    ArrayList<RewardsHistoryModel.Result> list = new ArrayList<>();
     private AdapterCoinModel madapter;
     private RecyclerView recycleViewbaihaiId;
     private SwipeRefreshLayout swipLayoutFoundation;
@@ -201,15 +202,15 @@ public class AwardDialog extends Dialog {
                                     awardImage = result.optString("image");
                                     awardMessage = result.optString("message");
 
-                                    ImageView award_levelsImg = (ImageView) findViewById(R.id.award_levelsImg);
-                                    TextView award_levelsId = (TextView) findViewById(R.id.award_levelsId);
-                                    TextView award_levelsMsg = (TextView) findViewById(R.id.award_levelsMsg);
-                                    TextView award_levelsMaxCoin = (TextView) findViewById(R.id.award_levelsMaxCoin);
+                                    //ImageView award_levelsImg = (ImageView) findViewById(R.id.award_levelsImg);
+                                    //TextView award_levelsId = (TextView) findViewById(R.id.award_levelsId);
+                                    //TextView award_levelsMsg = (TextView) findViewById(R.id.award_levelsMsg);
+                                    //TextView award_levelsMaxCoin = (TextView) findViewById(R.id.award_levelsMaxCoin);
 
-                                    Glide.with(mContext).load(awardImage).error(R.drawable.rewards).into(award_levelsImg);
-                                    award_levelsId.setText(awardName);
-                                    award_levelsMsg.setText(awardMessage+"\n"+"You Reached a "+awardMinCoin+" Coins..!!");
-                                    award_levelsMaxCoin.setText("Get a "+awardMaxCoin+" Coins, And earn a new Rewards..!!");
+                                    //Glide.with(mContext).load(awardImage).error(R.drawable.rewards).into(award_levelsImg);
+                                    //award_levelsId.setText(awardName);
+                                    //award_levelsMsg.setText(awardMessage+"\n"+"You Reached a "+awardMinCoin+" Coins..!!");
+                                   // award_levelsMaxCoin.setText("Get a "+awardMaxCoin+" Coins, And earn a new Rewards..!!");
 
 
                                 }
@@ -245,23 +246,23 @@ public class AwardDialog extends Dialog {
 
         DataManager.getInstance().showProgressMessage(mContext, "Please wait...");
 
-        Call<CoinHistoryModel> call = apiInterface.get_coin_history (uid);
+        Call<RewardsHistoryModel> call = apiInterface.get_coin_history (uid);
 
 
-        call.enqueue(new Callback<CoinHistoryModel>() {
+        call.enqueue(new Callback<RewardsHistoryModel>() {
             @Override
-            public void onResponse(@NotNull Call<CoinHistoryModel> call, @NotNull Response<CoinHistoryModel> response) {
+            public void onResponse(@NotNull Call<RewardsHistoryModel> call, @NotNull Response<RewardsHistoryModel> response) {
                 DataManager.getInstance().hideProgressMessage();
 
                 try {
-                    CoinHistoryModel commentModel = response.body();
+                    RewardsHistoryModel commentModel = response.body();
 
                     if (commentModel != null) {
                         if (commentModel.getStatus().equals("1")) {
 
 
                             //  list.add(commentModel.getResult());
-                            list= (ArrayList<CoinHistoryModel.Result>) commentModel.getResult();
+                            list= (ArrayList<RewardsHistoryModel.Result>) commentModel.getResult();
 
 
 
@@ -292,7 +293,7 @@ public class AwardDialog extends Dialog {
             }
 
             @Override
-            public void onFailure(Call<CoinHistoryModel> call, Throwable t) {
+            public void onFailure(Call<RewardsHistoryModel> call, Throwable t) {
                 DataManager.getInstance().hideProgressMessage();
                 Toast.makeText(mContext, ""+call, Toast.LENGTH_SHORT).show();
 

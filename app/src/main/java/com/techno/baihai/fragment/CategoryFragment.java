@@ -489,11 +489,16 @@ public class CategoryFragment extends Fragment {
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
-
+        String langua="EN";
+        String lang=PrefManager.get(mContext,"lang");
+        if (lang.equals("es")&& lang!=null){
+            langua="ES";
+        }
 
         HashMap<String, String> param = new HashMap<>();
         param.put("lat", latitude);
         param.put("lon", longitude);
+        param.put("language", langua);
 
 
         ApiCallBuilder.build(getActivity())

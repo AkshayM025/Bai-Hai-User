@@ -18,6 +18,7 @@ import com.techno.baihai.adapter.MyProductListAdapter;
 import com.techno.baihai.api.Constant;
 import com.techno.baihai.listner.FragmentListener;
 import com.techno.baihai.model.CategoryList;
+import com.techno.baihai.utils.PrefManager;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -93,10 +94,14 @@ public class DonationCategoryfragment extends Fragment {
         progressDialog = new ProgressDialog(getActivity());
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
-
+        String langua="EN";
+        String lang= PrefManager.get(mContext,"lang");
+        if (lang.equals("es")&& lang!=null){
+            langua="ES";
+        }
 
         HashMap<String, String> param = new HashMap<>();
-        param.put("", "");
+        param.put("language", langua);
         ApiCallBuilder.build(getActivity())
                 .isShowProgressBar(false)
                 .setUrl(Constant.BASE_URL + "get_category") //http://bai-hai.com/webservice/get_category

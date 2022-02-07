@@ -426,6 +426,7 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
                                         String contact_name = object1.getString("contact_name");
                                         String email = object1.getString("email");
                                         String mobile = object1.getString("phone_no");
+                                        String webpage = object1.getString("webpage");
                                         String location = object1.getString("location");
                                         String description = object1.getString("description");
 

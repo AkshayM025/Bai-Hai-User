@@ -89,7 +89,8 @@
         android:text="@string/legal"
         android:textColor="@color/colorBlack"
         android:textSize="18sp"
-        android:textStyle="normal" />
+        android:textStyle="normal"
+        android:onClick="LegalInfo"/>
     <!--  <LinearLayout
           android:layout_width="match_parent"
           android:layout_height="wrap_content"

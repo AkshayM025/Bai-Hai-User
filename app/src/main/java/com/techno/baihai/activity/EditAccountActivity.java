@@ -212,10 +212,26 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
                                 if (result != null) {
                                     image = result.optString("image");
                                 }
+                                String legal_info = "null";
+                                if (result != null) {
+                                    legal_info = result.optString("legal_info");
+                                }
+                                String guide = "null";
+                                if (result != null) {
+                                    guide = result.optString("guide");
+                                }
+                                String guide_free = "null";
+                                if (result != null) {
+                                    guide_free = result.optString("guide_free");
+                                }
+                                String guide_give_free = "null";
+                                if (result != null) {
+                                    guide_give_free = result.optString("guide_give_free");
+                                }
                                // Log.e("image=>", "-------->" + image);
 
 
-                                User user = new User(user_ID, username, email, password,mobile,image);
+                                User user = new User(user_ID, username, email, password,mobile,image,legal_info,guide,guide_free,guide_give_free);
                                 Picasso.get().load(image).placeholder(R.drawable.profile_img).into(civ_User);
 
                                 PrefManager.getInstance(getApplicationContext()).userLogin(user);
@@ -376,10 +392,26 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
                                 if (result != null) {
                                     image = result.optString("image");
                                 }
+                                String legal_info = "null";
+                                if (result != null) {
+                                    legal_info = result.optString("legal_info");
+                                }
+                                String guide = "null";
+                                if (result != null) {
+                                    guide = result.optString("guide");
+                                }
+                                String guide_free = "null";
+                                if (result != null) {
+                                    guide_free = result.optString("guide_free");
+                                }
+                                String guide_give_free = "null";
+                                if (result != null) {
+                                    guide_give_free = result.optString("guide_give_free");
+                                }
                                // Log.e("image=>", "-------->" + image);
 
 
-                                User user = new User(user_ID,username,email,password,mobile,image);
+                                User user = new User(user_ID,username,email,password,mobile,image,legal_info,guide,guide_free,guide_give_free);
                                 Picasso.get().load(image).placeholder(R.drawable.profile_img).into(civ_User);
 
                                 PrefManager.getInstance(getApplicationContext()).userLogin(user);

@@ -1,12 +1,15 @@
 package com.techno.baihai.activity;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -16,16 +19,34 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.google.android.gms.wallet.PaymentsClient;
+import com.google.android.gms.wallet.Wallet;
+import com.google.android.gms.wallet.WalletConstants;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.techno.baihai.R;
+import com.techno.baihai.api.Constant;
 import com.techno.baihai.fragment.ChatFragment;
 import com.techno.baihai.fragment.HomeFragment;
 import com.techno.baihai.listner.FragmentListener;
+import com.techno.baihai.model.User;
+import com.techno.baihai.utils.PrefManager;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
+
+import www.develpoeramit.mapicall.ApiCallBuilder;
 
 public class HomeActivity extends AppCompatActivity
         implements BottomNavigationView.OnNavigationItemSelectedListener, FragmentListener {
@@ -33,11 +54,16 @@ public class HomeActivity extends AppCompatActivity
     private BottomNavigationView navigationView;
     private boolean doubleBackToExitPressedOnce;
     private String chats;
-
+    private static final String TAG = LoginActivity.class.getSimpleName();
+    private final Context mContext = this;
+    private ProgressBar progressBar;
+    private PaymentsClient paymentsClient;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         setContentView(R.layout.activity_home);
@@ -48,30 +74,31 @@ public class HomeActivity extends AppCompatActivity
         navigationView.setOnNavigationItemSelectedListener(this);
 
 
-
         try {
 
-             chats= getIntent().getStringExtra("Chatrequest");
+            chats = getIntent().getStringExtra("Chatrequest");
 
-                if (chats!=null && chats.equals("1")){
-                    setColorOnBar(R.color.colorPrimaryDark);
-                    loadFragment(new ChatFragment(this));
-                    navigationView.setSelectedItemId(R.id.chat);
-
-
-                }else {
-                    setColorOnBar(R.color.colorPrimaryDark);
-                    loadFragment(new HomeFragment(this));
-                    navigationView.setSelectedItemId(R.id.home);
+            if (chats != null && chats.equals("1")) {
+                setColorOnBar(R.color.colorPrimaryDark);
+                loadFragment(new ChatFragment(this));
+                navigationView.setSelectedItemId(R.id.chat);
 
 
-                }
+            } else {
+                setColorOnBar(R.color.colorPrimaryDark);
+                loadFragment(new HomeFragment(this));
+                progressBar = findViewById(R.id.progressBar);
+                navigationView.setSelectedItemId(R.id.home);
+                this.LegalInfo(navigationView);
+                this.sendNotification();
+
+            }
 
 
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("home", String.valueOf(e));
-            Toast.makeText(this, "home"+e.getMessage(), Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "home" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
@@ -82,7 +109,6 @@ public class HomeActivity extends AppCompatActivity
         Log.e("CDate2", mydate);
         Date cTime = Calendar.getInstance().getTime();
         Log.e("CDate3", String.valueOf(cTime));
-
 
     }
 
@@ -140,14 +166,155 @@ public class HomeActivity extends AppCompatActivity
         return true;
 
     }
+    private void sendNotification(){
+        User user = PrefManager.getInstance(this).getUser();
+        HashMap<String, String> parms = new HashMap<>();
+        parms.put("id_user", user.getId());
+        parms.put("message", "message user");
+        ApiCallBuilder.build(this)
+                .isShowProgressBar(false)
+                .setUrl(Constant.BASE_URL + "notify_donate?")
+                .setParam(parms)
+//                    .setFile("image", "file_path")
+                .execute(new ApiCallBuilder.onResponse() {
+                    @Override
+                    public void Success(String response) {
+                        Log.d(TAG, "respoLogin:" + response);
 
+                        if (!response.equals("\r\n")){
+                            try {
+                                JSONObject object = new JSONObject(response);
+                                String status = object.getString("status");
+                                String message = object.getString("message");
+
+                                Log.e(TAG, "STATUS_:" + status);
+
+                                if (status.equals("1")) {
+
+                                    Toast.makeText(mContext, "Notification sended",
+                                            Toast.LENGTH_SHORT).show();
+
+
+                                }
+
+
+                            } catch (JSONException e) {
+
+
+                                Log.i(TAG, "errorL", e);
+                                Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            }
+                    }
+
+                    }
+
+                    @Override
+                    public void Failed(String error) {
+                        Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+    public void LegalInfo(View view) {
+        //progressBar.setVisibility(View.VISIBLE);
+        User user = PrefManager.getInstance(this).getUser();
+
+
+        String legal = user.getLegalinfo();
+
+        if (legal.equals("0")) {
+            String langua="Yes";
+            String langua1="No";
+            String lang=PrefManager.get(mContext,"lang");
+            if (lang.equals("es")&& lang!=null){
+                langua="Si";
+                langua1="No";
+
+            }
+            //  progressBar.setVisibility(View.GONE);
+            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(mContext);
+            // Configura el titulo.
+            alertDialogBuilder.setTitle(getResources().getString(R.string.legal_information));
+
+            // Configura el mensaje.
+            alertDialogBuilder
+                    .setMessage(getResources().getString(R.string.legal_mesagge))
+                    .setCancelable(false)
+                    .setPositiveButton(langua, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            setLegal();
+
+                        }
+                    })
+
+                    .setNegativeButton(langua1, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    }).create().show();
+
+
+
+        }
+
+
+    }
 
     @Override
     public void click(Fragment fragment) {
         loadFragment(fragment);
     }
 
+    void setLegal() {
+        User user = PrefManager.getInstance(this).getUser();
+        String email=null;
+        if(user.getEmail() == ""){
+           email = user.getPassword();
+        }else{
+            email = user.getEmail();
+        }
 
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("email", email);
+        parms1.put("activity", "0");
+        ApiCallBuilder.build(this)
+                .setUrl(Constant.BASE_URL + Constant.LEGAL)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try{
+                        Log.d(TAG, "respoLogin:" + response);
+                        JSONObject object = new JSONObject(response);
+                        String message = object.getString("message");
+                        User user2 = new User(
+                                user.getId(),
+                                user.getUsername(),
+                                user.getEmail(),
+                                user.getPassword(),
+                                user.getPhone(),
+                                user.getImage(),
+                                "1",
+                                user.getGuide(),
+                                user.getGuideFree(),
+                                user.getGuideGiveFree()
+                        );
+
+                        PrefManager.getInstance(getApplicationContext()).userLogin(user2);
+
+                        } catch (JSONException e) {
+
+
+                            Log.i(TAG, "errorL", e);
+                            Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
+    }
 
 
     void setColorOnBar(int color) {
@@ -206,5 +373,9 @@ public class HomeActivity extends AppCompatActivity
         }
 
     }
+
+
+
+
 
 }

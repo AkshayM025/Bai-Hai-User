@@ -26,6 +26,10 @@ public class PrefManager {
     private static final String KEY_PHONE = "keyphone";
     private static final String KEY_ID = "keyid";
     private static final String KEY_IMAGE = "keyimage";
+    private static final String KEY_LEGAL_INFO = "keylegalinfo";
+    private static final String KEY_GUIDE = "keyguide";
+    private static final String KEY_GUIDE_FREE = "keyguide_free";
+    private static final String KEY_GUIDE_GIVE_FREE = "keyguide_give_free";
     public static SharedPreferences sharedPreferences;
     public static String KEY_BaiHai_Status="KEY_BaiHai_Status";
     public static String Key_AmountId="Key_AmountId";
@@ -162,6 +166,10 @@ public class PrefManager {
         editor.putString(KEY_PASSWORD, user.getPassword());
         editor.putString(KEY_PHONE, user.getPhone());
         editor.putString(KEY_IMAGE, user.getImage());
+        editor.putString(KEY_LEGAL_INFO, user.getLegalinfo());
+        editor.putString(KEY_GUIDE, user.getGuide());
+        editor.putString(KEY_GUIDE_FREE, user.getGuideFree());
+        editor.putString(KEY_GUIDE_GIVE_FREE, user.getGuideGiveFree());
 
 
         editor.apply();
@@ -186,7 +194,11 @@ public class PrefManager {
                 sharedPreferences.getString(KEY_EMAIL, null),
                 sharedPreferences.getString(KEY_PASSWORD, null),
                 sharedPreferences.getString(KEY_PHONE, null),
-                sharedPreferences.getString(KEY_IMAGE, null)
+                sharedPreferences.getString(KEY_IMAGE, null),
+                sharedPreferences.getString(KEY_LEGAL_INFO, null),
+                sharedPreferences.getString(KEY_GUIDE, null),
+                sharedPreferences.getString(KEY_GUIDE_FREE, null),
+                sharedPreferences.getString(KEY_GUIDE_GIVE_FREE, null)
 
 
         );

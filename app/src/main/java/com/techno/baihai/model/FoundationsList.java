@@ -9,12 +9,13 @@ public class FoundationsList {
     private String mobile;
     private String location;
     private String description;
+    private String webpage;
 
 
-    public FoundationsList(String org_id, String org_name, String contact_name, String email, String mobile, String location, String description) {
+    public FoundationsList(String org_id, String org_name, String contact_name, String email, String mobile,String webpage, String location, String description) {
         this.organizationName = org_name;
         this.org_id = org_id;
-
+        this.webpage = webpage;
         this.contactName = contact_name;
         this.email = email;
         this.mobile = mobile;
@@ -42,6 +43,14 @@ public class FoundationsList {
 
     public void setMobile(String mobile) {
         this.mobile = mobile;
+    }
+
+    public String getWebpage() {
+        return webpage;
+    }
+
+    public void setWebpage(String webpage) {
+        this.webpage = webpage;
     }
 
     public String getLocation() {

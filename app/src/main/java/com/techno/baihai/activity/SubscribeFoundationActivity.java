@@ -42,7 +42,7 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
     double lat, lng;
     String latitude, longitude;
     String regID;
-    private EditText et_orgname, et_contact, et_desc, et_email, et_number;
+    private EditText et_orgname, et_contact, et_desc, et_email, et_number,et_mobileId,et_webpage;
     private final Context mContext = this;
     private ProgressBar progressBar;
     private Boolean isInternetPresent = false;
@@ -78,7 +78,8 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
         et_contact = findViewById(R.id.et_contact);
         et_desc = findViewById(R.id.et_desc);
 
-
+        et_mobileId=findViewById(R.id.et_mobileId);
+        et_webpage=findViewById(R.id.et_webpage);
         et_locationIcon = findViewById(R.id.et_locationIcon);
 
 
@@ -137,6 +138,8 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
         final String location_address = et_location.getText().toString().trim();
         final String contat_name = et_contact.getText().toString().trim();
         final String description = et_desc.getText().toString().trim();
+        final String mobile =et_mobileId.getText().toString().trim();
+        final String webpage =et_webpage.getText().toString().trim();
 
         progressBar = findViewById(R.id.progressBar);
 
@@ -153,7 +156,13 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
             CustomSnakbar.showSnakabar(mContext, view, "Please Enter Number!");
             et_number.requestFocus();
 
-        }*/ else if (location_address.equalsIgnoreCase("")) {
+        }*/else if(mobile.equalsIgnoreCase("")){
+            CustomSnakbar.showSnakabar(mContext, view, "Please Enter PhoneNumber!");
+            et_mobileId.requestFocus();
+        }else if(webpage.equalsIgnoreCase("")){
+            CustomSnakbar.showSnakabar(mContext, view, "Please Enter Webpage!");
+            et_webpage.requestFocus();
+        }else if (location_address.equalsIgnoreCase("")) {
             CustomSnakbar.showSnakabar(mContext, view, "Please Enter Location!");
             et_location.requestFocus();
         } else if (contat_name.equalsIgnoreCase("")) {
@@ -168,7 +177,8 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
             HashMap<String, String> parms = new HashMap<>();
             parms.put("org_name", org_name);
             parms.put("email", "email");
-            parms.put("phone_no", "number");
+            parms.put("phone_no", mobile);
+            parms.put("webpage", webpage);
             parms.put("location", location_address);
             parms.put("contact_name", contat_name);
             parms.put("description", description);
@@ -202,6 +212,8 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
                                     et_contact.setText("");
                                     et_desc.setText("");
                                     et_email.setText("");
+                                    et_webpage.setText("");
+                                    et_mobileId.setText("");
                                     et_number.setText("");
                                     CustomSnakbar.showSnakabar(mContext, view, "Thankyou for registering\nplease check your email for further instructions!");
                                     RegisterFoundationDailog();

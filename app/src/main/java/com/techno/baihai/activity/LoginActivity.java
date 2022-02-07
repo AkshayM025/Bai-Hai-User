@@ -1,9 +1,14 @@
 package com.techno.baihai.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.app.AlarmManager;
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
@@ -67,6 +72,7 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Calendar;
 import java.util.HashMap;
 
 import okhttp3.ResponseBody;
@@ -106,8 +112,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     @SuppressLint("WrongViewCast")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+
         super.onCreate(savedInstanceState);
         if (PrefManager.getInstance(this).isLoggedIn()) {
+
             startActivity(new Intent(this, HomeActivity.class));
             finish();
         }
@@ -118,6 +127,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
         setContentView(R.layout.activity_login);
+
+
+
         FirebaseAuth.getInstance().signOut();
 
 
@@ -261,6 +273,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         findViewById(R.id.btn_login).setOnClickListener(this::doLoginIn);
 
+
     }
 
 
@@ -293,7 +306,59 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             track.showSettingsAlert();
         }
     }
+ private void sendNotification(){
+     User user = PrefManager.getInstance(this).getUser();
+     progressBar.setVisibility(View.VISIBLE);
+     HashMap<String, String> parms = new HashMap<>();
+     parms.put("id_user", user.getId());
+     parms.put("message", "message user");
+     ApiCallBuilder.build(this)
+             .isShowProgressBar(false)
+             .setUrl(Constant.BASE_URL + "notify_donate?")
+             .setParam(parms)
+//                    .setFile("image", "file_path")
+             .execute(new ApiCallBuilder.onResponse() {
+                 @Override
+                 public void Success(String response) {
+                     Log.d(TAG, "respoLogin:" + response);
 
+
+                     try {
+                         JSONObject object = new JSONObject(response);
+                         String status = object.getString("status");
+                         String message = object.getString("message");
+
+                         Log.e(TAG, "STATUS_:" + status);
+
+                         if (status.equals("1")) {
+                             progressBar.setVisibility(View.GONE);
+
+                             Toast.makeText(mContext, "Notification sended",
+                                     Toast.LENGTH_SHORT).show();
+
+
+
+                         }
+
+
+                     } catch (JSONException e) {
+
+                         progressBar.setVisibility(View.GONE);
+                         Log.i(TAG, "errorL", e);
+                         Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                         e.printStackTrace();
+                     }
+
+
+                 }
+
+                 @Override
+                 public void Failed(String error) {
+                     progressBar.setVisibility(View.GONE);
+                     Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
+                 }
+             });
+ }
     private void userLoginIn(View view) {
 
         final String email = et_Email.getText().toString();
@@ -349,9 +414,11 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                             result.getString("email"),
                                             result.getString("password"),
                                             result.getString("mobile"),
-                                            result.getString("image")
-
-
+                                            result.getString("image"),
+                                            result.getString("legal_info"),
+                                            result.getString("guide"),
+                                            result.getString("guide_free"),
+                                            result.getString("guide_give_free")
                                     );
 
                                     PrefManager.getInstance(getApplicationContext()).userLogin(user);
@@ -391,6 +458,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
     }
+
 
 
     public void RegisterUserBtn(View view) {
@@ -732,7 +800,11 @@ handleSignInResult(task);*/
                                         userData.getString("password"),
                                         userData.getString("email"),
                                         userData.getString("mobile"),
-                                        userData.getString("image")
+                                        userData.getString("image"),
+                                        userData.getString("legal_info"),
+                                        userData.getString("guide"),
+                                        userData.getString("guide_free"),
+                                        userData.getString("guide_give_free")
 
 
                                 );

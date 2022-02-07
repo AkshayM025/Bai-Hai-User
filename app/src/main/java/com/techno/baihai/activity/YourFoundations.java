@@ -120,6 +120,7 @@ public class YourFoundations extends AppCompatActivity {
                                         String org_name = object1.getString("org_name");
                                         String contact_name = object1.getString("contact_name");
 
+
                                         foundationsLists.add(new FoundationsList(org_name, contact_name));
 
 

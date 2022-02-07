@@ -7,6 +7,11 @@ public class Constant {
     public static final String BASE_URL = "http://bai-hai.com/webservice/";
 
     public static final String LOGIN = "login?";
+    public static final String LEGAL ="validate_legal?";
+    public static final String GUIDE ="validate_guide?";
+    public static final String GUIDE_FREE ="validate_guide_free?";
+    public static final String GUIDE_GIVE_FREE ="validate_guide_give_free?";
+    public static final String REPORT ="report_user?";
     public static final String POST_CREATE_AN_USER = "signup?";
     public static final String RAGISTER_ORGANIZATION = "register_organization?";
     // global topic to receive app wide push notifications

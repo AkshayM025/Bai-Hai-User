@@ -87,7 +87,7 @@ public class StripePaymentActivity extends AppCompatActivity {
             Key_AmountId = PrefManager.getString(PrefManager.Key_AmountId);
         } catch (Exception ex) {
             ex.printStackTrace();
-            Toast.makeText(mContext, "chack YourfoundationsId" + ex, Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "check YourfoundationsId" + ex, Toast.LENGTH_SHORT).show();
         }
         TextView NeedTo_payID=findViewById(R.id.NeedTo_payID);
         TextView payment_actionBarId=findViewById(R.id.payment_actionBarId);

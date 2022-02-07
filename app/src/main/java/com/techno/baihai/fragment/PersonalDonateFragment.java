@@ -87,7 +87,7 @@ public class PersonalDonateFragment extends AppCompatActivity {
             }
 
         }else{
-            Toast.makeText(mContext, "FOundation Not Found..!!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "Non Profit Not Found..!!", Toast.LENGTH_SHORT).show();
         }
        // startActivity(new Intent(this, ThankyouActivity.class));
     }

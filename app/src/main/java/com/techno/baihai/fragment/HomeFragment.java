@@ -4,8 +4,10 @@ import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -13,17 +15,32 @@ import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingFlowParams;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesUpdatedListener;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
+import com.android.billingclient.api.BillingClient;
+import com.android.billingclient.api.BillingClientStateListener;
+import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.Purchase;
+import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.android.billingclient.api.SkuDetailsParams;
+import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.squareup.picasso.Picasso;
 import com.techno.baihai.R;
 import com.techno.baihai.activity.AccountActivity;
 import com.techno.baihai.activity.AwardDialog;
+import com.techno.baihai.activity.MyProductListActivity;
 import com.techno.baihai.activity.RewardPointsActivity;
 import com.techno.baihai.activity.SubscribeFoundationActivity;
+import com.techno.baihai.activity.StripePaymentActivity;
 import com.techno.baihai.api.Constant;
 import com.techno.baihai.listner.FragmentListener;
 import com.techno.baihai.model.User;
@@ -33,9 +50,15 @@ import com.techno.baihai.utils.PrefManager;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
+import java.util.*;
 
 import de.hdodenhof.circleimageview.CircleImageView;
+import smartdevelop.ir.eram.showcaseviewlib.GuideView;
+import smartdevelop.ir.eram.showcaseviewlib.config.DismissType;
+import smartdevelop.ir.eram.showcaseviewlib.listener.GuideListener;
 import www.develpoeramit.mapicall.ApiCallBuilder;
 
 public class HomeFragment extends Fragment {
@@ -43,15 +66,23 @@ public class HomeFragment extends Fragment {
     Context mContext;
     FragmentListener listener;
     LinearLayout donation, point, id_prize;
-    CardView card, card2, card3, card4;
+    CardView card, card2, card3, card4,card5,donation_2,id_prize2,point2;
     CircleImageView home_profileId;
     TextView home_usernameId;
-    String latitude, longitude;
+    String latitude, longitude,guide;
     private boolean checkReward=true;
     private Boolean isInternetPresent = false;
+    private static final String SHOWCASE_ID = "1";
     private String uid;
+    private PurchasesUpdatedListener purchasesUpdatedListener = new PurchasesUpdatedListener() {
+        @Override
+        public void onPurchasesUpdated(BillingResult billingResult, List<Purchase> purchases) {
+            // To be implemented in a later section.
+        }
+    };
 
-
+    private BillingClient billingClient ;
+    private PurchasesUpdatedListener purchasesUpdatedListener1;
     public HomeFragment(FragmentListener listener) {
         // Required empty public constructor
         this.listener = listener;
@@ -63,12 +94,38 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         mContext = getActivity();
+        purchasesUpdatedListener1 = new PurchasesUpdatedListener() {
+            @Override
+            public void onPurchasesUpdated(BillingResult billingResult, List<Purchase> purchases) {
+                // To be implemented in a later section.
+            }
+        };
+        billingClient=  BillingClient.newBuilder(mContext)
+                .setListener(purchasesUpdatedListener1)
+                .enablePendingPurchases()
+                .build();
+        billingClient.startConnection(new BillingClientStateListener() {
+            @Override
+            public void onBillingSetupFinished(BillingResult billingResult) {
+                if (billingResult.getResponseCode() ==  BillingClient.BillingResponseCode.OK) {
+                    // The BillingClient is ready. You can query purchases here.
+                    Log.e("logueo: ", uid);
+                }
+            }
+            @Override
+            public void onBillingServiceDisconnected() {
+                // Try to restart the connection on the next request to
+                // Google Play by calling the startConnection() method.
+            }
+        });
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
@@ -92,11 +149,14 @@ public class HomeFragment extends Fragment {
 
         User user = PrefManager.getInstance(mContext).getUser();
         uid = String.valueOf(user.getId());
+         guide = String.valueOf(user.getGuide());
         Log.e("user_id: ", uid);
 
 
 
-
+        donation_2 = view.findViewById(R.id.donation_2);
+        point2 = view.findViewById(R.id.point2);
+        id_prize2 = view.findViewById(R.id.id_prize2);
         donation = view.findViewById(R.id.donation);
         donation.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -142,7 +202,9 @@ public class HomeFragment extends Fragment {
         card2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                listener.click(new CategoryFragment(listener));
+
+                //listener.click(new CategoryFragment(listener));
+               startActivity(new Intent(mContext, MyProductListActivity.class));
             }
         });
         card3 = view.findViewById(R.id.card3);
@@ -167,7 +229,47 @@ public class HomeFragment extends Fragment {
                 startActivity(new Intent(mContext, SubscribeFoundationActivity.class));
             }
         });
+        card5 = view.findViewById(R.id.card5);
+        card5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("informacion suscribe: ", uid);
+                startActivity(new Intent(mContext, StripePaymentActivity.class));
+               // listener.click(new DonationFragment(listener));
+               /* billingClient.startConnection(new BillingClientStateListener() {
+                    @Override
+                    public void onBillingSetupFinished(BillingResult billingResult) {
+                        if (billingResult.getResponseCode() ==  BillingClient.BillingResponseCode.OK) {
+                            // The BillingClient is ready.
+                            List<String> skuList = new ArrayList<>();
+                            skuList.add("premium_upgrade");
+                            skuList.add("gas");
+                            SkuDetailsParams.Builder params = SkuDetailsParams.newBuilder();
+                            params.setSkusList(skuList).setType(BillingClient.SkuType.INAPP);
+                            billingClient.querySkuDetailsAsync(params.build(),
+                                    new SkuDetailsResponseListener() {
+                                        @Override
+                                        public void onSkuDetailsResponse(BillingResult billingResult,
+                                                                         List<SkuDetails> skuDetailsList) {
+                                            // Process the result.
+                                        }
+                                    });
+                            BillingFlowParams billingFlowParams = BillingFlowParams.newBuilder()
+                                    .setSkuDetails(skuDetails)
+                                    .build();
+                            int responseCode = billingClient.launchBillingFlow(getActivity(), billingFlowParams).getResponseCode();
+                        }
+                    }
+                    @Override
+                    public void onBillingServiceDisconnected() {
+                        // Try to restart the connection on the next request to
+                        // Google Play by calling the startConnection() method.
+                    }
+                });
+                */
 
+            }
+        });
         getUserUpdate();
         if (isInternetPresent) {
           //  GetLevelsApi(uid);
@@ -177,7 +279,19 @@ public class HomeFragment extends Fragment {
         }
 
 getCurrentLocation();
-        return view;
+
+           return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        User user = PrefManager.getInstance(getActivity()).getUser();
+        if(!user.getGuide().equals("1")){
+            ShowIntro("Give  Stuff", "Help others. Give free stuff", card, 1);
+
+        }
+
     }
 
     private void GetLevelsApi(String Uid) {
@@ -312,7 +426,42 @@ getCurrentLocation();
 
 
 
+    private void ShowIntro(String title, String text, CardView viewId, final int type) {
 
+        new GuideView.Builder(mContext)
+                .setTitle(title)
+                .setContentText(text)
+                .setContentTextSize(12)//optional
+                .setTitleTextSize(14)//optional
+                .setDismissType(DismissType.anywhere) //optional - default dismissible by TargetView
+                .setTargetView(viewId)
+                .setGuideListener(new GuideListener() {
+                    @Override
+                    public void onDismiss(View view) {
+                        if (type == 1) {
+                            ShowIntro(getResources().getString(R.string.guide_get_free_stuff), getResources().getString(R.string.guide_get_free_stuff_1), card2, 6);
+                        } else if (type == 6) {
+                            ShowIntro("Non profit", "Here you have the  possibility to register your non profit", card4, 5);
+                        } else if (type == 5)  {
+                            ShowIntro("suscribe", "Here you have the  possibility to suscribe bye -hi", card5, 4);
+                        }else if (type == 4)  {
+                            ShowIntro("donation", "Here you see your donations", donation_2, 3);
+                        }else if (type == 3)  {
+                            ShowIntro("Awards", "Here you can see the rewards you've earned", id_prize2, 2);
+                        }else if (type == 2)  {
+                            ShowIntro("Coins", "Here you can see the coins you have earned", point2, 7);
+                        }
+                        else if(type == 7)  {
+                            setGuide();
+                            SharedPreferences.Editor sharedPreferencesEditor = mContext.getSharedPreferences("show_case_pref",
+                                    Context.MODE_PRIVATE).edit();
+                            sharedPreferencesEditor.putBoolean("showcase", false);
+                        }
+                    }
+                })
+                .build()
+                .show();
+    }
 
     @Override
     public void onResume() {
@@ -352,6 +501,57 @@ getCurrentLocation();
         } else {
             track.showSettingsAlert();
         }
+    }
+
+    private void setGuide() {
+        User user = PrefManager.getInstance(getActivity()).getUser();
+        String id=null;
+        if(user.getId() == ""){
+            id = user.getId();
+        }else{
+            id = user.getId();
+        }
+
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", "0");
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.GUIDE)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try{
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String message = object.getString("message");
+                            User user2 = new User(
+                                    user.getId(),
+                                    user.getUsername(),
+                                    user.getEmail(),
+                                    user.getPassword(),
+                                    user.getPhone(),
+                                    user.getImage(),
+                                    user.getLegalinfo(),
+                                    "1",
+                                    user.getGuideFree(),
+                                    user.getGuideGiveFree()
+                            );
+
+                            PrefManager.getInstance(getActivity()).userLogin(user2);
+
+
+
+                        } catch (JSONException e) {
+
+
+                            Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
     }
 
 

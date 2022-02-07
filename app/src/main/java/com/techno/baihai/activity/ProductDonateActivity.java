@@ -769,11 +769,16 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
         progressDialog = new ProgressDialog(this);
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
-
+        String langua="EN";
+        String lang=PrefManager.get(mContext,"lang");
+        if (lang.equals("es")&& lang!=null){
+            langua="ES";
+        }
 
         HashMap<String, String> param = new HashMap<>();
         param.put("lat", latitude);
         param.put("lon", longitude);
+        param.put("language", langua);
         ApiCallBuilder.build(mContext)
                 .isShowProgressBar(false)
                 .setUrl(Constant.BASE_URL + "get_category") //http://bai-hai.com/webservice/get_category
@@ -898,7 +903,7 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
 
     public void choosePhotoFromGallary() {
 
-        Intent pickPhoto = new Intent(Intent.ACTION_PICK,
+            Intent pickPhoto = new Intent(Intent.ACTION_PICK,
                 android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
         startActivityForResult(pickPhoto, 1);
     }

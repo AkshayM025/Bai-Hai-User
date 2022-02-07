@@ -4,6 +4,7 @@ import com.techno.baihai.model.CoinHistoryModel;
 import com.techno.baihai.model.GetBaiHaiTransactionModel;
 import com.techno.baihai.model.GetCategoryModel;
 import com.techno.baihai.model.GetUserFoundnTransModel;
+import com.techno.baihai.model.RewardsHistoryModel;
 
 import java.util.Map;
 
@@ -66,7 +67,7 @@ public interface APIInterface {
     Call<GetCategoryModel> get_category(@FieldMap Map<String, String> params);
 
     @GET("get_coin_history?")
-    Call<CoinHistoryModel> get_coin_history(@Query("user_id") String user_id);
+    Call<RewardsHistoryModel> get_coin_history(@Query("user_id") String user_id);
 
 
 }
