@@ -165,11 +165,9 @@ dependencies {
 
     implementation "com.github.mreram:showcaseview:1.4.0"
 
-
-
-
-
-
+    def billing_version1 = '4.0.0'
+    
+    implementation "com.android.billingclient:billing:$billing_version1"
 
 }
 apply plugin: 'com.google.firebase.crashlytics'

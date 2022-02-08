@@ -255,9 +255,9 @@
     <string name="guide_coins">Coins</string>
     <string name="guide_coins1">Here you can see the coins you have earned</string>
     <string name="guide_donation_non_profit">Non profit</string>
-    <string name="guide_donation_non_profit1">Here you have the  possibility to send money to fundation</string>
-    <string name="guide_donation_non_profit2">Non profit</string>
-    <string name="guide_donation_non_profit21">Here you have the  possibility to help bye-hi</string>
+    <string name="guide_donation_non_profit1">Here you can contact a non profit</string>
+    <string name="guide_donation_non_profit2">Help bye-hi</string>
+    <string name="guide_donation_non_profit21">Here you can donate money to bye-hi</string>
     <string name="guide_donation_donate">Donate</string>
     <string name="guide_donation_donate1">Help others. Give free stuff</string>
     <string name="legal_information">Informacion legal</string>

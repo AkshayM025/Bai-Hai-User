@@ -4,7 +4,7 @@ import android.Manifest;
 
 public class Constant {
 
-    public static final String BASE_URL = "http://bai-hai.com/webservice/";
+    public static final String BASE_URL = "https://bai-hai.com/webservice/";
 
     public static final String LOGIN = "login?";
     public static final String LEGAL = "validate_legal?";

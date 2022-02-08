@@ -22,7 +22,7 @@ public class
 AboutUsActivity extends AppCompatActivity {
     ProgressBar progressBar = null;
     VideoView videoView = null;
-    String videoUrl = "http://bai-hai.com/uploads/video/Bai-Hai.mp4";
+    String videoUrl = "https://bai-hai.com/uploads/video/Bai-Hai.mp4";
     TextView tv_cancel;
 
     @Override

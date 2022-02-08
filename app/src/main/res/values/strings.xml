@@ -100,7 +100,7 @@
     <string name="you_will_need_to_pay_for_the_delivery">You will need to pay for the delivery</string>
     <string name="hello_before_everything_ntell_us_what_do_you_want_to_do">Hello, before everything,\ntell us what do you want to do?</string>
     <string name="donate_to_the_free_store">DONATE TO THE FREE STORE</string>
-    <string name="donate_to_a_foundaton">DONATE TO A FOUNDATON</string>
+    <string name="donate_to_a_foundaton">DONATE TO A NON PROFIT</string>
     <string name="donate_to_bai_hai">DONATE TO BYE-HI</string>
     <string name="available_foundations">Available Foundations</string>
     <string name="nicolas_medellin">Nicolas Medellin</string>
@@ -235,7 +235,7 @@
     <string name="guide_non_profit">Non profit</string>
     <string name="guide_non_profit1">Here you have the  possibility to register your non profit</string>
     <string name="guide_suscribe">suscribe</string>
-    <string name="guide_suscribe1">Here you have the  possibility to suscribe bye -hi</string>
+    <string name="guide_suscribe1">Here you have the  possibility to suscribe to bye -hi</string>
     <string name="guide_donation">donation</string>
     <string name="guide_donation1">Here you see your donations</string>
     <string name="guide_awards">Awards</string>
@@ -251,13 +251,13 @@
     <string name="guide_filters3">Filters</string>
     <string name="guide_filters31">Filter products by category</string>
     <string name="guide_donation_non_profit">Non profit</string>
-    <string name="guide_donation_non_profit1">Here you have the  possibility to send money to fundation</string>
-    <string name="guide_donation_non_profit2">Non profit</string>
-    <string name="guide_donation_non_profit21">Here you have the  possibility to help bye-hi</string>
+    <string name="guide_donation_non_profit1">Here you can contact a non profit</string>
+    <string name="guide_donation_non_profit2">Help bye-hi </string>
+    <string name="guide_donation_non_profit21">Here you can donate money to bye-hi</string>
     <string name="guide_donation_donate">Donate</string>
     <string name="guide_donation_donate1">Help others. Give free stuff</string>
     <string name="guide_product_list">Products List</string>
-    <string name="guide_product_list1">Here you can see pictures and information about products and  contact the donator</string>
+    <string name="guide_product_list1">Help others. Give free stuff</string>
 
     <string name="legal_information">Legal Information</string>
     <string name="legal_cancel">Cancel</string>
