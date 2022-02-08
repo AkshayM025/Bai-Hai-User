@@ -114,8 +114,7 @@ public class DonationFragment extends Fragment implements View.OnClickListener {
     public void onStart() {
         super.onStart();
         User user = PrefManager.getInstance(getActivity()).getUser();
-        iv_card1.setVisibility(View.GONE);
-        iv_card3.setVisibility(View.GONE);
+
 
         if (!user.getGuideGiveFree().equals("1")) {
             ShowIntro(getResources().getString(R.string.guide_donation_donate), getResources().getString(R.string.guide_donation_donate1), iv_card2, 1);
@@ -125,6 +124,7 @@ public class DonationFragment extends Fragment implements View.OnClickListener {
     }
 
     private void ShowIntro(String title, String text, CardView viewId, final int type) {
+        final int data= iv_card2.getTop();
         if (type == 1) {
             iv_card2.setTop(900);
 
@@ -141,10 +141,6 @@ public class DonationFragment extends Fragment implements View.OnClickListener {
                     @Override
                     public void onDismiss(View view) {
                         if (type == 1) {
-                            iv_card1.setVisibility(View.VISIBLE);
-                            iv_card3.setVisibility(View.VISIBLE);
-                            iv_card2.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
-
                             ShowIntro(getResources().getString(R.string.guide_donation_non_profit), getResources().getString(R.string.guide_donation_non_profit1), iv_card1, 6);
                         } else if (type == 6) {
                             ShowIntro(getResources().getString(R.string.guide_donation_non_profit2), getResources().getString(R.string.guide_donation_non_profit21), iv_card3, 5);
