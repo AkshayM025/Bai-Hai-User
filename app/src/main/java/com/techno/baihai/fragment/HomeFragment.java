@@ -1,5 +1,6 @@
 package com.techno.baihai.fragment;
 
+import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
@@ -16,6 +17,8 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.android.billingclient.api.AcknowledgePurchaseParams;
+import com.android.billingclient.api.AcknowledgePurchaseResponseListener;
 import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
@@ -23,6 +26,7 @@ import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
@@ -32,6 +36,7 @@ import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingResult;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
+import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.squareup.picasso.Picasso;
@@ -48,6 +53,8 @@ import com.techno.baihai.model.User;
 import com.techno.baihai.utils.GPSTracker;
 import com.techno.baihai.utils.PrefManager;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -63,7 +70,7 @@ import smartdevelop.ir.eram.showcaseviewlib.listener.GuideListener;
 import www.develpoeramit.mapicall.ApiCallBuilder;
 
 public class HomeFragment extends Fragment {
-
+    BillingClient billingClient;
     Context mContext;
     FragmentListener listener;
     LinearLayout donation, point, id_prize;
@@ -75,15 +82,7 @@ public class HomeFragment extends Fragment {
     private Boolean isInternetPresent = false;
     private static final String SHOWCASE_ID = "1";
     private String uid;
-    private PurchasesUpdatedListener purchasesUpdatedListener = new PurchasesUpdatedListener() {
-        @Override
-        public void onPurchasesUpdated(BillingResult billingResult, List<Purchase> purchases) {
-            // To be implemented in a later section.
-        }
-    };
 
-    private BillingClient billingClient;
-    private PurchasesUpdatedListener purchasesUpdatedListener1;
 
     public HomeFragment(FragmentListener listener) {
         // Required empty public constructor
@@ -105,31 +104,23 @@ public class HomeFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
 
         mContext = getActivity();
-        purchasesUpdatedListener1 = new PurchasesUpdatedListener() {
-            @Override
-            public void onPurchasesUpdated(BillingResult billingResult, List<Purchase> purchases) {
-                // To be implemented in a later section.
-            }
-        };
-        billingClient = BillingClient.newBuilder(mContext)
-                .setListener(purchasesUpdatedListener1)
-                .enablePendingPurchases()
-                .build();
-        billingClient.startConnection(new BillingClientStateListener() {
-            @Override
-            public void onBillingSetupFinished(BillingResult billingResult) {
-                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
-                    // The BillingClient is ready. You can query purchases here.
-                    Log.e("logueo: ", uid);
-                }
-            }
 
-            @Override
-            public void onBillingServiceDisconnected() {
-                // Try to restart the connection on the next request to
-                // Google Play by calling the startConnection() method.
-            }
-        });
+        billingClient = BillingClient.newBuilder(mContext)
+                .enablePendingPurchases()
+                .setListener(new PurchasesUpdatedListener() {
+                    @Override
+                    public void onPurchasesUpdated(@NotNull  BillingResult billingResult,@Nullable  List<Purchase> purchases) {
+                        // To be implemented in a later section.
+                        if(billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null){
+                            for(Purchase purchase: purchases){
+                                if(purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged()){
+                                    verifyPurchase(purchase);
+                                }
+                            }
+                        }
+                    }
+                }).build();
+        connectToGooglePlayBilling();
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         View view = inflater.inflate(R.layout.fragment_home, container, false);
 
@@ -224,7 +215,7 @@ public class HomeFragment extends Fragment {
             }
         });
         card5 = view.findViewById(R.id.card5);
-        card5.setOnClickListener(new View.OnClickListener() {
+        /*card5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Log.e("informacion suscribe: ", uid);
@@ -232,7 +223,7 @@ public class HomeFragment extends Fragment {
 
 
             }
-        });
+        });*/
         getUserUpdate();
         if (isInternetPresent) {
         } else {
@@ -244,7 +235,110 @@ public class HomeFragment extends Fragment {
 
         return view;
     }
+    private void verifyPurchase(Purchase purchase){
+        String requestUrl ="";
+        String purchaseToken = purchase.getPurchaseToken();
+        String purchaseTime = Long.toString(purchase.getPurchaseTime());
+        String purchaseOrderId = purchase.getOrderId();
+        String purchaseValid = Integer.toString(purchase.getPurchaseState());
+        User user = PrefManager.getInstance(getActivity()).getUser();
+        String id = user.getId();
 
+
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("purchase_token", purchaseToken);
+        parms1.put("purchase_time", purchaseTime);
+        parms1.put("purchase_order_id", purchaseOrderId);
+        parms1.put("purchase_valid", purchaseValid);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.PAY)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String isValid = object.getString("isValid");
+                            if(isValid.equals("true")){
+                                AcknowledgePurchaseParams acknowledgePurchaseParams
+                                        = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
+                                billingClient.acknowledgePurchase(
+                                        acknowledgePurchaseParams,
+                                        new AcknowledgePurchaseResponseListener() {
+                                            @Override
+                                            public void onAcknowledgePurchaseResponse(@NonNull BillingResult billingResult) {
+                                                if(billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK){
+                                                    Toast.makeText(mContext,"ACKNOLOWGED",Toast.LENGTH_LONG).show();
+
+                                                }
+                                            }
+                                        }
+                                );
+                            }
+
+
+
+                        } catch (JSONException e) {
+
+
+                            Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
+
+    }
+    private void connectToGooglePlayBilling(){
+        billingClient.startConnection(new BillingClientStateListener() {
+            @Override
+            public void onBillingSetupFinished(@NotNull BillingResult billingResult) {
+                if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
+                    getProductDetails();
+                }
+            }
+
+            @Override
+            public void onBillingServiceDisconnected() {
+                connectToGooglePlayBilling();
+            }
+        });
+    }
+
+    private void getProductDetails(){
+        List<String> productsIds = new ArrayList<>();
+        productsIds.add("skill_uper_cut");
+        SkuDetailsParams getProductsDetailsQuery = SkuDetailsParams
+                .newBuilder()
+                .setType(BillingClient.SkuType.SUBS)
+                .setSkusList(productsIds)
+                .build();
+        Activity activity= getActivity();
+        billingClient.querySkuDetailsAsync(
+                getProductsDetailsQuery,
+                new SkuDetailsResponseListener() {
+                    @Override
+                    public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @androidx.annotation.Nullable List<SkuDetails> list) {
+                        if(billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && list != null){
+
+                            card5.setOnClickListener(new View.OnClickListener() {
+                                @Override
+                                public void onClick(View v) {
+                                    SkuDetails itemInfo = list.get(0);
+                                    billingClient.launchBillingFlow(
+                                            activity,
+                                            BillingFlowParams.newBuilder().setSkuDetails(itemInfo).build()
+                                    );
+                                }
+                            });
+                        }
+                    }
+                }
+        );
+    }
     @Override
     public void onStart() {
         super.onStart();
