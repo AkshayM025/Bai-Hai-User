@@ -82,6 +82,7 @@ public class HomeFragment extends Fragment {
     private Boolean isInternetPresent = false;
     private static final String SHOWCASE_ID = "1";
     private String uid;
+    private View view;
 
 
     public HomeFragment(FragmentListener listener) {
@@ -105,24 +106,9 @@ public class HomeFragment extends Fragment {
 
         mContext = getActivity();
 
-        billingClient = BillingClient.newBuilder(mContext)
-                .enablePendingPurchases()
-                .setListener(new PurchasesUpdatedListener() {
-                    @Override
-                    public void onPurchasesUpdated(@NotNull  BillingResult billingResult,@Nullable  List<Purchase> purchases) {
-                        // To be implemented in a later section.
-                        if(billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null){
-                            for(Purchase purchase: purchases){
-                                if(purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged()){
-                                    verifyPurchase(purchase);
-                                }
-                            }
-                        }
-                    }
-                }).build();
-        connectToGooglePlayBilling();
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
-        View view = inflater.inflate(R.layout.fragment_home, container, false);
+        view = inflater.inflate(R.layout.fragment_home, container, false);
 
         home_usernameId = view.findViewById(R.id.home_usernameId);
 
@@ -232,7 +218,22 @@ public class HomeFragment extends Fragment {
         }
 
         getCurrentLocation();
-
+        billingClient = BillingClient.newBuilder(mContext)
+                .enablePendingPurchases()
+                .setListener(new PurchasesUpdatedListener() {
+                    @Override
+                    public void onPurchasesUpdated(@NotNull  BillingResult billingResult,@Nullable  List<Purchase> purchases) {
+                        // To be implemented in a later section.
+                        if(billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && purchases != null){
+                            for(Purchase purchase: purchases){
+                                if(purchase.getPurchaseState() == Purchase.PurchaseState.PURCHASED && !purchase.isAcknowledged()){
+                                    verifyPurchase(purchase);
+                                }
+                            }
+                        }
+                    }
+                }).build();
+        connectToGooglePlayBilling();
         return view;
     }
     private void verifyPurchase(Purchase purchase){
@@ -244,7 +245,7 @@ public class HomeFragment extends Fragment {
         User user = PrefManager.getInstance(getActivity()).getUser();
         String id = user.getId();
 
-
+/*
         HashMap<String, String> parms1 = new HashMap<>();
         parms1.put("user_id", id);
         parms1.put("purchase_token", purchaseToken);
@@ -289,7 +290,21 @@ public class HomeFragment extends Fragment {
 
                     public void Failed(String error) {
                     }
-                });
+                });*/
+        AcknowledgePurchaseParams acknowledgePurchaseParams
+                = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
+        billingClient.acknowledgePurchase(
+                acknowledgePurchaseParams,
+                new AcknowledgePurchaseResponseListener() {
+                    @Override
+                    public void onAcknowledgePurchaseResponse(@NonNull BillingResult billingResult) {
+                        if(billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK){
+                            Toast.makeText(mContext,"ACKNOLOWGED",Toast.LENGTH_LONG).show();
+
+                        }
+                    }
+                }
+        );
 
     }
     private void connectToGooglePlayBilling(){
@@ -298,7 +313,7 @@ public class HomeFragment extends Fragment {
             public void onBillingSetupFinished(@NotNull BillingResult billingResult) {
                 if (billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK) {
                     getProductDetails();
-                }
+                }else{}
             }
 
             @Override
@@ -310,7 +325,7 @@ public class HomeFragment extends Fragment {
 
     private void getProductDetails(){
         List<String> productsIds = new ArrayList<>();
-        productsIds.add("skill_uper_cut");
+        productsIds.add("14599");
         SkuDetailsParams getProductsDetailsQuery = SkuDetailsParams
                 .newBuilder()
                 .setType(BillingClient.SkuType.SUBS)
@@ -323,11 +338,12 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @androidx.annotation.Nullable List<SkuDetails> list) {
                         if(billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && list != null){
-
+                            SkuDetails itemInfo = list.get(0);
+                            card5 = view.findViewById(R.id.card5);
                             card5.setOnClickListener(new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    SkuDetails itemInfo = list.get(0);
+
                                     billingClient.launchBillingFlow(
                                             activity,
                                             BillingFlowParams.newBuilder().setSkuDetails(itemInfo).build()
