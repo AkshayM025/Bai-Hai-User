@@ -251,7 +251,7 @@ public class HomeActivity extends AppCompatActivity
         User user = PrefManager.getInstance(this).getUser();
         String email = null;
         if (user.getEmail() == "") {
-            email = user.getPassword();
+            email = user.getId();
         } else {
             email = user.getEmail();
         }

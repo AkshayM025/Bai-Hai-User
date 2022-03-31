@@ -384,11 +384,14 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
         progressDialog = new ProgressDialog(mContext);
         progressDialog.setMessage("Please wait...");
         progressDialog.show();
-
+        String langua = "EN";
+        String lang = PrefManager.get(mContext, "lang");
+        if (lang.equals("es") && lang != null) {
+            langua = "ES";
+        }
 
         HashMap<String, String> param = new HashMap<>();
-        param.put("lat", latitude);
-        param.put("lon", longitude);
+        param.put("language", langua);
         Call<GetCategoryModel> call = apiInterface.get_category(param);
 
         Log.e("get_user_category", "" + call.request().headers());
@@ -481,7 +484,7 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
         parms.put("used", productUsed);
         parms.put("lat", String.valueOf(lat));
         parms.put("lon", String.valueOf(lng));
-        parms.put("status", product_status);
+        parms.put("status", "Deactive");
 
         HashMap<String, File> fileHashMap = new HashMap<String, File>();
         fileHashMap.put("image1", file);

@@ -109,9 +109,9 @@ public class AcceptedChatListFragment extends Fragment {
         // http://bai-hai.com/webservice/get_chat_request?
         // seller_id=71
 
-
+        User user = PrefManager.getInstance(getActivity()).getUser();
         HashMap<String, String> param = new HashMap<>();
-        param.put("seller_id", uid);
+        param.put("seller_id", user.getId());
         param.put("status", "Accepted");
         ApiCallBuilder.build(getActivity())
                 .isShowProgressBar(false)        // http://bai-hai.com/webservice/get_chat_request?seller_id=71&status=Accepted
@@ -161,14 +161,16 @@ public class AcceptedChatListFragment extends Fragment {
                                                 String reciver_id = object1.optString("user_id");
                                                 String seller_id = object1.optString("seller_id");
                                                 String product_id = object1.optString("product_id");
+                                                if(seller_id.equals(user.getId())){
+                                                    acceptedChatModals.add(new AcceptedChatModal(reciver_id, seller_id,
+                                                            product_id, chat_username, userchat_img, status_id, "",
+                                                            product_name, product_imgUrl, product_desc));
 
 
+                                                }
 
-                                                acceptedChatModals.add(new AcceptedChatModal(reciver_id, seller_id,
-                                                        product_id, chat_username, userchat_img, status_id, "",
-                                                        product_name, product_imgUrl, product_desc));
 
-                                            }catch(JSONException e){
+                                                }catch(JSONException e){
                                                 Log.e("jsonEx", Objects.requireNonNull(e.getMessage()));
                                             }
 

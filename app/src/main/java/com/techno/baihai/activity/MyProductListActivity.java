@@ -126,7 +126,7 @@ public class MyProductListActivity extends AppCompatActivity {
 
 
                         Toast.makeText(mContext, "S=> " + popupDistance, Toast.LENGTH_LONG).show();
-                        GetProductList();
+                        GetSearchProduct();
 
                         return true;
                     }
@@ -165,27 +165,17 @@ public class MyProductListActivity extends AppCompatActivity {
             @Override
             public void afterTextChanged(Editable editable) {
                 if (isInternetPresent) {
-                    GetSearchProduct();
+                    String productStxt = search_Product.getText().toString().trim();
+                    if(!productStxt.equals("")){
+                        GetSearchProduct();
+                    }
                 } else {
                     PrefManager prefManager = new PrefManager(mContext);
                     PrefManager.showSettingsAlert(mContext);
                 }
             }
         });
-
-        if (isInternetPresent) {
-            if (latitude != null && longitude != null) {
-                GetProductList();
-            } else {
-                Toast.makeText(mContext, "location null", Toast.LENGTH_SHORT).show();
-            }
-        } else {
-            PrefManager prefManager = new PrefManager(mContext);
-            PrefManager.showSettingsAlert(mContext);
-        }
-
-
-        categoryLists.add("");
+        categoryLists.add("None");
         categoryLists.add("Technology");
         categoryLists.add("Sport");
         categoryLists.add("Furniture");
@@ -225,6 +215,19 @@ public class MyProductListActivity extends AppCompatActivity {
 
             }
         });
+        if (isInternetPresent) {
+            if (latitude != null && longitude != null) {
+                GetProductList();
+            } else {
+                Toast.makeText(mContext, "location null", Toast.LENGTH_SHORT).show();
+            }
+        } else {
+            PrefManager prefManager = new PrefManager(mContext);
+            PrefManager.showSettingsAlert(mContext);
+        }
+
+
+
 
         noDataList = findViewById(R.id.not_DataList);
 
@@ -302,7 +305,7 @@ public class MyProductListActivity extends AppCompatActivity {
 
     private void GetProductList() {
 
-
+        String distance = "";
         if (!popupDistance.equals("0")) {
 
             if (popupDistance.equals("Unlimited")) {
@@ -315,7 +318,11 @@ public class MyProductListActivity extends AppCompatActivity {
         } else {
             distance = "10";
         }
-
+        if (spinner.getSelectedItemPosition() != 0) {
+            CatId = "" + spinner.getSelectedItemPosition() + "";
+        } else {
+            CatId = "0";
+        }
         fillte = "DESC";
         Log.e("distance", distance);
         Log.e("latitude", latitude);
@@ -330,13 +337,13 @@ public class MyProductListActivity extends AppCompatActivity {
         param.put("user_id", uid);
         param.put("lat", latitude);
         param.put("lon", longitude);
-        param.put("category_id", "1");
+        param.put("category_id", CatId);
         param.put("distance", distance);
         param.put("sort_by", fillte);
 
 
         Log.e("uid", uid);
-
+        // http://bai-hai.com/webservice/get_product_by_category?user_id=98&lat=testproduct
 
         ApiCallBuilder.build(this)
                 .isShowProgressBar(false)
@@ -467,8 +474,20 @@ public class MyProductListActivity extends AppCompatActivity {
         // http://bai-hai.com/webservice/product_search?category_id=1&name=testproduct
         // category_id=1&
         // name=testproduct
+        if (!popupDistance.equals("0")) {
 
+            if (popupDistance.equals("Unlimited")) {
 
+                distance = "10000";
+            } else {
+                distance = PrefManager.get(mContext, PrefManager.KEY_DISTANCE).split(" ")[0];
+
+            }
+        } else {
+            distance = "10";
+        }
+
+        Log.e("distance", distance);
         HashMap<String, String> param = new HashMap<>();
         String productStxt = search_Product.getText().toString().trim();
         if (spinner.getSelectedItemPosition() != 0) {
@@ -483,11 +502,12 @@ public class MyProductListActivity extends AppCompatActivity {
         param.put("name", productStxt);
         param.put("lat", latitude);
         param.put("lon", longitude);
+        param.put("distance", distance);
         param.put("sort_by", "DESC");
 
 
         ApiCallBuilder.build(this)
-                .isShowProgressBar(false)// http://bai-hai.com/webservice/product_search?category_id=1&name=testproduct
+                .isShowProgressBar(false)// http://bai-hai.com/webservice/product_search?category_id=5&name=&lat=37.4220014&lon=-122.0840214&distance=10&sort_by=DESC
                 .setUrl(Constant.BASE_URL + "product_search?")
                 .setParam(param)
                 .execute(new ApiCallBuilder.onResponse() {
@@ -515,6 +535,7 @@ public class MyProductListActivity extends AppCompatActivity {
                                         JSONObject object1 = result.getJSONObject(i);
 
                                         JSONObject object3 = object1.optJSONObject("category_details");
+                                        JSONObject object2 = object1.optJSONObject("user_details");
                                         String category_image = null;
                                         if (object3 != null) {
                                             category_image = object3.getString("cat_image");
@@ -530,7 +551,7 @@ public class MyProductListActivity extends AppCompatActivity {
 
 
                                         String seller_id = object1.getString("user_id");
-
+                                        String seller_name =object2.getString("name");
                                         String product_id = object1.getString("id");
 
 
@@ -549,7 +570,7 @@ public class MyProductListActivity extends AppCompatActivity {
                                         String product_dateTime = object1.getString("date_time");
 
                                         myProductModeListls.add(new MyProductModeListl(product_id, seller_id,
-                                                "", category_id,
+                                                seller_name, category_id,
                                                 product_name, product_description, "",
                                                 product_address, product_used, product_name_imageUrl,
                                                 "", category_image, category_name, product_lat, product_lon, product_status, product_dateTime));
@@ -579,6 +600,7 @@ public class MyProductListActivity extends AppCompatActivity {
 
 
                         }
+
                         product_mAdapter = new MyProductListAdapter(getApplicationContext(), myProductModeListls);
                         product_recyclerView.removeAllViews();
 
@@ -594,7 +616,7 @@ public class MyProductListActivity extends AppCompatActivity {
                         //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
                         noDataList.setVisibility(View.GONE);
 
-                        Toast.makeText(mContext, "Check Your Network: " + error, Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, "Data not Found: " + error, Toast.LENGTH_LONG).show();
                     }
                 });
 

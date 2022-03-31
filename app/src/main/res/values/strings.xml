@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">ByeHi</string>
 
-    <string name="MAP_API_KEY">AIzaSyBahgOi1QI-R5rtXJFfViXlMIUFHFrm_Rg</string>
+    <string name="MAP_API_KEY">AIzaSyCxw6iTNCcys8A0f2EE32SgouvlXtGd01U</string>
 
 
     <!-- TODO: Remove or change this placeholder text -->
@@ -11,7 +11,7 @@
 
     <string name="facebook_app_id">550540026317755</string>
     <string name="fb_login_protocol_scheme" tools:ignore="MissingTranslation">fb5505400263177556</string>
-    <string name="reset_pass">Firstly enter a current pasword\nThen entered a new password &amp;\nconfirm password.></string>
+    <string name="reset_pass">Firstly enter a current password\nThen entered a new password &amp;\nconfirm password.></string>
     <string name="ok">OK</string>
     <string name="required">Is required?</string>
     <string name="required1">Password not match?</string>
@@ -95,8 +95,8 @@
     <string name="browse_by_category">Browse by category</string>
     <string name="messages">Messages</string>
     <string name="chat_enquiry">Chat Enquiry</string>
-    <string name="seller_chat">Seller Chat</string>
-    <string name="buyer_chat">Buyer Chat</string>
+    <string name="seller_chat">Requester Chat</string>
+    <string name="buyer_chat">Donor Chat</string>
     <string name="you_will_need_to_pay_for_the_delivery">You will need to pay for the delivery</string>
     <string name="hello_before_everything_ntell_us_what_do_you_want_to_do">Hello, before everything,\ntell us what do you want to do?</string>
     <string name="donate_to_the_free_store">DONATE TO THE FREE STORE</string>
@@ -110,7 +110,7 @@
     <string name="give_free_stuff">GIVE FREE STUFF</string>
     <string name="get_free_stuff">GET FREE STUFF</string>
     <string name="volunteer_with_nbai_hai">VOLUNTEER WITH\nBYE-HI</string>
-    <string name="subscribe_your_foundation">SUBSCRIBE YOUR NON PROFIT</string>
+    <string name="subscribe_your_foundation">SUBSCRIBE A NON PROFIT</string>
     <string name="no_result">No Result</string>
     <string name="payment_ammount">Payment Amount</string>
     <string name="cardholder_name">Cardholder name</string>
@@ -127,7 +127,7 @@
     <string name="you_will_need_to_pay_for_nthe_delivery">You will need to pay for\nthe delivery</string>
     <string name="conitnue">Conitnue</string>
     <string name="dummy_text_is_the_text_that_is_used_in_the_publishing_industery_or_by_web_designers_to_occupy_the_space_which_will_later_be_filled_with_real_content_this_is_required_when_for_example_the_final_text_is_not_avaliable">Dummy text is the text that is used in the Publishing industery or by web designers to occupy the space which will later be filled with real content. This is required when, for example, the final text is not avaliable.</string>
-    <string name="let_the_donor_know_why_you_nwant">Let the donor know why you\nwant</string>
+    <string name="let_the_donor_know_why_you_nwant">Let the donor know why you\nwant this product!</string>
     <string name="take_a_pic">Add product Image\s:</string>
     <string name="n">N</string>
     <string name="y">Y</string>
@@ -194,7 +194,7 @@
     <string name="instaShare">Like us on the Instagram</string>
     <string name="shareApp">Share</string>
     <string name="rewards_poinr">Your Reward Coins</string>
-    <string name="your_reward">Your Reward</string>
+    <string name="your_reward">Your Rewards</string>
     <string name="msg">Congratulations</string>
     <string name="enter_ammount">Enter amount</string>
     <string name="doller">$0.00</string>
@@ -205,7 +205,7 @@
     <string name="data_not">No Foundation Found</string>
     <string name="coins10">You get 10 coins..!!</string>
     <string name="foundation">Register Organization</string>
-    <string name="text_fnd">Thank you for suscribing your foundation\nWe are reviewing the information in order to approve your request!!</string>
+    <string name="text_fnd">Thank you for subscribing your foundation\nWe are reviewing the information in order to approve your request!!</string>
     <string name="coins5">You get 5 coins..!!</string>
     <string name="my_payment">My Payment History</string>
     <string name="payment_history">Payment History</string>
@@ -213,7 +213,7 @@
     <string name="transaction_nt_fnd">Transaction not found</string>
     <string name="orderId">OrderNo</string>
     <string name="organame">Foundation</string>
-    <string name="no_trans">No Transacton History</string>
+    <string name="no_trans">No Transaction History</string>
     <string name="Deatils">User-Details</string>
     <string name="seller_name_akki">Seller Name: Akki</string>
     <string name="category">Category</string>
@@ -229,13 +229,13 @@
     <string name="default_notification_channel_id">fcm_default_channel</string>
     <string name="report">report</string>
     <string name="webpage"> link webpage</string>
-    <string name="suscribe"> Suscribe</string>
+    <string name="suscribe"> Subscribe</string>
     <string name="guide_get_free_stuff">get free stuff</string>
     <string name="guide_get_free_stuff_1">here you can see the products and request them</string>
     <string name="guide_non_profit">Non profit</string>
-    <string name="guide_non_profit1">Here you have the  possibility to register your non profit</string>
-    <string name="guide_suscribe">suscribe</string>
-    <string name="guide_suscribe1">Here you have the  possibility to suscribe to bye -hi</string>
+    <string name="guide_non_profit1">Here you can  register a non profit</string>
+    <string name="guide_suscribe">subscribe</string>
+    <string name="guide_suscribe1">Here you have the  option to subscribe to bye -hi</string>
     <string name="guide_donation">donation</string>
     <string name="guide_donation1">Here you see your donations</string>
     <string name="guide_awards">Awards</string>
@@ -257,7 +257,7 @@
     <string name="guide_donation_donate">Donate</string>
     <string name="guide_donation_donate1">Help others. Give free stuff</string>
     <string name="guide_product_list">Products List</string>
-    <string name="guide_product_list1">Here you can see pictures and information about products and  contact the donator</string>
+    <string name="guide_product_list1">Here you can see pictures and information about products and  contact the donor</string>
 
     <string name="legal_information">Legal Information</string>
     <string name="legal_cancel">Cancel</string>

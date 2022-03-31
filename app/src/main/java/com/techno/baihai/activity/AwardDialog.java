@@ -172,8 +172,8 @@ public class AwardDialog extends Dialog {
 
                         } catch (JSONException e) {
                             progressDialog.dismiss();
-
-                            Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
+                            Log.e("selectedresponse=>",""+e.getMessage());
+                           // Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
 
@@ -182,7 +182,8 @@ public class AwardDialog extends Dialog {
                     @Override
                     public void Failed(String error) {
                         progressDialog.dismiss();
-                        Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
+                        Log.e("Failed=>",""+error);
+                    //    Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -224,7 +225,8 @@ public class AwardDialog extends Dialog {
 
                 } catch (Exception e) {
                     DataManager.getInstance().hideProgressMessage();
-                    Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
+                    Log.e("ErrorApiTransaction=>",""+e);
+               //     Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
 
                     e.printStackTrace();
                 }
@@ -234,7 +236,9 @@ public class AwardDialog extends Dialog {
             @Override
             public void onFailure(Call<RewardsHistoryModel> call, Throwable t) {
                 DataManager.getInstance().hideProgressMessage();
-                Toast.makeText(mContext, "" + call, Toast.LENGTH_SHORT).show();
+
+                Log.e("FailedApiTrasnsaction=>",""+call);
+             //   Toast.makeText(mContext, "" + call, Toast.LENGTH_SHORT).show();
 
             }
         });

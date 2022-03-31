@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -17,6 +18,7 @@ import com.techno.baihai.R;
 import com.techno.baihai.api.Constant;
 import com.techno.baihai.activity.CategoryProductActivity;
 import com.techno.baihai.model.MyProductModeListl;
+import com.techno.baihai.model.User;
 import com.techno.baihai.utils.PrefManager;
 
 import java.util.List;
@@ -66,6 +68,7 @@ public class MyProductListAdapter extends RecyclerView.Adapter<MyProductListAdap
 
                 if (myProductModeListls.get(position).getProduct_category_id().equals(0)) {
                     PrefManager.setString(Constant.RECEIVER_ID, myProductModeListls.get(position).getSeller_id());
+                    User user = PrefManager.getInstance(context).getUser();
 
                     intent = new Intent(context, CategoryProductActivity.class);
                     intent.putExtra("getSellerId", myProductModeListls.get(position).getSeller_id());
@@ -87,9 +90,12 @@ public class MyProductListAdapter extends RecyclerView.Adapter<MyProductListAdap
                     context.startActivity(intent);
 
                 } else {
+                    User user = PrefManager.getInstance(context).getUser();
+
                     PrefManager.setString(Constant.RECEIVER_ID, myProductModeListls.get(position).getSeller_id());
                     intent = new Intent(context, CategoryProductActivity.class);
                     intent.putExtra("getSellerId", myProductModeListls.get(position).getSeller_id());
+
                     intent.putExtra("getSellerName", myProductModeListls.get(position).getProduct_seller_name());
                     intent.putExtra("getProductId", myProductModeListls.get(position).getProduct_id());
                     intent.putExtra("getProductCategoryId", myProductModeListls.get(position).getProduct_category_id());
@@ -127,12 +133,13 @@ public class MyProductListAdapter extends RecyclerView.Adapter<MyProductListAdap
         public ImageView product_Icon;
         public CardView card_productListId;
         public TextView product_name, product_desc, product_sellerName, product_dateTimeId;
+        public LinearLayout chat_solicitud;
 
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
 
-
+            chat_solicitud = itemView.findViewById(R.id.chat_solicitud);
             product_Icon = itemView.findViewById(R.id.product_IconId);
             card_productListId = itemView.findViewById(R.id.card_productListId);
             product_name = itemView.findViewById(R.id.product_nameId);

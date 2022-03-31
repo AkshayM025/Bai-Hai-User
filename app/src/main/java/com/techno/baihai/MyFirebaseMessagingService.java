@@ -23,6 +23,9 @@ import com.techno.baihai.activity.LoginActivity;
 import com.techno.baihai.activity.ProductDonateActivity;
 import com.techno.baihai.activity.RatingActivity;
 import com.techno.baihai.activity.StripePaymentActivity;
+import com.techno.baihai.fragment.AcceptedChatListFragment;
+import com.techno.baihai.fragment.ChatEnquiryFragment;
+import com.techno.baihai.fragment.ChatFragment;
 import com.techno.baihai.utils.PrefManager;
 
 import org.json.JSONObject;
@@ -114,9 +117,9 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String status = object.optString("status");
             Intent intent;
             PendingIntent pendingIntent = null;
-            String chatRequestStatus = object.optString("key1");
+            String chatRequestStatus = object.optString("key4");
             String chatStatus = object.optString("key");
-
+            String chatStatus1 = object.optString("key2");
             String Chatresult = object.optString("type");
 
 
@@ -193,29 +196,29 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 }
 
 
-            } else if (chatRequestStatus.equals("Chat request")) {
+            } else if (chatRequestStatus.equals("You have new chat request")) {
 
                 try {
                     msg = object.optString("key1");
                     title = object.optString("key4");
-                    intent = new Intent(this, LoginActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+                    intent = new Intent(this, HomeActivity.class);
                     intent.putExtra("Chatrequest", "1");
-
                     pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
                             PendingIntent.FLAG_ONE_SHOT);
                 } catch (Exception e) {
                     e.printStackTrace();
 
                 }
-            } else if (chatStatus.equals("Your Chat request is Accepted")) {
+            } else if (chatStatus1.equals("Accepted")) {
 
                 try {
                     msg = object.getString("key");
-
+                    title = object.optString("message");
                     intent = new Intent(this, HomeActivity.class);
-                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
                     intent.putExtra("Chatrequest", "1");
+
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+
 
                     pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
                             PendingIntent.FLAG_ONE_SHOT);
@@ -272,7 +275,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }
             Date currentTime = new Date();
 //
-            if(messageBody.equals("message user") && (currentTime.getDate()== 16 && currentTime.getHours() == 13 && currentTime.getMinutes() == 49) ){
+            if(messageBody.equals("message user") && (currentTime.getDate()== 16 ) ){
                 msg="Necesitas algo o quieres donarlo? Es momento de hacerlo en bye-hi :) ";
                 title="Donate to Bye - hi";
                 intent = new Intent(this, HomeActivity.class);
@@ -286,11 +289,10 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
 
 if((messageBody.equals("message user") && (currentTime.getDate()== 16 ))
         || Chatresult.equals("insert_chat") ||
-        chatStatus.equals("Your Chat request is Accepted") ||
-        chatRequestStatus.equals("Chat request") ||
+        chatStatus1.equals("Accepted")  ||
         status.equals("Complete") ||
         status.equals("Accept") ||
-        status.equals("Rejected")){
+        status.equals("Rejected") || chatRequestStatus.equals("You have new chat request")){
     String channelId = getString(R.string.default_notification_channel_id);
     Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)

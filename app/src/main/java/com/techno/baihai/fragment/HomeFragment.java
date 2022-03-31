@@ -234,8 +234,9 @@ public class HomeFragment extends Fragment {
                     }
                 }).build();
         connectToGooglePlayBilling();
+        getUserUpdate();
         return view;
-    }
+    }   
     private void verifyPurchase(Purchase purchase){
         String requestUrl ="";
         String purchaseToken = purchase.getPurchaseToken();
@@ -334,7 +335,7 @@ public class HomeFragment extends Fragment {
         Activity activity= getActivity();
         billingClient.querySkuDetailsAsync(
                 getProductsDetailsQuery,
-                new SkuDetailsResponseListener() {
+                new  SkuDetailsResponseListener() {
                     @Override
                     public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @androidx.annotation.Nullable List<SkuDetails> list) {
                         if(billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && list != null){
@@ -358,6 +359,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        getUserUpdate();
         User user = PrefManager.getInstance(getActivity()).getUser();
         if (!user.getGuide().equals("1")) {
             ShowIntro(getResources().getString(R.string.guide_give_free_stuff), getResources().getString(R.string.guide_give_free_stuff_1), card, 1);
@@ -491,7 +493,7 @@ public class HomeFragment extends Fragment {
                 .setGuideListener(new GuideListener() {
                     @Override
                     public void onDismiss(View view) {
-                        if (type == 1) {
+                         if (type == 1) {
                             ShowIntro(getResources().getString(R.string.guide_get_free_stuff), getResources().getString(R.string.guide_get_free_stuff_1), card2, 6);
                         } else if (type == 6) {
                             ShowIntro(getResources().getString(R.string.guide_non_profit), getResources().getString(R.string.guide_non_profit1), card4, 5);
@@ -517,8 +519,6 @@ public class HomeFragment extends Fragment {
 
     @Override
     public void onResume() {
-
-
         getUserUpdate();
         getCurrentLocation();
         super.onResume();

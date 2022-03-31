@@ -63,8 +63,8 @@ AboutUsActivity extends AppCompatActivity {
 
 
     public void faceBookLike(View view) {
-        String fbPageId = "717369165113807";
-        String fbPageUrl = "https://m.facebook.com/BaiHaiorg/";
+        String fbPageId = "-102707731998257";
+        String fbPageUrl = "https://m.facebook.com/byehiapp/";
 
         try {
             getPackageManager().getPackageInfo("com.facebook.katana", 0);
@@ -88,7 +88,7 @@ AboutUsActivity extends AppCompatActivity {
     }
 
     private void InstaShare() {
-        Uri uri = Uri.parse("https://instagram.com/bai_hai_org?igshid=1f00e9w7qaxas");
+        Uri uri = Uri.parse("https://instagram.com/bye_hi_app?igshid=1f00e9w7qaxas");
         Intent likeIng = new Intent(Intent.ACTION_VIEW, uri);
 
         likeIng.setPackage("com.instagram.android");

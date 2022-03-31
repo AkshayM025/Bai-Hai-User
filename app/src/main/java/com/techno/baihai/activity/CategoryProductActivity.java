@@ -92,7 +92,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
     private SliderAdapter adapter;
     private List<MyProductModeListl> myProductModeListls;
 
-
+    private TextView chat_solicitud;
     private Circle mCircle;
     private Marker mMarker;
     private GoogleMap mMap;
@@ -109,13 +109,23 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
     private TextView sellerNameId;
     ArrayList<String> returnValue;
 
-
+    private String show_message;
     private Boolean isInternetPresent = false;
     private ProgressBar loading_spinnerId;
     private ProSliderAdapter proSliderAdapter;
     private FragmentProductCategoryBinding binding;
 
-
+    private void initilizeMap() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        assert mapFragment != null;
+        mapFragment.getMapAsync(this);
+    }
+    @Override
+    public  void onResume(){
+            super.onResume();
+            initilizeMap();
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -133,7 +143,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
         details_locationId = findViewById(R.id.details_productLocationId);
         sellerNameId = findViewById(R.id.sellerNameId);
 
-
+        chat_solicitud = findViewById(R.id.chat_description);
         User user = PrefManager.getInstance(this).getUser();
         uid = String.valueOf(user.getId());
         Log.e("red_ID", "-------->" + uid);
@@ -143,7 +153,6 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
             product_SellerId = getIntent().getStringExtra("getSellerId");
             productId = getIntent().getStringExtra("getProductId");
             product_SellerName = getIntent().getStringExtra("getSellerName");
-
 
             product_categoryId = getIntent().getStringExtra("getProductCategoryId");
             product_categoryImage = getIntent().getStringExtra("getProductCategoryImageUrl");
@@ -157,7 +166,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
             productlon = getIntent().getStringExtra("getProductlon");
 
             productNameId = findViewById(R.id.prodNameId);
-            productNameId.setText("Name:- " + productName);
+            productNameId.setText("Name:" + productName);
             sellerNameId.setText("SellerName: " + product_SellerName);
 
             sellerNameId.setOnClickListener(new View.OnClickListener() {
@@ -191,8 +200,9 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 
         if (uid.equals(product_SellerId)) {
             chat.setVisibility(View.GONE);
-
+            chat_solicitud.setVisibility(View.GONE);
         } else {
+            chat_solicitud.setVisibility(View.VISIBLE);
             chat.setVisibility(View.VISIBLE);
             chat.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -207,10 +217,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
         getCurrentLocation();
 
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        assert mapFragment != null;
-        mapFragment.getMapAsync(this);
+
 
         getAddress(Double.parseDouble(productlat), Double.parseDouble(productlon));
 
@@ -247,7 +254,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                             String result = object.optString("result");
                             JSONObject object1 = new JSONObject(result);
                             if (status.equals("1")) {
-                                Log.e("get_image_2=>", "" + object1.optString("image1").split("images/").length);
+                                Log.e("get_image_1=>", "" + object1.optString("image1").split("images/").length);
                                 binding.imageSlider.setVisibility(View.VISIBLE);
                                 myProductModeListls = new ArrayList<>();
                                 if (object1.optString("image1").split("images/").length == 2) {
@@ -285,7 +292,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                                             "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(), commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
 
                                 }
-
+                                Log.e("get_latest_product=>", "" + myProductModeListls.size());
 
                                 adapter = new SliderAdapter(getApplicationContext(), myProductModeListls);
 
@@ -607,7 +614,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
     private void getCurrentLocation() {
 
         GPSTracker track = new GPSTracker(this);
-        if (track.canGetLocation()) {
+        if (track!=null && track.canGetLocation() ) {
             latitude = String.valueOf(track.getLatitude());
             Log.e("lat=>", "-------->" + latitude);
 
@@ -635,11 +642,11 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                 .isShowProgressBar(false)
                 .setUrl(Constant.BASE_URL + "get_profile?")
                 .setParam(param)
-                .isShowProgressBar(true)
                 .execute(new ApiCallBuilder.onResponse() {
                     @Override
                     public void Success(String response) {
                         Log.e("Response=>", "" + response);
+
                         try {
 
                             JSONObject object = new JSONObject(response);

@@ -98,13 +98,12 @@ public class AvailableChatListFragment extends Fragment {
         availableChat_recyclerview.setLayoutManager(layoutManager); // set LayoutManager to RecyclerView
 
         if (isInternetPresent) {
-            // GetAvailableChat();
+             GetAvailableChat();
         } else {
             PrefManager prefManager = new PrefManager(mContext);
             PrefManager.showSettingsAlert(mContext);
         }
 
-        GetAvailableChat();
 
 
         return view;
@@ -122,9 +121,9 @@ public class AvailableChatListFragment extends Fragment {
         // http://bai-hai.com/webservice/get_chat_request?
         // seller_id=71
 
-
+        User user = PrefManager.getInstance(getActivity()).getUser();
         HashMap<String, String> param = new HashMap<>();
-        param.put("user_id", uid);
+        param.put("user_id", user.getId());
         ApiCallBuilder.build(getActivity())
                 .isShowProgressBar(false)        // http://bai-hai.com/webservice/get_available_chat_request?
                 .setUrl(Constant.BASE_URL + "get_available_chat_request?")
@@ -170,12 +169,14 @@ public class AvailableChatListFragment extends Fragment {
                                                 String reciver_id = object1.optString("seller_id");
                                                 String seller_id = object1.optString("seller_id");
                                                 String product_id = object1.optString("product_id");
+                                                if(!seller_id.equals(user.getId())){
+                                                    acceptedChatModals.add(new AcceptedChatModal(reciver_id, seller_id, product_id,
+                                                            chat_username, sellerchat_img, status_id, "",
+                                                            product_name, product_imgUrl,
+                                                            product_desc));
+                                                }
 
 
-                                                acceptedChatModals.add(new AcceptedChatModal(reciver_id, seller_id, product_id,
-                                                        chat_username, sellerchat_img, status_id, "",
-                                                        product_name, product_imgUrl,
-                                                        product_desc));
                                             } catch (JSONException e) {
                                                 Log.e("jsonEx", Objects.requireNonNull(e.getMessage()));
                                             }

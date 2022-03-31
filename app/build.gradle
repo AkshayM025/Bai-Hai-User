@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
-
 android {
     compileSdkVersion 30
     buildToolsVersion "30.0.3"
@@ -8,8 +7,8 @@ android {
         applicationId "com.techno.baihai"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 1
-        versionName "1.0"
+        versionCode 5
+        versionName "5.2"
         multiDexEnabled true
         archivesBaseName = "BaiHaiUser"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -130,12 +129,12 @@ dependencies {
 
    // implementation 'io.github.rockerhieu:emojicon:1.4.0'
 
-    implementation "com.google.android.gms:play-services-location:17.1.0"
-    implementation 'com.google.android.gms:play-services-maps:17.0.0'
+    implementation "com.google.android.gms:play-services-location:latest"
+    implementation 'com.google.android.gms:play-services-maps:latest'
    // implementation 'com.google.android.gms:play-services-ads:19.0.0'
-  //  implementation 'com.google.android.gms:play-services-vision:20.1.3'
+   //  implementation 'com.google.android.gms:play-services-vision:20.1.3'
     implementation 'com.google.android.gms:play-services-auth:19.0.0'
-    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:8.6.2'
+    implementation 'com.mapbox.mapboxsdk:mapbox-android-sdk:9.1.0'
 
     implementation 'org.apache.commons:commons-lang3:3.4'
 
@@ -158,9 +157,9 @@ dependencies {
 
     implementation 'com.facebook.android:facebook-share:[5,6)' //Facebook Share
     implementation 'com.erikagtierrez.multiple_media_picker:multiple-media-picker:1.0.5'
-  //  implementation  'com.fxn769:pix:1.0.5'
+    //  implementation  'com.fxn769:pix:1.0.5'
     implementation  'com.fxn769:pix:1.5.6'
-// https://mvnrepository.com/artifact/net.minidev/json-smart
+    // https://mvnrepository.com/artifact/net.minidev/json-smart
     implementation 'net.minidev:json-smart:2.4.7'
 
     implementation "com.github.mreram:showcaseview:1.4.0"
