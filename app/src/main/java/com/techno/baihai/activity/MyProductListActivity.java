@@ -3,7 +3,6 @@ package com.techno.baihai.activity;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.location.Address;
 import android.location.Geocoder;
 import android.os.Bundle;
@@ -29,17 +28,13 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.bumptech.glide.Glide;
 import com.techno.baihai.R;
-import com.techno.baihai.adapter.CategoryAdapter;
 import com.techno.baihai.adapter.MyProductListAdapter;
 import com.techno.baihai.api.Constant;
-import com.techno.baihai.model.CategoryList;
 import com.techno.baihai.model.MyProductModeListl;
 import com.techno.baihai.model.User;
 import com.techno.baihai.utils.GPSTracker;
 import com.techno.baihai.utils.PrefManager;
-import com.techno.baihai.utils.Preference;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -358,71 +353,74 @@ public class MyProductListActivity extends AppCompatActivity {
 
                         try {
 
+
                             if (myProductModeListls != null) {
                                 myProductModeListls.clear();
                             }
-                            JSONObject object = new JSONObject(response);
-                            String status = object.optString("status");
-                            String message = object.optString("message");
-                            if (status.equals("1")) {
+                            if(!response.equals("") && response!=null  ) {
+                                JSONObject object = new JSONObject(response);
+                                String status = object.optString("status");
+                                String message = object.optString("message");
+                                if (status.equals("1")) {
 
 
-                                JSONArray result = object.optJSONArray("result");
-                                //Log.e(TAG, "result=>" + result.length());
+                                    JSONArray result = object.optJSONArray("result");
+                                    //Log.e(TAG, "result=>" + result.length());
 
 
-                                // if (result != null) {
-                                if (result != null) {
-                                    for (int i = 0; i < result.length(); i++) {
+                                    // if (result != null) {
+                                    if (result != null) {
+                                        for (int i = 0; i < result.length(); i++) {
 
-                                        JSONObject object1 = result.getJSONObject(i);
+                                            JSONObject object1 = result.getJSONObject(i);
 
-                                        JSONObject object2 = object1.optJSONObject("user_details");
+                                            JSONObject object2 = object1.optJSONObject("user_details");
 
-                                        String seller_name = "null";
-                                        if (object2 != null) {
-                                            seller_name = object2.getString("name");
+                                            String seller_name = "null";
+                                            if (object2 != null) {
+                                                seller_name = object2.getString("name");
+                                            }
+                                            Log.e("", "name=>" + seller_name);
+
+                                            JSONObject object3 = object1.optJSONObject("category_details");
+
+                                            String category_image = "null";
+                                            if (object3 != null) {
+                                                category_image = object3.getString("cat_image");
+                                            }
+                                            String category_name = "null";
+                                            if (object3 != null) {
+                                                category_name = object3.getString("cat_name");
+                                            }
+                                            Log.e("", "category_image=>" + category_image);
+                                            String catImag = category_image;
+                                            String catName = category_name;
+
+                                            String product_id = object1.optString("id");
+
+                                            String seller_id = object1.optString("user_id");
+
+                                            String category_id = object1.optString("category_id");
+                                            String product_name = object1.optString("name");
+                                            String product_name_imageUrl = object1.optString("image1");
+                                            String product_description = object1.optString("description");
+                                            String product_address = object1.optString("address");
+                                            String product_used = object1.optString("used");
+                                            String product_lat = object1.getString("lat");
+                                            String product_lon = object1.getString("lon");
+                                            String product_status = object1.getString("status");
+                                            String product_dateTime = object1.getString("date_time");
+
+
+                                            myProductModeListls.add(new MyProductModeListl(product_id, seller_id, seller_name, category_id,
+                                                    product_name, product_description, "",
+                                                    product_address, "product_used", product_name_imageUrl,
+                                                    "", category_image, category_name, product_lat, product_lon, product_status, product_dateTime));
+
+
                                         }
-                                        Log.e("", "name=>" + seller_name);
-
-                                        JSONObject object3 = object1.optJSONObject("category_details");
-
-                                        String category_image = "null";
-                                        if (object3 != null) {
-                                            category_image = object3.getString("cat_image");
-                                        }
-                                        String category_name = "null";
-                                        if (object3 != null) {
-                                            category_name = object3.getString("cat_name");
-                                        }
-                                        Log.e("", "category_image=>" + category_image);
-                                        String catImag = category_image;
-                                        String catName = category_name;
-
-                                        String product_id = object1.optString("id");
-
-                                        String seller_id = object1.optString("user_id");
-
-                                        String category_id = object1.optString("category_id");
-                                        String product_name = object1.optString("name");
-                                        String product_name_imageUrl = object1.optString("image1");
-                                        String product_description = object1.optString("description");
-                                        String product_address = object1.optString("address");
-                                        String product_used = object1.optString("used");
-                                        String product_lat = object1.getString("lat");
-                                        String product_lon = object1.getString("lon");
-                                        String product_status = object1.getString("status");
-                                        String product_dateTime = object1.getString("date_time");
-
-
-                                        myProductModeListls.add(new MyProductModeListl(product_id, seller_id, seller_name, category_id,
-                                                product_name, product_description, "",
-                                                product_address, "product_used", product_name_imageUrl,
-                                                "", category_image, category_name, product_lat, product_lon, product_status, product_dateTime));
-
 
                                     }
-                                }
                               /*  }else {
                                     noDataList.setVisibility(View.VISIBLE);
                                     Toast.makeText(mContext, "Data Not Found ", Toast.LENGTH_LONG).show();
@@ -430,23 +428,24 @@ public class MyProductListActivity extends AppCompatActivity {
                                 }*/
 
 
-                            } else {
+                                } else {
 
-                                noDataList.setVisibility(View.VISIBLE);
-                                Toast.makeText(mContext, "Data Not Found ", Toast.LENGTH_LONG).show();
+                                    noDataList.setVisibility(View.VISIBLE);
+                                    Toast.makeText(mContext, "Data Not Found ", Toast.LENGTH_LONG).show();
+                                }
                             }
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Toast.makeText(mContext, "" + e, Toast.LENGTH_LONG).show();
 
 
                         }
-                        product_mAdapter = new MyProductListAdapter(getApplicationContext(), myProductModeListls);
-                        product_recyclerView.removeAllViews();
+                            product_mAdapter = new MyProductListAdapter(getApplicationContext(), myProductModeListls);
+                            product_recyclerView.removeAllViews();
 
 
-                        product_recyclerView.setAdapter(product_mAdapter);
+                            product_recyclerView.setAdapter(product_mAdapter);
+
 
 
                     }
@@ -518,80 +517,90 @@ public class MyProductListActivity extends AppCompatActivity {
                         noDataList.setVisibility(View.GONE);
 
                         try {
-                            JSONObject object = new JSONObject(response);
-                            String status = object.optString("status");
-                            String message = object.optString("message");
-                            if (status.equals("1")) {
+                            if(!response.equals("") && response!=null  ) {
+                                JSONObject object = new JSONObject(response);
+                                String status = object.optString("status");
+                                String message = object.optString("message");
+                                if (status.equals("1")) {
 
 
-                                JSONArray result = object.optJSONArray("result");
-                                Log.e(TAG, "result=>" + result);
+                                    JSONArray result = object.optJSONArray("result");
+                                    Log.e(TAG, "result=>" + result);
 
-                                myProductModeListls.clear();
+                                    myProductModeListls.clear();
 
-                                if (result != null) {
-                                    for (int i = 0; i < result.length(); i++) {
+                                    if (result != null) {
+                                        for (int i = 0; i < result.length(); i++) {
 
-                                        JSONObject object1 = result.getJSONObject(i);
+                                            JSONObject object1 = result.getJSONObject(i);
 
-                                        JSONObject object3 = object1.optJSONObject("category_details");
-                                        JSONObject object2 = object1.optJSONObject("user_details");
-                                        String category_image = null;
-                                        if (object3 != null) {
-                                            category_image = object3.getString("cat_image");
+                                            JSONObject object3 = object1.optJSONObject("category_details");
+                                            JSONObject object2 = object1.optJSONObject("user_details");
+                                            String category_image = null;
+                                            if (object3 != null) {
+                                                category_image = object3.getString("cat_image");
+                                            }
+                                            String category_name = null;
+                                            if (object3 != null) {
+                                                category_name = object3.getString("cat_name");
+                                            }
+                                            Log.e("", "category_image=>" + category_image);
+
+                                            String catImag = category_image;
+                                            String catName = category_name;
+
+
+                                            String seller_id = object1.getString("user_id");
+                                            String seller_name = object2.getString("name");
+                                            String product_id = object1.getString("id");
+
+
+                                            String category_id = object1.getString("category_id");
+
+                                            String product_name = object1.getString("name");
+                                            String product_name_imageUrl = object1.getString("image1");
+                                            String product_description = object1.getString("description");
+
+                                            String product_address = object1.getString("address");
+
+                                            String product_used = object1.getString("used");
+                                            String product_lat = object1.getString("lat");
+                                            String product_lon = object1.getString("lon");
+                                            String product_status = object1.getString("status");
+                                            String product_dateTime = object1.getString("date_time");
+
+                                            myProductModeListls.add(new MyProductModeListl(product_id, seller_id,
+                                                    seller_name, category_id,
+                                                    product_name, product_description, "",
+                                                    product_address, product_used, product_name_imageUrl,
+                                                    "", category_image, category_name, product_lat, product_lon, product_status, product_dateTime));
+
+                                            product_mAdapter.notifyDataSetChanged();
+
+
                                         }
-                                        String category_name = null;
-                                        if (object3 != null) {
-                                            category_name = object3.getString("cat_name");
-                                        }
-                                        Log.e("", "category_image=>" + category_image);
 
-                                        String catImag = category_image;
-                                        String catName = category_name;
+                                    } else {
+
+                                        myProductModeListls.clear();
+                                        product_recyclerView.removeAllViews();
+                                        noDataList.setVisibility(View.VISIBLE);
 
 
-                                        String seller_id = object1.getString("user_id");
-                                        String seller_name =object2.getString("name");
-                                        String product_id = object1.getString("id");
-
-
-                                        String category_id = object1.getString("category_id");
-
-                                        String product_name = object1.getString("name");
-                                        String product_name_imageUrl = object1.getString("image1");
-                                        String product_description = object1.getString("description");
-
-                                        String product_address = object1.getString("address");
-
-                                        String product_used = object1.getString("used");
-                                        String product_lat = object1.getString("lat");
-                                        String product_lon = object1.getString("lon");
-                                        String product_status = object1.getString("status");
-                                        String product_dateTime = object1.getString("date_time");
-
-                                        myProductModeListls.add(new MyProductModeListl(product_id, seller_id,
-                                                seller_name, category_id,
-                                                product_name, product_description, "",
-                                                product_address, product_used, product_name_imageUrl,
-                                                "", category_image, category_name, product_lat, product_lon, product_status, product_dateTime));
-
-                                        product_mAdapter.notifyDataSetChanged();
-
-
+                                        Toast.makeText(mContext, "No Data", Toast.LENGTH_LONG).show();
                                     }
+
+
+                                } else {
+
+                                    myProductModeListls.clear();
+                                    product_recyclerView.removeAllViews();
+                                    noDataList.setVisibility(View.VISIBLE);
+
+
+                                    Toast.makeText(mContext, "" + message, Toast.LENGTH_LONG).show();
                                 }
-
-
-                            } else {
-
-                                myProductModeListls.clear();
-                                product_recyclerView.removeAllViews();
-                                noDataList.setVisibility(View.VISIBLE);
-
-
-                                Toast.makeText(mContext, "" + message, Toast.LENGTH_LONG).show();
                             }
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                             noDataList.setVisibility(View.GONE);
@@ -601,10 +610,11 @@ public class MyProductListActivity extends AppCompatActivity {
 
                         }
 
-                        product_mAdapter = new MyProductListAdapter(getApplicationContext(), myProductModeListls);
-                        product_recyclerView.removeAllViews();
+                            product_mAdapter = new MyProductListAdapter(getApplicationContext(), myProductModeListls);
+                            product_recyclerView.removeAllViews();
 
-                        product_recyclerView.setAdapter(product_mAdapter);
+                            product_recyclerView.setAdapter(product_mAdapter);
+
 
 
                     }
@@ -649,41 +659,42 @@ public class MyProductListActivity extends AppCompatActivity {
                         Log.e("ResponseCategory=>", "" + response);
 
                         try {
-                            JSONObject object = new JSONObject(response);
-                            String status = object.optString("status");
-                            String message = object.optString("message");
-                            if (status.equals("1")) {
+                            if(!response.equals("") && response!=null  ) {
+                                JSONObject object = new JSONObject(response);
+                                String status = object.optString("status");
+                                String message = object.optString("message");
+                                if (status.equals("1")) {
 
 
-                                JSONArray jArray = object.optJSONArray("result");
-                                //Log.e(TAG, "result=>" + jArray);
+                                    JSONArray jArray = object.optJSONArray("result");
+                                    //Log.e(TAG, "result=>" + jArray);
 
-                                if (jArray != null) {
-                                    for (int i = 0; i < jArray.length(); i++) {
-
-
-                                        JSONObject object1 = jArray.getJSONObject(i);
+                                    if (jArray != null) {
+                                        for (int i = 0; i < jArray.length(); i++) {
 
 
-                                        // Log.e(TAG, "resulti=>" + i);
-                                        final String category_id = object1.getString("id");
-
-                                        final String category_name = object1.getString("category_name");
-                                        final String imageUrl = object1.getString("image");
+                                            JSONObject object1 = jArray.getJSONObject(i);
 
 
-                                        categoryProd.add(category_name);
+                                            // Log.e(TAG, "resulti=>" + i);
+                                            final String category_id = object1.getString("id");
+
+                                            final String category_name = object1.getString("category_name");
+                                            final String imageUrl = object1.getString("image");
 
 
+                                            categoryProd.add(category_name);
+
+
+                                        }
                                     }
+
+
+                                } else {
+
+                                    Toast.makeText(mContext, "Not Match", Toast.LENGTH_SHORT).show();
                                 }
-
-
-                            } else {
-
-                                Toast.makeText(mContext, "Not Match", Toast.LENGTH_SHORT).show();
                             }
-
                         } catch (JSONException e) {
                             e.printStackTrace();
                             Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
@@ -742,11 +753,7 @@ public class MyProductListActivity extends AppCompatActivity {
     private void setGuideProducts() {
         User user = PrefManager.getInstance(this).getUser();
         String id = null;
-        if (user.getId() == "") {
-            id = user.getId();
-        } else {
-            id = user.getId();
-        }
+        id = user.getId();
 
         HashMap<String, String> parms1 = new HashMap<>();
         parms1.put("user_id", id);
@@ -757,25 +764,26 @@ public class MyProductListActivity extends AppCompatActivity {
                 .execute(new ApiCallBuilder.onResponse() {
                     public void Success(String response) {
                         try {
-                            Log.e("selectedresponse=>", "-------->" + response);
-                            JSONObject object = new JSONObject(response);
-                            String message = object.getString("message");
-                            User user2 = new User(
-                                    user.getId(),
-                                    user.getUsername(),
-                                    user.getEmail(),
-                                    user.getPassword(),
-                                    user.getPhone(),
-                                    user.getImage(),
-                                    user.getLegalinfo(),
-                                    user.getGuide(),
-                                    "1",
-                                    user.getGuideGiveFree()
-                            );
+                            if(!response.equals("") && response!=null  ) {
+                                Log.e("selectedresponse=>", "-------->" + response);
+                                JSONObject object = new JSONObject(response);
+                                String message = object.getString("message");
+                                User user2 = new User(
+                                        user.getId(),
+                                        user.getUsername(),
+                                        user.getEmail(),
+                                        user.getPassword(),
+                                        user.getPhone(),
+                                        user.getImage(),
+                                        user.getLegalinfo(),
+                                        user.getGuide(),
+                                        "1",
+                                        user.getGuideGiveFree()
+                                );
 
-                            PrefManager.getInstance(mContext).userLogin(user2);
+                                PrefManager.getInstance(mContext).userLogin(user2);
 
-
+                            }
                         } catch (JSONException e) {
 
 

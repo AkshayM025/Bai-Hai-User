@@ -65,51 +65,52 @@ public class MyProductListAdapter extends RecyclerView.Adapter<MyProductListAdap
             public void onClick(View view) {
 
                 Intent intent = new Intent();
+                if(myProductModeListls.size()>0) {
+                    if (myProductModeListls.get(position).getProduct_category_id().equals(0)) {
+                        PrefManager.setString(Constant.RECEIVER_ID, myProductModeListls.get(position).getSeller_id());
+                        User user = PrefManager.getInstance(context).getUser();
 
-                if (myProductModeListls.get(position).getProduct_category_id().equals(0)) {
-                    PrefManager.setString(Constant.RECEIVER_ID, myProductModeListls.get(position).getSeller_id());
-                    User user = PrefManager.getInstance(context).getUser();
+                        intent = new Intent(context, CategoryProductActivity.class);
+                        intent.putExtra("getSellerId", myProductModeListls.get(position).getSeller_id());
+                        intent.putExtra("getSellerName", myProductModeListls.get(position).getProduct_seller_name());
 
-                    intent = new Intent(context, CategoryProductActivity.class);
-                    intent.putExtra("getSellerId", myProductModeListls.get(position).getSeller_id());
-                    intent.putExtra("getSellerName", myProductModeListls.get(position).getProduct_seller_name());
+                        intent.putExtra("getProductId", myProductModeListls.get(position).getProduct_id());
+                        intent.putExtra("getProductCategoryId", myProductModeListls.get(position).getProduct_category_id());
+                        intent.putExtra("getProductCategoryImageUrl", myProductModeListls.get(position).getCategory_image());
+                        intent.putExtra("getProductCategoryName", myProductModeListls.get(position).getCategory_name());
+                        intent.putExtra("getProductName", myProductModeListls.get(position).getProduct_name());
+                        intent.putExtra("getProductImageUrl", myProductModeListls.get(position).getProduct_image1Url());
+                        intent.putExtra("getProductDecrip", myProductModeListls.get(position).getProduct_description());
+                        intent.putExtra("getProductAddress", myProductModeListls.get(position).getProduct_address());
+                        intent.putExtra("getProductlat", myProductModeListls.get(position).getProduct_lat());
+                        intent.putExtra("getProductlon", myProductModeListls.get(position).getProduct_lon());
 
-                    intent.putExtra("getProductId", myProductModeListls.get(position).getProduct_id());
-                    intent.putExtra("getProductCategoryId", myProductModeListls.get(position).getProduct_category_id());
-                    intent.putExtra("getProductCategoryImageUrl", myProductModeListls.get(position).getCategory_image());
-                    intent.putExtra("getProductCategoryName", myProductModeListls.get(position).getCategory_name());
-                    intent.putExtra("getProductName", myProductModeListls.get(position).getProduct_name());
-                    intent.putExtra("getProductImageUrl", myProductModeListls.get(position).getProduct_image1Url());
-                    intent.putExtra("getProductDecrip", myProductModeListls.get(position).getProduct_description());
-                    intent.putExtra("getProductAddress", myProductModeListls.get(position).getProduct_address());
-                    intent.putExtra("getProductlat", myProductModeListls.get(position).getProduct_lat());
-                    intent.putExtra("getProductlon", myProductModeListls.get(position).getProduct_lon());
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(intent);
 
-                    context.startActivity(intent);
+                    } else {
+                        User user = PrefManager.getInstance(context).getUser();
 
-                } else {
-                    User user = PrefManager.getInstance(context).getUser();
+                        PrefManager.setString(Constant.RECEIVER_ID, myProductModeListls.get(position).getSeller_id());
+                        intent = new Intent(context, CategoryProductActivity.class);
+                        intent.putExtra("getSellerId", myProductModeListls.get(position).getSeller_id());
 
-                    PrefManager.setString(Constant.RECEIVER_ID, myProductModeListls.get(position).getSeller_id());
-                    intent = new Intent(context, CategoryProductActivity.class);
-                    intent.putExtra("getSellerId", myProductModeListls.get(position).getSeller_id());
+                        intent.putExtra("getSellerName", myProductModeListls.get(position).getProduct_seller_name());
+                        intent.putExtra("getProductId", myProductModeListls.get(position).getProduct_id());
+                        intent.putExtra("getProductCategoryId", myProductModeListls.get(position).getProduct_category_id());
+                        intent.putExtra("getProductCategoryImageUrl", myProductModeListls.get(position).getCategory_image());
+                        intent.putExtra("getProductCategoryName", myProductModeListls.get(position).getCategory_name());
+                        intent.putExtra("getProductName", myProductModeListls.get(position).getProduct_name());
+                        intent.putExtra("getProductImageUrl", myProductModeListls.get(position).getProduct_image1Url());
+                        intent.putExtra("getProductDecrip", myProductModeListls.get(position).getProduct_description());
+                        intent.putExtra("getProductAddress", myProductModeListls.get(position).getProduct_address());
+                        intent.putExtra("getProductlat", myProductModeListls.get(position).getProduct_lat());
+                        intent.putExtra("getProductlon", myProductModeListls.get(position).getProduct_lon());
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 
-                    intent.putExtra("getSellerName", myProductModeListls.get(position).getProduct_seller_name());
-                    intent.putExtra("getProductId", myProductModeListls.get(position).getProduct_id());
-                    intent.putExtra("getProductCategoryId", myProductModeListls.get(position).getProduct_category_id());
-                    intent.putExtra("getProductCategoryImageUrl", myProductModeListls.get(position).getCategory_image());
-                    intent.putExtra("getProductCategoryName", myProductModeListls.get(position).getCategory_name());
-                    intent.putExtra("getProductName", myProductModeListls.get(position).getProduct_name());
-                    intent.putExtra("getProductImageUrl", myProductModeListls.get(position).getProduct_image1Url());
-                    intent.putExtra("getProductDecrip", myProductModeListls.get(position).getProduct_description());
-                    intent.putExtra("getProductAddress", myProductModeListls.get(position).getProduct_address());
-                    intent.putExtra("getProductlat", myProductModeListls.get(position).getProduct_lat());
-                    intent.putExtra("getProductlon", myProductModeListls.get(position).getProduct_lon());
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-
-                    context.startActivity(intent);
+                        context.startActivity(intent);
+                    }
                 }
             }
         });

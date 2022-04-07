@@ -71,7 +71,7 @@ import java.util.Locale;
 import de.hdodenhof.circleimageview.CircleImageView;
 import www.develpoeramit.mapicall.ApiCallBuilder;
 
-
+//
 public class
 CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback {
 
@@ -115,17 +115,18 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
     private ProSliderAdapter proSliderAdapter;
     private FragmentProductCategoryBinding binding;
 
-    private void initilizeMap() {
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                .findFragmentById(R.id.map);
-        assert mapFragment != null;
-        mapFragment.getMapAsync(this);
-    }
-    @Override
-    public  void onResume(){
-            super.onResume();
-            initilizeMap();
-    }
+        private void initilizeMap() {
+            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                    .findFragmentById(R.id.map);
+            assert mapFragment != null;
+            mapFragment.getMapAsync(this);
+        }
+
+        @Override
+        public  void onResume(){
+                super.onResume();
+                initilizeMap();
+        }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -181,7 +182,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 
         } catch (Exception exception) {
             exception.printStackTrace();
-            Toast.makeText(mContext, "" + exception, Toast.LENGTH_LONG).show();
+            Toast.makeText(mContext, "error datos" , Toast.LENGTH_LONG).show();
         }
 
         GetSliderProductList(productId);
@@ -223,7 +224,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 
     }
 
-    private void GetSliderProductList(String productId) {
+    private void    GetSliderProductList(String productId) {
 
 
         final ProgressDialog progressDialog;
@@ -234,6 +235,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 
         HashMap<String, String> param = new HashMap<>();
         param.put("product_id", productId);
+        //binding.imageSlider.setVisibility(View.VISIBLE);
 
 
         ApiCallBuilder.build(this)
@@ -246,73 +248,75 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                         Log.e("get_latest_product=>", "" + response);
                         progressDialog.dismiss();
                         try {
-                            GetProDetailModel commentModel = new Gson().fromJson(response, GetProDetailModel.class);
+                            if(!response.equals("") && response!=null  ){
+                               myProductModeListls = new ArrayList<>();
+                                JSONObject object = new JSONObject(response);
+                                String status = object.optString("status");
+                                String message = object.optString("message");
+                                String result = object.optString("result");
+                                JSONObject object1 = new JSONObject(result);
+                                JSONObject object2 = object1.optJSONObject("user_details");
+                                JSONObject object3 = object1.optJSONObject("category_details");
+                                if (status.equals("1") && !object1.equals("")) {
+                                   // Log.e("get_image_2=>", "" + commentModel.getResult().getImage1());
 
-                            JSONObject object = new JSONObject(response);
-                            String status = object.optString("status");
-                            String message = object.optString("message");
-                            String result = object.optString("result");
-                            JSONObject object1 = new JSONObject(result);
-                            if (status.equals("1")) {
-                                Log.e("get_image_1=>", "" + object1.optString("image1").split("images/").length);
-                                binding.imageSlider.setVisibility(View.VISIBLE);
-                                myProductModeListls = new ArrayList<>();
-                                if (object1.optString("image1").split("images/").length == 2) {
-                                    myProductModeListls.add(new MyProductModeListl(productId, commentModel.getResult().getUserId(),
-                                            commentModel.getResult().getUserDetails().getUserName(), commentModel.getResult().getCategoryId(), commentModel.getResult().getName(), commentModel.getResult().getDescription(),
-                                            "", commentModel.getResult().getAddress(), commentModel.getResult().getUsed(), commentModel.getResult().getImage1(),
-                                            "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(), commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
+                                    if (object1.optString("image1").split("images/").length == 2) {
+                                        myProductModeListls.add(new MyProductModeListl(productId, object1.optString("user_id"),
+                                                object2.optString("user_name"), object1.optString("category_id"), object1.optString("name"), object1.optString("description"),
+                                                "", object1.optString("address"), object1.optString("used"), object1.optString("image1"),
+                                                "", object3.optString("cat_image"), object3.optString("cat_name"), object1.optString("lat"), object1.optString("lon"), "product_status", "product_dateTime"));
 
+                                    }
+                                    if (object1.optString("image2").split("images/").length == 2) {
+                                        myProductModeListls.add(new MyProductModeListl(productId, object1.optString("user_id"),
+                                                object2.optString("user_name"), object1.optString("category_id"), object1.optString("name"), object1.optString("description"),
+                                                "", object1.optString("address"), object1.optString("used"), object1.optString("image2"),
+                                                "", object3.optString("cat_image"), object3.optString("cat_name"), object1.optString("lat"), object1.optString("lon"), "product_status", "product_dateTime"));
+
+                                    }
+                                    if (object1.optString("image3").split("images/").length == 2) {
+                                        myProductModeListls.add(new MyProductModeListl(productId, object1.optString("user_id"),
+                                                object2.optString("user_name"), object1.optString("category_id"), object1.optString("name"), object1.optString("description"),
+                                                "", object1.optString("address"), object1.optString("used"), object1.optString("image3"),
+                                                "", object3.optString("cat_image"), object3.optString("cat_name"), object1.optString("lat"), object1.optString("lon"), "product_status", "product_dateTime"));
+
+                                    }
+                                    if (object1.optString("image4").split("images/").length == 2) {
+                                        myProductModeListls.add(new MyProductModeListl(productId, object1.optString("user_id"),
+                                                object2.optString("user_name"), object1.optString("category_id"), object1.optString("name"), object1.optString("description"),
+                                                "", object1.optString("address"), object1.optString("used"), object1.optString("image4"),
+                                                "", object3.optString("cat_image"), object3.optString("cat_name"), object1.optString("lat"), object1.optString("lon"), "product_status", "product_dateTime"));
+
+                                    }
+                                    if (object1.optString("image5").split("images/").length == 2) {
+                                        myProductModeListls.add(new MyProductModeListl(productId, object1.optString("user_id"),
+                                                object2.optString("user_name"), object1.optString("category_id"), object1.optString("name"), object1.optString("description"),
+                                                "", object1.optString("address"), object1.optString("used"), object1.optString("image5"),
+                                                "", object3.optString("cat_image"), object3.optString("cat_name"), object1.optString("lat"), object1.optString("lon"), "product_status", "product_dateTime"));
+
+                                    }
+
+                                    adapter = new SliderAdapter(getApplicationContext(), myProductModeListls);
+
+                                    binding.imageSlider.setSliderAdapter(adapter);
+                                    adapter.notifyDataSetChanged();
+                                    binding.imageSlider.setIndicatorAnimation(IndicatorAnimationType.THIN_WORM); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
+                                    binding.imageSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+                                    binding.imageSlider.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
+                                    binding.imageSlider.setIndicatorSelectedColor(Color.WHITE);
+                                    binding.imageSlider.setIndicatorUnselectedColor(Color.GRAY);
+                                    binding.imageSlider.setScrollTimeInSec(4); //set scroll delay in seconds :
+                                    binding.imageSlider.startAutoCycle();
+
+
+                                } else {
+                                   binding.imageSlider.setVisibility(View.GONE);
+                                    binding.productImgdetailsId.setVisibility(View.VISIBLE);
+
+                                    Toast.makeText(mContext, "You have no new product\nnear by ", Toast.LENGTH_SHORT).show();
                                 }
-                                if (object1.optString("image2").split("images/").length == 2) {
-                                    myProductModeListls.add(new MyProductModeListl(productId, commentModel.getResult().getUserId(),
-                                            commentModel.getResult().getUserDetails().getUserName(), commentModel.getResult().getCategoryId(), commentModel.getResult().getName(), commentModel.getResult().getDescription(),
-                                            "", commentModel.getResult().getAddress(), commentModel.getResult().getUsed(), commentModel.getResult().getImage2(),
-                                            "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(), commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
-
-                                }
-                                if (object1.optString("image3").split("images/").length == 2) {
-                                    myProductModeListls.add(new MyProductModeListl(productId, commentModel.getResult().getUserId(),
-                                            commentModel.getResult().getUserDetails().getUserName(), commentModel.getResult().getCategoryId(), commentModel.getResult().getName(), commentModel.getResult().getDescription(),
-                                            "", commentModel.getResult().getAddress(), commentModel.getResult().getUsed(), commentModel.getResult().getImage3(),
-                                            "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(), commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
-
-                                }
-                                if (object1.optString("image4").split("images/").length == 2) {
-                                    myProductModeListls.add(new MyProductModeListl(productId, commentModel.getResult().getUserId(),
-                                            commentModel.getResult().getUserDetails().getUserName(), commentModel.getResult().getCategoryId(), commentModel.getResult().getName(), commentModel.getResult().getDescription(),
-                                            "", commentModel.getResult().getAddress(), commentModel.getResult().getUsed(), commentModel.getResult().getImage4(),
-                                            "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(), commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
-
-                                }
-                                if (object1.optString("image5").split("images/").length == 2) {
-                                    myProductModeListls.add(new MyProductModeListl(productId, commentModel.getResult().getUserId(),
-                                            commentModel.getResult().getUserDetails().getUserName(), commentModel.getResult().getCategoryId(), commentModel.getResult().getName(), commentModel.getResult().getDescription(),
-                                            "", commentModel.getResult().getAddress(), commentModel.getResult().getUsed(), commentModel.getResult().getImage5(),
-                                            "", commentModel.getResult().getCategoryDetails().getCatImage(), commentModel.getResult().getCategoryDetails().getCatName(), commentModel.getResult().getLat(), commentModel.getResult().getLon(), "product_status", "product_dateTime"));
-
-                                }
-                                Log.e("get_latest_product=>", "" + myProductModeListls.size());
-
-                                adapter = new SliderAdapter(getApplicationContext(), myProductModeListls);
-
-                                binding.imageSlider.setSliderAdapter(adapter);
-                                adapter.notifyDataSetChanged();
-                                binding.imageSlider.setIndicatorAnimation(IndicatorAnimationType.THIN_WORM); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
-                                binding.imageSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
-                                binding.imageSlider.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
-                                binding.imageSlider.setIndicatorSelectedColor(Color.WHITE);
-                                binding.imageSlider.setIndicatorUnselectedColor(Color.GRAY);
-                                binding.imageSlider.setScrollTimeInSec(4); //set scroll delay in seconds :
-                                binding.imageSlider.startAutoCycle();
-
-
-                            } else {
-                                binding.imageSlider.setVisibility(View.GONE);
-                                binding.productImgdetailsId.setVisibility(View.VISIBLE);
-
-                                Toast.makeText(mContext, "You have no new product\nnear by ", Toast.LENGTH_SHORT).show();
                             }
+
 
 
                         } catch (JSONException e) {
@@ -560,6 +564,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                         Log.e("responsechat=>", String.valueOf(response));
                         // do anything with response
                         try {
+                            if(!response.equals("") && response!=null  ){
                             JSONObject object = new JSONObject(response);
                             String status = object.optString("status");
                             message = object.optString("message");
@@ -589,7 +594,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                                 Toast.makeText(CategoryProductActivity.this, " " + message, Toast.LENGTH_LONG).show();
 
                             }
-
+                        }
 
                         } catch (JSONException e) {
 
@@ -602,7 +607,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                     @Override
                     public void Failed(String error) {
                         progressDialog.dismiss();
-                        Toast.makeText(mContext, "Error=" + error, Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, "Error=" , Toast.LENGTH_LONG).show();
 
                     }
                 });
@@ -642,116 +647,116 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                 .isShowProgressBar(false)
                 .setUrl(Constant.BASE_URL + "get_profile?")
                 .setParam(param)
+                .isShowProgressBar(true)
                 .execute(new ApiCallBuilder.onResponse() {
                     @Override
                     public void Success(String response) {
                         Log.e("Response=>", "" + response);
-
                         try {
-
-                            JSONObject object = new JSONObject(response);
-                            String status = object.optString("status");
-                            String message = object.optString("message");
-                            if (status.equals("1")) {
-
-
-                                //   https://www.shipit.ng/BaiHai/webservice/get_profile?user_id=1
-
-                                JSONObject result = object.optJSONObject("result");
+                            if(!response.equals("") && response!=null  ) {
+                                JSONObject object = new JSONObject(response);
+                                String status = object.optString("status");
+                                String message = object.optString("message");
+                                if (status.equals("1")) {
 
 
-                                String user_ID = "null";
-                                if (result != null) {
-                                    user_ID = result.optString("id");
-                                }
-                                String username = "null";
-                                if (result != null) {
-                                    username = result.optString("name");
-                                }
-                                String mobile = "null";
-                                if (result != null) {
-                                    mobile = result.optString("mobile");
-                                }
-                                String email = "null";
-                                if (result != null) {
-                                    email = result.optString("email");
-                                }
-                                String password = "null";
-                                if (result != null) {
-                                    password = result.optString("password");
-                                }
-                                String image = "null";
-                                if (result != null) {
-                                    image = result.optString("image");
-                                }
-                                String legal_info = "null";
-                                if (result != null) {
-                                    legal_info = result.optString("legal_info");
-                                }
-                                String guide = "null";
-                                if (result != null) {
-                                    guide = result.optString("guide");
-                                }
-                                String guide_free = "null";
-                                if (result != null) {
-                                    guide_free = result.optString("guide_free");
-                                }
-                                String guide_give_free = "null";
-                                if (result != null) {
-                                    guide_give_free = result.optString("guide_give_free");
-                                }
-                                // Log.e("image=>", "-------->" + image);
+                                    //   https://www.shipit.ng/BaiHai/webservice/get_profile?user_id=1
+
+                                    JSONObject result = object.optJSONObject("result");
 
 
-                                User user = new User(user_ID, username, email, password, mobile, image, legal_info, guide, guide_free, guide_give_free);
-
-                                PrefManager.getInstance(getApplicationContext()).userLogin(user);
-
-
-                                final AlertDialog.Builder alert = new AlertDialog.Builder(CategoryProductActivity.this);
-
-                                View mView = getLayoutInflater().inflate(R.layout.user_dialog, null);
-                                nameId = mView.findViewById(R.id.nameId);
-                                user_mobileId = mView.findViewById(R.id.user_mobileId);
-                                user_imgId = mView.findViewById(R.id.user_imgId);
-                                btn_user_dialog = mView.findViewById(R.id.btn_user_dialog);
-                                img_cancel = mView.findViewById(R.id.img_cancel);
-                                loading_spinnerId = mView.findViewById(R.id.loading_spinnerId);
-
-
-                                alert.setView(mView);
-                                final AlertDialog alertDialog = alert.create();
-                                alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-                                alertDialog.setCanceledOnTouchOutside(false);
-                                nameId.setText(user.getUsername());
-                                user_mobileId.setText(mobile);
-                                Picasso.get().load(image).placeholder(R.drawable.profile_img).into(user_imgId);
-                                img_cancel.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        alertDialog.dismiss();
-
+                                    String user_ID = "null";
+                                    if (result != null) {
+                                        user_ID = result.optString("id");
                                     }
-                                });
-
-                                btn_user_dialog.setOnClickListener(new View.OnClickListener() {
-                                    @Override
-                                    public void onClick(View v) {
-                                        alertDialog.dismiss();
-
+                                    String username = "null";
+                                    if (result != null) {
+                                        username = result.optString("name");
                                     }
-                                });
+                                    String mobile = "null";
+                                    if (result != null) {
+                                        mobile = result.optString("mobile");
+                                    }
+                                    String email = "null";
+                                    if (result != null) {
+                                        email = result.optString("email");
+                                    }
+                                    String password = "null";
+                                    if (result != null) {
+                                        password = result.optString("password");
+                                    }
+                                    String image = "null";
+                                    if (result != null) {
+                                        image = result.optString("image");
+                                    }
+                                    String legal_info = "null";
+                                    if (result != null) {
+                                        legal_info = result.optString("legal_info");
+                                    }
+                                    String guide = "null";
+                                    if (result != null) {
+                                        guide = result.optString("guide");
+                                    }
+                                    String guide_free = "null";
+                                    if (result != null) {
+                                        guide_free = result.optString("guide_free");
+                                    }
+                                    String guide_give_free = "null";
+                                    if (result != null) {
+                                        guide_give_free = result.optString("guide_give_free");
+                                    }
+                                    // Log.e("image=>", "-------->" + image);
 
 
-                                alertDialog.show();
+                                    User user = new User(user_ID, username, email, password, mobile, image, legal_info, guide, guide_free, guide_give_free);
+
+                                    PrefManager.getInstance(getApplicationContext()).userLogin(user);
 
 
-                            } else {
-                                //loading_spinnerId.setVisibility(View.GONE);
+                                    final AlertDialog.Builder alert = new AlertDialog.Builder(CategoryProductActivity.this);
 
-                                Toast.makeText(mContext, "" + message, Toast.LENGTH_SHORT).show();
+                                    View mView = getLayoutInflater().inflate(R.layout.user_dialog, null);
+                                    nameId = mView.findViewById(R.id.nameId);
+                                    user_mobileId = mView.findViewById(R.id.user_mobileId);
+                                    user_imgId = mView.findViewById(R.id.user_imgId);
+                                    btn_user_dialog = mView.findViewById(R.id.btn_user_dialog);
+                                    img_cancel = mView.findViewById(R.id.img_cancel);
+                                    loading_spinnerId = mView.findViewById(R.id.loading_spinnerId);
+
+
+                                    alert.setView(mView);
+                                    final AlertDialog alertDialog = alert.create();
+                                    alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+                                    alertDialog.setCanceledOnTouchOutside(false);
+                                    nameId.setText(user.getUsername());
+                                    user_mobileId.setText(mobile);
+                                    Picasso.get().load(image).placeholder(R.drawable.profile_img).into(user_imgId);
+                                    img_cancel.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            alertDialog.dismiss();
+
+                                        }
+                                    });
+
+                                    btn_user_dialog.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            alertDialog.dismiss();
+
+                                        }
+                                    });
+
+
+                                    alertDialog.show();
+
+
+                                } else {
+                                    //loading_spinnerId.setVisibility(View.GONE);
+
+                                    Toast.makeText(mContext, "error en consumo profile", Toast.LENGTH_SHORT).show();
+                                }
                             }
-
 
                         } catch (Exception e) {
                             e.printStackTrace();
