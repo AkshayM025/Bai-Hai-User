@@ -40,7 +40,7 @@ import retrofit2.Callback;
 import retrofit2.Response;
 import www.develpoeramit.mapicall.ApiCallBuilder;
 
-public class AwardDialog extends Dialog {
+public class    AwardDialog extends Dialog {
 
 
     public Activity mContext;

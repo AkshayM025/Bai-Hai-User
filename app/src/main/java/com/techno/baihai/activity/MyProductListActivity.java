@@ -30,12 +30,15 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.techno.baihai.R;
 import com.techno.baihai.adapter.MyProductListAdapter;
+import com.techno.baihai.api.APIClient;
 import com.techno.baihai.api.Constant;
+import com.techno.baihai.model.GetCategoryModel;
 import com.techno.baihai.model.MyProductModeListl;
 import com.techno.baihai.model.User;
 import com.techno.baihai.utils.GPSTracker;
 import com.techno.baihai.utils.PrefManager;
 
+import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -46,11 +49,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+import retrofit2.Call;
+import retrofit2.Callback;
+import retrofit2.Response;
 import smartdevelop.ir.eram.showcaseviewlib.GuideView;
 import smartdevelop.ir.eram.showcaseviewlib.config.DismissType;
 import smartdevelop.ir.eram.showcaseviewlib.config.Gravity;
 import smartdevelop.ir.eram.showcaseviewlib.listener.GuideListener;
 import www.develpoeramit.mapicall.ApiCallBuilder;
+import com.techno.baihai.api.APIInterface;
 
 
 public class MyProductListActivity extends AppCompatActivity {
@@ -68,11 +75,13 @@ public class MyProductListActivity extends AppCompatActivity {
     private String latitude, longitude;
     private List<MyProductModeListl> myProductModeListls;
     private TextView location_productId, noDataList;
-    private String uid, CatId, searchProductTxt;
+    private String uid, CatId;
+    ArrayList<String> category = new ArrayList<>();
+    ArrayList<GetCategoryModel.Result> category_new = new ArrayList<>();
     private String distance;
-    private String popupFillter;
     private String fillte;
     List<String> categoryLists;
+    private APIInterface apiInterface;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -93,7 +102,7 @@ public class MyProductListActivity extends AppCompatActivity {
         User user = PrefManager.getInstance(this).getUser();
         uid = String.valueOf(user.getId());
         Log.i(TAG, "user_id: " + uid);
-
+        apiInterface = APIClient.getClient().create(APIInterface.class);
         getCurrentLocation();
 
 
@@ -170,26 +179,12 @@ public class MyProductListActivity extends AppCompatActivity {
                 }
             }
         });
-        categoryLists.add("None");
-        categoryLists.add("Technology");
-        categoryLists.add("Sport");
-        categoryLists.add("Furniture");
-        categoryLists.add("Tools");
-        categoryLists.add("Toys");
-        categoryLists.add("Cutlery");
-        categoryLists.add("Vehicle");
-        categoryLists.add("Pets");
-        categoryLists.add("Clothes");
+
 
         spinner = (Spinner) findViewById(R.id.spinner);
-        ArrayAdapter ad
-                = new ArrayAdapter(
-                this, android.R.layout.simple_spinner_item, categoryLists);
 
-        ad.setDropDownViewResource(
-                android.R.layout
-                        .simple_spinner_dropdown_item);
-        spinner.setAdapter(ad);
+        GetUserCategoryApi();
+
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -228,7 +223,82 @@ public class MyProductListActivity extends AppCompatActivity {
 
 
     }
+    private void GetUserCategoryApi() {
 
+
+        final ProgressDialog progressDialog;
+        progressDialog = new ProgressDialog(mContext);
+        progressDialog.setMessage("Please wait...");
+        progressDialog.show();
+        String langua = "EN";
+        String lang = PrefManager.get(mContext, "lang");
+        if (lang.equals("es") && lang != null) {
+            langua = "ES";
+        }
+
+        HashMap<String, String> param = new HashMap<>();
+        param.put("language", langua);
+        Call<GetCategoryModel> call = apiInterface.get_category(param);
+
+        Log.e("get_user_category", "" + call.request().headers());
+
+        call.enqueue(new Callback<GetCategoryModel>() {
+            @Override
+            public void onResponse(@NotNull Call<GetCategoryModel> call, @NotNull Response<GetCategoryModel> response) {
+                progressDialog.dismiss();
+
+                try {
+                    GetCategoryModel commentModel = response.body();
+                    category.clear();
+                    category.add("None");
+                    if (commentModel != null) {
+                        if (commentModel.getStatus().equals("1")) {
+                            int position=0;
+                            category_new = (ArrayList<GetCategoryModel.Result>) commentModel.getResult();
+                            //list = (ArrayList<GetTopicDataModel>) commentModel.getResult();
+                            for (int i = 0; i < commentModel.getResult().size(); i++) {
+
+
+                                category.add(commentModel.getResult().get(i).getCategoryName());
+
+
+                            }
+                            if (category != null && !category.equals("")) {
+
+
+                                spinner.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, category));
+
+                            } else {
+                                Toast.makeText(mContext, "category null..!!", Toast.LENGTH_SHORT).show();
+                            }
+
+
+                        } else {
+
+                            Toast.makeText(mContext, "No Category found", Toast.LENGTH_SHORT).show();
+
+                        }
+                    } else {
+                        Toast.makeText(mContext, "Model not correct", Toast.LENGTH_SHORT).show();
+
+                    }
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            }
+
+            @Override
+            public void onFailure(Call<GetCategoryModel> call, Throwable t) {
+                progressDialog.dismiss();
+
+                Toast.makeText(mContext, "" + call, Toast.LENGTH_SHORT).show();
+
+            }
+        });
+
+    }
     @Override
     protected void onResume() {
         if (isInternetPresent) {
@@ -303,7 +373,7 @@ public class MyProductListActivity extends AppCompatActivity {
         String distance = "";
         if (!popupDistance.equals("0")) {
 
-            if (popupDistance.equals("Unlimited")) {
+            if (popupDistance.equals("Unlimited") || popupDistance.equals("ilimitado")) {
 
                 distance = "10000";
             } else {

@@ -407,21 +407,23 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
 
                     if (commentModel != null) {
                         if (commentModel.getStatus().equals("1")) {
-
+                            int position=0;
                             category_new = (ArrayList<GetCategoryModel.Result>) commentModel.getResult();
                             //list = (ArrayList<GetTopicDataModel>) commentModel.getResult();
                             for (int i = 0; i < commentModel.getResult().size(); i++) {
 
 
                                 category.add(commentModel.getResult().get(i).getCategoryName());
-
+                                if(commentModel.getResult().get(i).getCategoryName().equals(PcategoryName)){
+                                    position=i;
+                                }
 
                             }
                             if (category != null && !category.equals("")) {
 
 
                                 spinner.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, category));
-
+                                spinner.setSelection(position);
                             } else {
                                 Toast.makeText(mContext, "category null..!!", Toast.LENGTH_SHORT).show();
                             }

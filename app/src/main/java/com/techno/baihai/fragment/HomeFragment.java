@@ -6,6 +6,8 @@ import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
@@ -13,7 +15,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,8 +79,10 @@ public class HomeFragment extends Fragment {
     FragmentListener listener;
     LinearLayout donation, point, id_prize;
     CardView card, card2, card3, card4, card5, donation_2, id_prize2, point2;
+    Switch language;
     CircleImageView home_profileId;
-    TextView home_usernameId;
+    SkuDetails itemInfo;
+    TextView home_usernameId,textDonation,textAwards,textCoins,textGive,textGet,textNonProfit,textSuscribe;
     String latitude, longitude, guide;
     private boolean checkReward = true;
     private Boolean isInternetPresent = false;
@@ -109,7 +115,13 @@ public class HomeFragment extends Fragment {
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         view = inflater.inflate(R.layout.fragment_home, container, false);
-
+        textCoins= view.findViewById(R.id.id_text_coins);
+        textDonation= view.findViewById(R.id.id_text_donation);
+        textAwards= view.findViewById(R.id.id_text_prize);
+        textGet = view.findViewById(R.id.id_text_get);
+        textGive = view.findViewById(R.id.id_text_give);
+        textNonProfit = view.findViewById(R.id.id_text_non_profit);
+        textSuscribe = view.findViewById(R.id.id_text_suscribe);
         home_usernameId = view.findViewById(R.id.home_usernameId);
 
         home_profileId = view.findViewById(R.id.home_profileId);
@@ -201,23 +213,6 @@ public class HomeFragment extends Fragment {
             }
         });
         card5 = view.findViewById(R.id.card5);
-        /*card5.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.e("informacion suscribe: ", uid);
-                startActivity(new Intent(mContext, StripePaymentActivity.class));
-
-
-            }
-        });*/
-        getUserUpdate();
-        if (isInternetPresent) {
-        } else {
-            PrefManager prefManager = new PrefManager(mContext);
-            PrefManager.showSettingsAlert(mContext);
-        }
-
-        getCurrentLocation();
         billingClient = BillingClient.newBuilder(mContext)
                 .enablePendingPurchases()
                 .setListener(new PurchasesUpdatedListener() {
@@ -234,9 +229,81 @@ public class HomeFragment extends Fragment {
                     }
                 }).build();
         connectToGooglePlayBilling();
+        card5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                billingClient.launchBillingFlow(
+                        getActivity(),
+                        BillingFlowParams.newBuilder().setSkuDetails(itemInfo).build()
+                );
+            }
+        });
         getUserUpdate();
+        /*card5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.e("informacion suscribe: ", uid);
+                startActivity(new Intent(mContext, StripePaymentActivity.class));
+
+
+            }
+        });*/
+        language = view.findViewById(R.id.switch1);
+        language.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                // do something, the isChecked will be
+                // true if the switch is in the On position
+                if(isChecked){
+                    Toast.makeText(mContext, "Select Spanish", Toast.LENGTH_LONG).show();
+                    updateResources(mContext, "es");
+                    PrefManager.save(mContext, "lang", "es");
+                    textAwards.setText("Premios");
+                    textCoins.setText("Monedas");
+                    textDonation.setText("Donaciones");
+                    textGet.setText("REGALAR COSAS GRATIS");
+                    textGive.setText("OBTENER COSAS GRATIS");
+                    textNonProfit.setText("SUSCRIBE TU FUNDACION");
+                    textSuscribe.setText("SUSCRIBETE");
+
+
+                }else{
+                    Toast.makeText(mContext, "Select English", Toast.LENGTH_LONG).show();
+                    updateResources(mContext, "en");
+                    PrefManager.save(mContext, "lang", "en");
+                    textAwards.setText("Awards");
+                    textCoins.setText("Coins");
+                    textDonation.setText("Donations");
+                    textGet.setText("GIVE FREE STUFF");
+                    textGive.setText("GET FREE STUFF");
+                    textNonProfit.setText("SUBSCRIBE A NON PROFIT");
+                    textSuscribe.setText("Subscribe");
+                }
+            }
+        });
+        getUserUpdate();
+        if (isInternetPresent) {
+        } else {
+            PrefManager prefManager = new PrefManager(mContext);
+            PrefManager.showSettingsAlert(mContext);
+        }
+
+        getCurrentLocation();
+
         return view;
-    }   
+    }
+
+    private static void updateResources(Context context, String language) {
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+    }
     private void verifyPurchase(Purchase purchase){
         String requestUrl ="";
         String purchaseToken = purchase.getPurchaseToken();
@@ -339,18 +406,8 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @androidx.annotation.Nullable List<SkuDetails> list) {
                         if(billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && list != null){
-                            SkuDetails itemInfo = list.get(0);
-                            card5 = view.findViewById(R.id.card5);
-                            card5.setOnClickListener(new View.OnClickListener() {
-                                @Override
-                                public void onClick(View v) {
+                             itemInfo = list.get(0);
 
-                                    billingClient.launchBillingFlow(
-                                            activity,
-                                            BillingFlowParams.newBuilder().setSkuDetails(itemInfo).build()
-                                    );
-                                }
-                            });
                         }
                     }
                 }

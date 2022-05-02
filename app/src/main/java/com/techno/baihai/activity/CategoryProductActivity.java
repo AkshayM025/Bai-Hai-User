@@ -77,7 +77,8 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 
     Context mContext = this;
     FragmentListener listener;
-    ImageView chat, catImageView, product_ImgdetailsId;
+    ImageView  catImageView, product_ImgdetailsId;
+    CardView chat;
     TextView catTxtViewId, details_locationId, product_DricrptionId;
     LinearLayout layout_status;
     RoundedImageView iv_Img_product;
@@ -92,7 +93,6 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
     private SliderAdapter adapter;
     private List<MyProductModeListl> myProductModeListls;
 
-    private TextView chat_solicitud;
     private Circle mCircle;
     private Marker mMarker;
     private GoogleMap mMap;
@@ -144,7 +144,6 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
         details_locationId = findViewById(R.id.details_productLocationId);
         sellerNameId = findViewById(R.id.sellerNameId);
 
-        chat_solicitud = findViewById(R.id.chat_description);
         User user = PrefManager.getInstance(this).getUser();
         uid = String.valueOf(user.getId());
         Log.e("red_ID", "-------->" + uid);
@@ -201,9 +200,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 
         if (uid.equals(product_SellerId)) {
             chat.setVisibility(View.GONE);
-            chat_solicitud.setVisibility(View.GONE);
         } else {
-            chat_solicitud.setVisibility(View.VISIBLE);
             chat.setVisibility(View.VISIBLE);
             chat.setOnClickListener(new View.OnClickListener() {
                 @Override
