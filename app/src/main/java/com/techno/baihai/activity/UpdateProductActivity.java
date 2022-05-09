@@ -51,6 +51,7 @@ import com.techno.baihai.utils.Tools;
 
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -287,7 +288,7 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
 
 
         if (isInternetPresent) {
-            GetUserCategoryApi();
+            GetCategory();
         } else {
             PrefManager.showSettingsAlert(mContext);
 
@@ -375,15 +376,9 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
 
         }
     }
+    private void GetCategory() {
 
 
-    private void GetUserCategoryApi() {
-
-
-        final ProgressDialog progressDialog;
-        progressDialog = new ProgressDialog(mContext);
-        progressDialog.setMessage("Please wait...");
-        progressDialog.show();
         String langua = "EN";
         String lang = PrefManager.get(mContext, "lang");
         if (lang.equals("es") && lang != null) {
@@ -391,70 +386,95 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
         }
 
         HashMap<String, String> param = new HashMap<>();
+        param.put("lat", latitude);
+        param.put("lon", longitude);
         param.put("language", langua);
-        Call<GetCategoryModel> call = apiInterface.get_category(param);
-
-        Log.e("get_user_category", "" + call.request().headers());
-
-        call.enqueue(new Callback<GetCategoryModel>() {
-            @Override
-            public void onResponse(@NotNull Call<GetCategoryModel> call, @NotNull Response<GetCategoryModel> response) {
-                progressDialog.dismiss();
-
-                try {
-                    GetCategoryModel commentModel = response.body();
-                    category.clear();
-
-                    if (commentModel != null) {
-                        if (commentModel.getStatus().equals("1")) {
+        ApiCallBuilder.build(mContext)
+                .isShowProgressBar(false)
+                .setUrl(Constant.BASE_URL + "get_category") //http://bai-hai.com/webservice/get_category
+                .setParam(param)
+                .execute(new ApiCallBuilder.onResponse() {
+                    @Override
+                    public void Success(String response) {
+                        Log.e("Response=>", "" + response);
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            String status = object.optString("status");
+                            String message = object.optString("message");
                             int position=0;
-                            category_new = (ArrayList<GetCategoryModel.Result>) commentModel.getResult();
-                            //list = (ArrayList<GetTopicDataModel>) commentModel.getResult();
-                            for (int i = 0; i < commentModel.getResult().size(); i++) {
+                            if (status.equals("1")) {
 
 
-                                category.add(commentModel.getResult().get(i).getCategoryName());
-                                if(commentModel.getResult().get(i).getCategoryName().equals(PcategoryName)){
-                                    position=i;
+                                try {
+
+                                    JSONArray jArray = object.optJSONArray("result");
+                                    // Log.e(TAG, "result=>" + jArray);
+                                    //Initializing the ArrayList
+
+                                    category.add("Select Category");
+
+
+                                    if (jArray != null) {
+                                        for (int i = 0; i < jArray.length(); i++) {
+
+
+                                            JSONObject object1 = jArray.getJSONObject(i);
+
+
+                                            //Log.e(TAG, "resulti=>" + i);
+                                            String category_id = object1.getString("id");
+                                            String category_name = object1.getString("category_name");
+                                            String imageUrl = object1.getString("image");
+
+
+                                            category.add(category_name);
+                                               if(category_name.equals(PcategoryName)){
+                                                    position=i;
+                                                }
+
+                                        }
+                                    }
+                                    if (category != null && !category.equals("")) {
+
+
+                                        spinner.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, category));
+                                        spinner.setSelection(position);
+                                    } else {
+                                        Toast.makeText(mContext, "Category Not Found..!!", Toast.LENGTH_SHORT).show();
+                                    }
+
+
+                                } catch (Exception e) {
+
+                                    e.printStackTrace();
                                 }
-
-                            }
-                            if (category != null && !category.equals("")) {
-
-
-                                spinner.setAdapter(new ArrayAdapter<String>(mContext, android.R.layout.simple_spinner_dropdown_item, category));
-                                spinner.setSelection(position);
                             } else {
-                                Toast.makeText(mContext, "category null..!!", Toast.LENGTH_SHORT).show();
+
+
+                                Toast.makeText(mContext, "Status" + message, Toast.LENGTH_SHORT).show();
                             }
 
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                            Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
 
-                        } else {
-
-                            Toast.makeText(mContext, "No Category found", Toast.LENGTH_SHORT).show();
 
                         }
-                    } else {
-                        Toast.makeText(mContext, "Model not correct", Toast.LENGTH_SHORT).show();
+
 
                     }
 
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+                    @Override
+                    public void Failed(String error) {
+                        //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
+                        Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
+                    }
+                });
 
-            }
-
-            @Override
-            public void onFailure(Call<GetCategoryModel> call, Throwable t) {
-                progressDialog.dismiss();
-
-                Toast.makeText(mContext, "" + call, Toast.LENGTH_SHORT).show();
-
-            }
-        });
 
     }
+
+
 
 
     private void UpdateProduct(final String p_name, String p_description, final View view) {

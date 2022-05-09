@@ -536,7 +536,7 @@
                             android:layout_width="40dp"
                             android:layout_height="40dp"
                             android:layout_gravity="center"
-                            android:src="@drawable/noti_icon" />
+                            android:src="@drawable/bye_hi_logo" />
 
 
                         <TextView
