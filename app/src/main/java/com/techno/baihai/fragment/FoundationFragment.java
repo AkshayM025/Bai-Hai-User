@@ -210,7 +210,7 @@ public class FoundationFragment extends Fragment {
                                 swipLayout.setRefreshing(false);
 
                                 foundation_notFound.setVisibility(VISIBLE);
-                                Toast.makeText(mContext, "Data Not Found" + message, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(mContext, "Data Not Found" + message, Toast.LENGTH_SHORT).show();
 
                             }
 
@@ -218,7 +218,7 @@ public class FoundationFragment extends Fragment {
                             swipLayout.setRefreshing(false);
 
                             e.printStackTrace();
-                            Toast.makeText(mContext, "ee" + e, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "ee" + e, Toast.LENGTH_SHORT).show();
 
 
                         }
@@ -235,7 +235,7 @@ public class FoundationFragment extends Fragment {
                         swipLayout.setRefreshing(false);
 
                         //progressDialog.dismiss();
-                        Toast.makeText(mContext, "e" + error, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "e" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 

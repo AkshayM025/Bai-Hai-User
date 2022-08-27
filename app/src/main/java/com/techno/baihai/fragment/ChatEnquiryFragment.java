@@ -205,7 +205,7 @@ public class ChatEnquiryFragment extends Fragment {
                     public void Failed(String error) {
 
                         progressDialog.dismiss();
-                        Toast.makeText(mContext, "Check Your Network: " + error, Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, "Check Your Network: " , Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -325,7 +325,7 @@ public class ChatEnquiryFragment extends Fragment {
 
                             } else {
 
-                                Toast.makeText(mContext, "" + message, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(mContext, "" + message, Toast.LENGTH_SHORT).show();
                             }
 
 
@@ -340,7 +340,7 @@ public class ChatEnquiryFragment extends Fragment {
 
                     @Override
                     public void Failed(String error) {
-                        Toast.makeText(mContext, "Failed" + error, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "Failed" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 

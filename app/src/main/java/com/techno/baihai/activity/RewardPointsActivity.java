@@ -17,6 +17,7 @@ import com.techno.baihai.databinding.ActivityRewardPointsBinding;
 import com.techno.baihai.model.User;
 import com.techno.baihai.utils.PrefManager;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.HashMap;
@@ -99,12 +100,12 @@ public class RewardPointsActivity extends AppCompatActivity {
                                     rewardPoints = result.optString("total_coins");
                                     binding.rewardsPointsID.setText(rewardPoints);
                                 }
-
+setLog("el usuario reviso su puntaje");
 
                             } else {
                                 progressDialog.dismiss();
 
-                                Toast.makeText(mContext, "" + message, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(mContext, "" + message, Toast.LENGTH_SHORT).show();
                             }
 
 
@@ -120,11 +121,49 @@ public class RewardPointsActivity extends AppCompatActivity {
                     public void Failed(String error) {
                         progressDialog.dismiss();
 
-                        Toast.makeText(mContext, "Failed" + error, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "Failed" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 
 
+    }
+    private void setLog(String message) {
+        User user = PrefManager.getInstance(mContext).getUser();
+        String id = null;
+        if (user.getId() == "") {
+            id = "1";
+        } else {
+            id = user.getId();
+        }
+
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", message);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.LOG_APP)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            if(status.equals("true")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                            }
+
+
+                        } catch (JSONException e) {
+
+
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
     }
 
 }

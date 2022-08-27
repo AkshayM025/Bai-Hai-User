@@ -8,7 +8,9 @@ public class Constant {
 
     public static final String LOGIN = "login?";
     public static final String LEGAL = "validate_legal?";
+    public static final String DELETE = "validate_delete?";
     public static final String GUIDE = "validate_guide?";
+    public static final String LOG_APP = "log_app?";
     public static final String PAY = "pay?";
     public static final String GUIDE_FREE = "validate_guide_free?";
     public static final String GUIDE_GIVE_FREE = "validate_guide_give_free?";

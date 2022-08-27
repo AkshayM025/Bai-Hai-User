@@ -128,7 +128,7 @@ public class RatingActivity extends AppCompatActivity {
 
     private void UserFeedbackApi(final String user_rating, String user_feedback, final View view) {
 
-
+ setLog("el usuario dio retroalimentacio nde forma correcta");
         final ProgressDialog progressDialog;
         progressDialog = new ProgressDialog(mContext);
         progressDialog.setMessage("Please wait...");
@@ -185,13 +185,50 @@ public class RatingActivity extends AppCompatActivity {
                     @Override
                     public void Failed(String error) {
                         progressDialog.dismiss();
-                        Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 
 
     }
+    private void setLog(String message) {
+        User user = PrefManager.getInstance(mContext).getUser();
+        String id = null;
+        if (user.getId() == "") {
+            id = "1";
+        } else {
+            id = user.getId();
+        }
 
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", message);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.LOG_APP)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            if(status.equals("true")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                            }
+
+
+                        } catch (JSONException e) {
+
+
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
+    }
 
     public void OnBackRating(View view) {
         onBackPressed();

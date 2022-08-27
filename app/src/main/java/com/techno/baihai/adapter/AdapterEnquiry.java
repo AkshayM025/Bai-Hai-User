@@ -131,7 +131,7 @@ public class AdapterEnquiry extends RecyclerView.Adapter<AdapterEnquiry.ViewHold
 
                                     } else {
 
-                                        Toast.makeText(context, "" + message, Toast.LENGTH_LONG).show();
+                                       // Toast.makeText(context, "" + message, Toast.LENGTH_LONG).show();
                                     }
 
                                 } catch (JSONException e) {
@@ -149,7 +149,7 @@ public class AdapterEnquiry extends RecyclerView.Adapter<AdapterEnquiry.ViewHold
 
                                 progressDialog.dismiss();
                                 //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
-                                Toast.makeText(context, "Check Your Network: " + error, Toast.LENGTH_LONG).show();
+                                //Toast.makeText(context, "Check Your Network: " + error, Toast.LENGTH_LONG).show();
                             }
                         });
 
@@ -200,7 +200,7 @@ public class AdapterEnquiry extends RecyclerView.Adapter<AdapterEnquiry.ViewHold
 
                                     } else {
 
-                                        Toast.makeText(context, "" + message, Toast.LENGTH_LONG).show();
+                                        //Toast.makeText(context, "" + message, Toast.LENGTH_LONG).show();
                                     }
 
                                 } catch (JSONException e) {
@@ -218,7 +218,7 @@ public class AdapterEnquiry extends RecyclerView.Adapter<AdapterEnquiry.ViewHold
 
                                 progressDialog.dismiss();
                                 //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
-                                Toast.makeText(context, "Check Your Network: " + error, Toast.LENGTH_LONG).show();
+                                //Toast.makeText(context, "Check Your Network: " + error, Toast.LENGTH_LONG).show();
                             }
                         });
 

@@ -148,7 +148,7 @@ public class PaymentUserProductHistory extends Fragment {
                 } catch (Exception e) {
                     DataManager.getInstance().hideProgressMessage();
                     binding.swipeUserProductId.setRefreshing(false);
-                    Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
 
                     e.printStackTrace();
                 }
@@ -159,7 +159,7 @@ public class PaymentUserProductHistory extends Fragment {
             public void onFailure(Call<GetUserFoundnTransModel> call, Throwable t) {
                 DataManager.getInstance().hideProgressMessage();
                 binding.swipeUserProductId.setRefreshing(false);
-                Toast.makeText(mContext, "" + call, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, "" + call, Toast.LENGTH_SHORT).show();
                 CustomSnakbar.showSnakabar(mContext, v, call.toString());
 
             }

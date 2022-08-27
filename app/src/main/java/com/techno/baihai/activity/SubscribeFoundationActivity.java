@@ -206,6 +206,7 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
                                     et_mobileId.setText("");
                                     et_number.setText("");
                                     CustomSnakbar.showSnakabar(mContext, view, "Thankyou for registering\nplease check your email for further instructions!");
+                                    setLog("El usuario registro la fundacion");
                                     RegisterFoundationDailog();
 
                                 } else if (status.equals("0")) {
@@ -219,14 +220,14 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
                             } catch (JSONException e) {
 
                                 progressBar.setVisibility(View.GONE);
-                                Toast.makeText(mContext, "Check Your Network" + e, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(mContext, "Check Your Network" + e, Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             }
                         }
 
                         @Override
                         public void Failed(String error) {
-                            Toast.makeText(mContext, "check your network" + error, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "check your network" + error, Toast.LENGTH_SHORT).show();
 
                         }
                     });
@@ -294,6 +295,46 @@ public class SubscribeFoundationActivity extends AppCompatActivity {
             et_location.setText(Tools.getCompleteAddressString(this, lat, lng));
         }
 
+    }
+
+
+    private void setLog(String message) {
+        User user = PrefManager.getInstance(mContext).getUser();
+        String id = null;
+        if (user.getId() == "") {
+            id = "1";
+        } else {
+            id = user.getId();
+        }
+
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", message);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.LOG_APP)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            if(status.equals("true")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                            }
+
+
+                        } catch (JSONException e) {
+
+
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
     }
 
 

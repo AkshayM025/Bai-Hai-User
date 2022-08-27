@@ -44,7 +44,7 @@ public class RewardsHistoryModel {
 
 
 
-public class Result {
+public static class Result {
 
     @SerializedName("id")
     @Expose
@@ -65,6 +65,15 @@ public class Result {
     @Expose
     private String message;
 
+    public Result(String id, String name, String min_coin, String max_coin, String image,String message) {
+        this.name = name;
+        this.id = id;
+        this.min_coin = min_coin;
+        this.max_coin = max_coin;
+        this.image = image;
+        this.message = message;
+
+    }
 
     public String getId() {
         return id;

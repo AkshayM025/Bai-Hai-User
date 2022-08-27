@@ -2,6 +2,7 @@ package com.techno.baihai.activity;
 
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -42,7 +43,7 @@ public class AccountActivity extends AppCompatActivity {
 
     private static final String TAG = "AccountActivity";
     TextView tv_cancel, tv_edit_account;
-    LinearLayout tv_aboutus, tv_support;
+    LinearLayout tv_aboutus, tv_support, tv_deletedata;
     CardView setting;
     CircleImageView profile_imgId;
     TextView acc_nameId;
@@ -75,31 +76,48 @@ public class AccountActivity extends AppCompatActivity {
         tv_cancel = findViewById(R.id.tv_cancel);
 
         tv_cancel.setOnClickListener(v -> {
+            setLog("presiono en boton cancelar de sesion de cuenta");
             startActivity(new Intent(AccountActivity.this, HomeActivity.class));
             Animatoo.animateSlideRight(mContext);
         });
 
         tv_edit_account = findViewById(R.id.tv_edit_account);
 
-        tv_edit_account.setOnClickListener(v -> startActivity(new Intent(AccountActivity.this, EditAccountActivity.class)));
+        tv_edit_account.setOnClickListener(v -> {
+            setLog("presiono en boton de editar cuenta");
+            startActivity(new Intent(AccountActivity.this, EditAccountActivity.class));
+
+        });
 
         setting = findViewById(R.id.setting);
 
-        setting.setOnClickListener(v -> startActivity(new Intent(AccountActivity.this, SettingActivity.class)));
+        setting.setOnClickListener(v -> {
+            setLog("presiono en boton de configuraciones para idioma de sesion de cuenta");
+            startActivity(new Intent(AccountActivity.this, SettingActivity.class));});
 
 
         tv_aboutus = findViewById(R.id.tv_aboutus);
 
-        tv_aboutus.setOnClickListener(v -> startActivity(new Intent(AccountActivity.this, AboutUsActivity.class)));
+        tv_aboutus.setOnClickListener(v -> {
+            setLog("presiono en boton de acerca de nosotros de sesion de cuenta");
+            startActivity(new Intent(AccountActivity.this, AboutUsActivity.class));
+        });
+        tv_deletedata = findViewById(R.id.tv_deletedata);
+        tv_deletedata.setOnClickListener(v -> {
+            setLog("presiono en boton de eliminar mi cuenta");
+            Deletedata(getWindow().getCurrentFocus());
 
-
+        });
         tv_support = findViewById(R.id.tv_support);
 
-        tv_support.setOnClickListener(v -> startActivity(new Intent(AccountActivity.this, SupportActivity.class)));
+        tv_support.setOnClickListener(v ->{
+            setLog("presiono en boton de respuesta a preguntas frecuentes de sesion de cuenta");
+            startActivity(new Intent(AccountActivity.this, SupportActivity.class));});
 
         tv_shareApp = findViewById(R.id.tv_shareApp);
 
         tv_shareApp.setOnClickListener(v -> {
+            setLog("presiono en boton de compartir app de sesion de cuenta");
             if (ShareDialog.canShow(ShareLinkContent.class)) {
                 ShareLinkContent linkContent = new ShareLinkContent.Builder()
                         .setQuote("Hey check out my app at:")
@@ -195,7 +213,7 @@ public class AccountActivity extends AppCompatActivity {
                             String message = object.optString("message");
                             if (status.equals("1")) {
                                 Toast.makeText(mContext, "You get +3Coins, Check Your Wallet...!!" + message, Toast.LENGTH_LONG).show();
-
+                                setLog("gano 3 puntos por ingresar a cuenta");
 
                             } else {
                                 progressDialog.dismiss();
@@ -217,13 +235,98 @@ public class AccountActivity extends AppCompatActivity {
                     public void Failed(String error) {
                         progressDialog.dismiss();
 
-                        Toast.makeText(mContext, "Failed" + error, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "Failed" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 
 
     }
+    public void Deletedata(View view) {
+        User user = PrefManager.getInstance(this).getUser();
 
+
+
+            String langua = "Yes";
+            String langua1 = "No";
+            String lang = PrefManager.get(mContext, "lang");
+            if (lang.equals("es") && lang != null) {
+                langua = "Si";
+                langua1 = "No";
+
+            }
+            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(mContext);
+            // Configura el titulo.
+            alertDialogBuilder.setTitle(getResources().getString(R.string.delete_data_title));
+
+            // Configura el mensaje.
+            alertDialogBuilder
+                    .setMessage(getResources().getString(R.string.delete_data_info))
+                    .setCancelable(false)
+                    .setPositiveButton(langua, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            setDeleteData();
+
+                        }
+                    })
+
+                    .setNegativeButton(langua1, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    }).create().show();
+
+
+
+
+
+    }
+    void setDeleteData() {
+        User user = PrefManager.getInstance(this).getUser();
+        String email = null;
+        if (user.getEmail() == "") {
+            email = user.getId();
+        } else {
+            email = user.getEmail();
+        }
+
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("email", email);
+        ApiCallBuilder.build(this)
+                .setUrl(Constant.BASE_URL + Constant.DELETE)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            String uid = user.getId();
+                        if(status.equalsIgnoreCase("1")){
+                            setLog("El usuario confirmo eliminacion de datos");
+                            Toast.makeText(mContext, "You Are Logout Succesfully", Toast.LENGTH_SHORT).show();
+                            PrefManager.getInstance(getApplicationContext()).logout();
+                            NotificationManagerCompat.from(mContext).cancelAll();
+                            finish();
+                            Intent intent = new Intent(mContext, LoginActivity.class);
+                            intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
+                            startActivity(intent);
+                            Animatoo.animateSlideDown(mContext);
+                        }
+
+
+
+                        } catch (JSONException e) {
+
+
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
+    }
 
     @Override
     protected void onRestart() {
@@ -307,14 +410,14 @@ public class AccountActivity extends AppCompatActivity {
                             } else {
                                 progressDialog.dismiss();
 
-                                Toast.makeText(mContext, "" + message, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(mContext, "" + message, Toast.LENGTH_SHORT).show();
 
                             }
 
                         } catch (JSONException e) {
                             progressDialog.dismiss();
 
-                            Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
 
@@ -323,7 +426,7 @@ public class AccountActivity extends AppCompatActivity {
                     @Override
                     public void Failed(String error) {
                         progressDialog.dismiss();
-                        Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -345,6 +448,45 @@ public class AccountActivity extends AppCompatActivity {
         Animatoo.animateSwipeLeft(mContext);
 
 
+    }
+
+    private void setLog(String message) {
+        User user = PrefManager.getInstance(mContext).getUser();
+        String id = null;
+        if (user.getId() == "") {
+            id = "1";
+        } else {
+            id = user.getId();
+        }
+
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", message);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.LOG_APP)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            if(status.equals("true")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                            }
+
+
+                        } catch (JSONException e) {
+
+
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
     }
 }
 

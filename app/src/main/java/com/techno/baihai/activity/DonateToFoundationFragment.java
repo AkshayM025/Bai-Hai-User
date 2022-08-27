@@ -105,6 +105,7 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
         img_locationId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+                setLog("Busqueda  de ubicacion  de fundacion en el mapa");
                 startActivityForResult(new Intent(DonateToFoundationFragment.this,
                         PinLocationActivity.class), AUTOCOMPLETE_REQUEST_CODE);
 
@@ -132,7 +133,7 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
 
         foundationId = String.valueOf(adapterView.getSelectedItemId());
         Log.i(TAG, "foundationId=>" + foundationId);
-        Toast.makeText(mContext, "foundationId=>" + foundationId, Toast.LENGTH_SHORT).show();
+       // Toast.makeText(mContext, "foundationId=>" + foundationId, Toast.LENGTH_SHORT).show();
     }
 
     @Override
@@ -209,7 +210,7 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
 
                                 progressDialog.dismiss();
 
-                                Toast.makeText(mContext, "Data Not Found: " + message, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(mContext, "Data Not Found: " + message, Toast.LENGTH_SHORT).show();
                             }
 
                         } catch (JSONException e) {
@@ -276,7 +277,7 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
         final String location = addressId.getText().toString().trim();
         final String size = SizeId.getText().toString().trim();
         final String mobile = mobileId.getText().toString().trim();
-
+        setLog("Guardo la fundacion correspondiente");
 
         //first we will do the validations
         int length = 10;
@@ -353,7 +354,7 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
                                 } else if (status.equals("0")) {
 
                                     progressBar.setVisibility(View.GONE);
-                                    Toast.makeText(mContext, "Failed, Please check your connnection !!", Toast.LENGTH_LONG).show();
+                                   // Toast.makeText(mContext, "Failed, Please check your connnection !!", Toast.LENGTH_LONG).show();
 
                                 }
 
@@ -415,6 +416,7 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
             @Override
             public void onClick(View v) {
                 alertDialog.dismiss();
+                setLog("Cancela el pago a la  fundacion");
                 PrefManager.setBoolean(PrefManager.KEY_BaiHai_Status, false);
 
 
@@ -423,6 +425,7 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
         btn_okay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setLog("Confirma el pago a la  fundacion");
                 alertDialog.dismiss();
                 PrefManager.setBoolean(PrefManager.KEY_BaiHai_Status, true);
                 finish();
@@ -444,5 +447,42 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
         alertDialog.show();
     }
 
+    private void setLog(String message) {
+        User user = PrefManager.getInstance(mContext).getUser();
+        String id = null;
+        if (user.getId() == "") {
+            id = "1";
+        } else {
+            id = user.getId();
+        }
 
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", message);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.LOG_APP)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            if(status.equals("true")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                            }
+
+
+                        } catch (JSONException e) {
+
+
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
+    }
 }

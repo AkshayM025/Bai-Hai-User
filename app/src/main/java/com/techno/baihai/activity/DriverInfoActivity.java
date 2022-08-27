@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -17,9 +18,19 @@ import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.bumptech.glide.Glide;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.techno.baihai.R;
+import com.techno.baihai.api.Constant;
+import com.techno.baihai.model.User;
 import com.techno.baihai.utils.PrefManager;
 
-public class DriverInfoActivity extends AppCompatActivity {
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
+
+import www.develpoeramit.mapicall.ApiCallBuilder;
+
+public class
+DriverInfoActivity extends AppCompatActivity {
 
     private String Provider_driverId;
     private String Provider_requestId;
@@ -72,7 +83,7 @@ public class DriverInfoActivity extends AppCompatActivity {
         PrefManager.save(this, "driver_number", driver_number);
 
 
-        Toast.makeText(mContext, "status" + PrefManager.get(mContext, "driver_imgUrl"), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(mContext, "status" + PrefManager.get(mContext, "driver_imgUrl"), Toast.LENGTH_SHORT).show();
 
 
         try {
@@ -93,6 +104,7 @@ public class DriverInfoActivity extends AppCompatActivity {
                 provider_callId.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+                        setLog("el usuario ya le llevan su pedido ");
                         String number = PrefManager.get(DriverInfoActivity.this, "driver_number");
                         Uri call = Uri.parse("tel:91" + number);
                         Intent surf = new Intent(Intent.ACTION_DIAL, call);
@@ -120,5 +132,44 @@ public class DriverInfoActivity extends AppCompatActivity {
         Intent intent = new Intent(this, HomeActivity.class);
         startActivity(intent);
         Animatoo.animateSlideLeft(this);
+    }
+
+    private void setLog(String message) {
+        User user = PrefManager.getInstance(mContext).getUser();
+        String id = null;
+        if (user.getId() == "") {
+            id = "1";
+        } else {
+            id = user.getId();
+        }
+
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", message);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.LOG_APP)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            if(status.equals("true")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                            }
+
+
+                        } catch (JSONException e) {
+
+
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
     }
 }

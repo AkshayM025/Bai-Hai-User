@@ -56,6 +56,7 @@ public class DonationFragment extends Fragment implements View.OnClickListener {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         mContext = getActivity();
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         View view = inflater.inflate(R.layout.fragment_donation, container, false);
 
@@ -196,7 +197,7 @@ public class DonationFragment extends Fragment implements View.OnClickListener {
                         } catch (JSONException e) {
 
 
-                            Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }

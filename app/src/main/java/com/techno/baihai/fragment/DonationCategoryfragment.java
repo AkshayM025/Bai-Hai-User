@@ -129,7 +129,7 @@ public class DonationCategoryfragment extends Fragment {
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
 
 
                         }
@@ -146,7 +146,7 @@ public class DonationCategoryfragment extends Fragment {
 
                         progressDialog.dismiss();
                         //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
-                        Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 

@@ -87,7 +87,7 @@ public class StripePaymentActivity extends AppCompatActivity {
             Key_AmountId = PrefManager.getString(PrefManager.Key_AmountId);
         } catch (Exception ex) {
             ex.printStackTrace();
-            Toast.makeText(mContext, "check YourfoundationsId" + ex, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(mContext, "check Yourfoundations Id" + ex, Toast.LENGTH_SHORT).show();
         }
         TextView NeedTo_payID=findViewById(R.id.NeedTo_payID);
         TextView payment_actionBarId=findViewById(R.id.payment_actionBarId);
@@ -282,8 +282,8 @@ public class StripePaymentActivity extends AppCompatActivity {
                         @Override
                         public void onError(@NotNull Exception e) {
                             // ProjectUtil.pauseProgressDialog();
-                            Toast.makeText(mContext,
-                                    "failed"+e, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext,
+                             //       "failed"+e, Toast.LENGTH_SHORT).show();
 
                         }
                     });
@@ -339,7 +339,7 @@ public class StripePaymentActivity extends AppCompatActivity {
                 } catch (Exception e) {
                     dialog.dismiss();
                     e.printStackTrace();
-                    Toast.makeText(StripePaymentActivity.this, " "+e, Toast.LENGTH_SHORT).show();
+                    //Toast.makeText(StripePaymentActivity.this, " "+e, Toast.LENGTH_SHORT).show();
 
 
                 }
@@ -350,7 +350,7 @@ public class StripePaymentActivity extends AppCompatActivity {
                 dialog.dismiss();
                 call.cancel();
                 Log.e("e", String.valueOf(call));
-                Toast.makeText(StripePaymentActivity.this, ""+call, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(StripePaymentActivity.this, ""+call, Toast.LENGTH_SHORT).show();
 
             }
         });
@@ -428,13 +428,13 @@ public class StripePaymentActivity extends AppCompatActivity {
                                 SuccessPaymentDailog();
 
 
-
+                            setLog("El usuario realizo un pago  a fundacion");
 
 
                             } else {
                                 progressDialog.dismiss();
 
-                                Toast.makeText(mContext, "" + message, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(mContext, "" + message, Toast.LENGTH_SHORT).show();
 
                             }
 
@@ -442,7 +442,7 @@ public class StripePaymentActivity extends AppCompatActivity {
                             progressDialog.dismiss();
                             Log.e("payment_to_foundation=>", "-------->" + e);
 
-                            Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
 
@@ -453,7 +453,7 @@ public class StripePaymentActivity extends AppCompatActivity {
                         progressDialog.dismiss();
                         Log.e("payment_to_foundation=>", "-------->" + error);
 
-                        Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -503,6 +503,45 @@ private void SuccessPaymentDailog(){
 
     alertDialog.show();
 }
+
+    private void setLog(String message) {
+        User user = PrefManager.getInstance(mContext).getUser();
+        String id = null;
+        if (user.getId() == "") {
+            id = "1";
+        } else {
+            id = user.getId();
+        }
+
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", message);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.LOG_APP)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            if(status.equals("true")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                            }
+
+
+                        } catch (JSONException e) {
+
+
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
+    }
 
 }
 

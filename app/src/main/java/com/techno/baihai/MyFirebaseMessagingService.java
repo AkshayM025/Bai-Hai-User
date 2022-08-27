@@ -276,7 +276,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             Date currentTime = new Date();
 //
             if(messageBody.equals("message user") && (currentTime.getDate()== 16 ) ){
-                msg="Necesitas algo o quieres donarlo? Es momento de hacerlo en bye-hi :) ";
+                msg="Necesitas algo o quieres donarlo? \n Es momento de hacerlo en bye-hi :) ";
                 title="Donate to Bye - hi";
                 intent = new Intent(this, HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);

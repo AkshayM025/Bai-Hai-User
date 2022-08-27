@@ -37,6 +37,7 @@ import com.techno.baihai.utils.Utils;
 import org.apache.commons.lang3.StringEscapeUtils;
 import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -147,7 +148,7 @@ public class ChattingBotActivity extends AppCompatActivity implements View.OnCli
                     popup.getMenuInflater().inflate(R.menu.poupup_menu3, popup.getMenu());
                     popup.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
                         public boolean onMenuItemClick(MenuItem item) {
-                            Toast.makeText(mContext, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "You Clicked : " + item.getTitle(), Toast.LENGTH_SHORT).show();
                             showCustomDialog(getRecieverId);
                             return true;
                         }
@@ -223,7 +224,7 @@ public class ChattingBotActivity extends AppCompatActivity implements View.OnCli
                 .setParam(parms1)
                 .execute(new ApiCallBuilder.onResponse() {
                     public void Success(String response) {
-
+                        setLog("click en boton para reportar usuario");
                         Log.d(TAG, "respoLogin:" + response);
                         Toast.makeText(mContext, "The  report  was  sended ", Toast.LENGTH_SHORT).show();
                     }
@@ -610,13 +611,54 @@ public class ChattingBotActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.iv_back:
+                setLog("click en boton atras en chat especifico");
                 onBackPressed();
                 break;
             case R.id.iv_send:
+                setLog("click en boton para envio de mensaje en chat");
                 sendMessage();
                 break;
 
 
         }
+    }
+
+    private void setLog(String message) {
+        User user = PrefManager.getInstance(mContext).getUser();
+        String id = null;
+        if (user.getId() == "") {
+            id = "1";
+        } else {
+            id = user.getId();
+        }
+
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", message);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.LOG_APP)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            if(status.equals("true")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                            }
+
+
+                        } catch (JSONException e) {
+
+
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
     }
 }

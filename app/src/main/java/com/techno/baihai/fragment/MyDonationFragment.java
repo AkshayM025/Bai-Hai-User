@@ -202,7 +202,7 @@ public class MyDonationFragment extends Fragment {
                         progressDialog.dismiss();
                         myDonation_NoDataList.setText("check your connection");
                         myDonation_NoDataList.setVisibility(View.VISIBLE);
-                        Toast.makeText(mContext, "Check Your Network: " + error, Toast.LENGTH_LONG).show();
+                       // Toast.makeText(mContext, "Check Your Network: " + error, Toast.LENGTH_LONG).show();
                     }
                 });
 

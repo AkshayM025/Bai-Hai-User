@@ -129,7 +129,7 @@ public class MyProductListActivity extends AppCompatActivity {
                         item.setChecked(true);
 
 
-                        Toast.makeText(mContext, "S=> " + popupDistance, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(mContext, "S=> " + popupDistance, Toast.LENGTH_LONG).show();
                         GetSearchProduct();
 
                         return true;
@@ -192,7 +192,7 @@ public class MyProductListActivity extends AppCompatActivity {
                 String item = adapterView.getItemAtPosition(position).toString();
                 Log.e("spinner=>", "" + item);
                 GetSearchProduct();
-                Toast.makeText(adapterView.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
+                //Toast.makeText(adapterView.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
 
                 //set as selected item.
                 spinner.setSelection(position);
@@ -206,6 +206,7 @@ public class MyProductListActivity extends AppCompatActivity {
         });
         if (isInternetPresent) {
             if (latitude != null && longitude != null) {
+                setLog("entro  y mostro la  lista de productos cercanos");
                 GetProductList();
 
                 GetCategory();
@@ -320,7 +321,7 @@ public class MyProductListActivity extends AppCompatActivity {
 
         final ProgressDialog progressDialog;
         progressDialog = new ProgressDialog(this);
-        progressDialog.setMessage("Please wait...");
+        progressDialog.setMessage(getResources().getString(R.string.please_wait1));
         progressDialog.show();
 
 
@@ -427,12 +428,12 @@ public class MyProductListActivity extends AppCompatActivity {
                                 } else {
 
                                     noDataList.setVisibility(View.VISIBLE);
-                                    Toast.makeText(mContext, "Data Not Found ", Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(mContext, "Data Not Found ", Toast.LENGTH_LONG).show();
                                 }
                             }
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(mContext, "" + e, Toast.LENGTH_LONG).show();
+                           // Toast.makeText(mContext, "" + e, Toast.LENGTH_LONG).show();
 
 
                         }
@@ -451,7 +452,7 @@ public class MyProductListActivity extends AppCompatActivity {
 
                         progressDialog.dismiss();
                         noDataList.setVisibility(View.VISIBLE);
-                        Toast.makeText(mContext, "" + error, Toast.LENGTH_LONG).show();
+                       // Toast.makeText(mContext, "" + error, Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -472,21 +473,27 @@ public class MyProductListActivity extends AppCompatActivity {
         if (!popupDistance.equals("0")) {
 
             if (popupDistance.equals("Unlimited") || popupDistance.equals("ilimitado")) {
-
+                setLog("filtro en lista de productos por ubicacion ilimitado");
                 distance = "10000";
             } else {
+
                 distance = PrefManager.get(mContext, PrefManager.KEY_DISTANCE).split(" ")[0];
 
             }
         } else {
+
             distance = "10";
         }
 
         Log.e("distance", distance);
         HashMap<String, String> param = new HashMap<>();
         String productStxt = search_Product.getText().toString().trim();
+        if(!productStxt.equalsIgnoreCase("")){
+            setLog("filtro en lista de productos por texto "+productStxt+"");
+        }
         if (spinner.getSelectedItemPosition() != 0) {
             CatId = "" + spinner.getSelectedItemPosition() + "";
+            setLog("filtro en lista de productos por categoria "+spinner.getSelectedItem()+"");
         } else {
             CatId = "0";
         }
@@ -594,7 +601,7 @@ public class MyProductListActivity extends AppCompatActivity {
                                     noDataList.setVisibility(View.VISIBLE);
 
 
-                                    Toast.makeText(mContext, "" + message, Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(mContext, "" + message, Toast.LENGTH_LONG).show();
                                 }
                             }
                         } catch (JSONException e) {
@@ -622,7 +629,7 @@ public class MyProductListActivity extends AppCompatActivity {
                         //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
                         noDataList.setVisibility(View.GONE);
 
-                        Toast.makeText(mContext, "Data not Found: " + error, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(mContext, "Data not Found: " + error, Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -706,7 +713,7 @@ public class MyProductListActivity extends AppCompatActivity {
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
 
 
                         }
@@ -718,7 +725,7 @@ public class MyProductListActivity extends AppCompatActivity {
                     public void Failed(String error) {
 
                         //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
-                        Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -792,11 +799,52 @@ public class MyProductListActivity extends AppCompatActivity {
 
                                 PrefManager.getInstance(mContext).userLogin(user2);
 
+                                setLog("termina guia de lista de productos");
+
                             }
                         } catch (JSONException e) {
 
 
-                            Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
+    }
+
+    private void setLog(String message) {
+        User user = PrefManager.getInstance(mContext).getUser();
+        String id = null;
+        if (user.getId() == "") {
+            id = "1";
+        } else {
+            id = user.getId();
+        }
+
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", message);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.LOG_APP)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            if(status.equals("true")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                            }
+
+
+                        } catch (JSONException e) {
+
+
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }

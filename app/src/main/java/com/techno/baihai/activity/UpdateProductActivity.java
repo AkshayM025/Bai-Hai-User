@@ -74,7 +74,8 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
     private static final int AUTOCOMPLETE_REQUEST_CODE = 111;
     private final Context mContext = UpdateProductActivity.this;
     public ImageView updateBackId;
-    CardView tv_deletePost, tv_donatePost;
+   // CardView tv_deletePost;
+    CardView tv_donatePost;
     ImageView pickImg;
     String uid, image, pathOfImg;
     double lat, lng;
@@ -147,7 +148,7 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
         tv_donatePost = findViewById(R.id.tv_donatePost);
 
 
-        tv_deletePost = findViewById(R.id.tv_deletePost);
+       // tv_deletePost = findViewById(R.id.tv_deletePost);
 
 
         pickImg = findViewById(R.id.pickImgUpdate);
@@ -260,21 +261,22 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
 
             }
         });
-        tv_deletePost.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        //tv_deletePost.setOnClickListener(new View.OnClickListener() {
+         //   @Override
+          //  public void onClick(View view) {
 
-                if (isInternetPresent) {
-                    DeleteProductApi();
-                } else {
-                    PrefManager prefManager = new PrefManager(mContext);
-                    PrefManager.showSettingsAlert(mContext);
+           //     if (isInternetPresent) {
+          //          setLog("El usuario solicita eliminar un producto");
+           //         DeleteProductApi();
+           //     } else {
+           //         PrefManager prefManager = new PrefManager(mContext);
+            //        PrefManager.showSettingsAlert(mContext);
             /*AlertConnection.showAlertDialog(mContext, "No Internet Connection",
                     "You don't have internet connection.", false);*/
-                }
+           //     }
 
-            }
-        });
+         //   }
+      //  });
 
 
         Umap_location.setOnClickListener(new View.OnClickListener() {
@@ -451,12 +453,12 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
                             } else {
 
 
-                                Toast.makeText(mContext, "Status" + message, Toast.LENGTH_SHORT).show();
+                               // Toast.makeText(mContext, "Status" + message, Toast.LENGTH_SHORT).show();
                             }
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
 
 
                         }
@@ -467,7 +469,7 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
                     @Override
                     public void Failed(String error) {
                         //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
-                        Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -479,7 +481,7 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
 
     private void UpdateProduct(final String p_name, String p_description, final View view) {
 
-
+        setLog("El usuario solicita actualizar un producto");
         final ProgressDialog progressDialog;
         progressDialog = new ProgressDialog(mContext);
         progressDialog.setMessage("Please wait...");
@@ -635,7 +637,7 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
                     @Override
                     public void Failed(String error) {
                         progressDialog.dismiss();
-                        Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -702,7 +704,7 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
                         pathOfImg = RealPathUtil.getRealPath(mContext, tempUri);
                         file = new File(pathOfImg);
 
-                        Toast.makeText(mContext, "CamHerePath=>  " + pathOfImg, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(mContext, "CamHerePath=>  " + pathOfImg, Toast.LENGTH_LONG).show();
 
                         image = pathOfImg;
 
@@ -731,7 +733,7 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
                         file = new File(pathOfImg);
 
 
-                        Toast.makeText(mContext, "GalleryHerePath " + pathOfImg, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(mContext, "GalleryHerePath " + pathOfImg, Toast.LENGTH_LONG).show();
 
                         image = pathOfImg;
 
@@ -798,5 +800,44 @@ public class UpdateProductActivity extends AppCompatActivity implements Spinner.
 
     public void onBackFromEditProduct(View view) {
         onBackPressed();
+    }
+
+    private void setLog(String message) {
+        User user = PrefManager.getInstance(mContext).getUser();
+        String id = null;
+        if (user.getId() == "") {
+            id = "1";
+        } else {
+            id = user.getId();
+        }
+
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", message);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.LOG_APP)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            if(status.equals("true")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                            }
+
+
+                        } catch (JSONException e) {
+
+
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
     }
 }

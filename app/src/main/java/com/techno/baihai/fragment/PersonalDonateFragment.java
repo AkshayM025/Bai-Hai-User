@@ -162,7 +162,7 @@ public class PersonalDonateFragment extends AppCompatActivity {
 
                         } catch (JSONException e) {
                             progressDialog.dismiss();
-                            Toast.makeText(PersonalDonateFragment.this, "" + e, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(PersonalDonateFragment.this, "" + e, Toast.LENGTH_SHORT).show();
 
                             e.printStackTrace();
                         }
@@ -173,7 +173,7 @@ public class PersonalDonateFragment extends AppCompatActivity {
                     @Override
                     public void Failed(String error) {
                         progressDialog.dismiss();
-                        Toast.makeText(PersonalDonateFragment.this, "" + error, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(PersonalDonateFragment.this, "" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 

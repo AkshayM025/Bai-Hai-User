@@ -208,7 +208,7 @@ public class AcceptedChatListFragment extends Fragment {
                     public void Failed(String error) {
 
                         progressDialog.dismiss();
-                        Toast.makeText(mContext, "Check Your Network: " + error, Toast.LENGTH_LONG).show();
+                        Toast.makeText(mContext, "Check Your Network: " , Toast.LENGTH_LONG).show();
                     }
                 });
 

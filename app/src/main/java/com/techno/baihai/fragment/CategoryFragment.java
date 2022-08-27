@@ -280,7 +280,7 @@ public class CategoryFragment extends Fragment {
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
 
 
                         }
@@ -303,7 +303,7 @@ public class CategoryFragment extends Fragment {
                     public void Failed(String error) {
 
                         progressDialog.dismiss();
-                        Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -400,7 +400,7 @@ public class CategoryFragment extends Fragment {
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
 
 
                         }
@@ -418,7 +418,7 @@ public class CategoryFragment extends Fragment {
 
                         progressDialog.dismiss();
                         //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
-                        Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 

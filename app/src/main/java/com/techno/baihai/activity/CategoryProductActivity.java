@@ -181,7 +181,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 
         } catch (Exception exception) {
             exception.printStackTrace();
-            Toast.makeText(mContext, "error datos" , Toast.LENGTH_LONG).show();
+           // Toast.makeText(mContext, "error datos" , Toast.LENGTH_LONG).show();
         }
 
         GetSliderProductList(productId);
@@ -205,6 +205,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
             chat.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+                    setLog("el usuario esta solictando  el producto "+product_SellerId+"");
                     ChatRequestDialog();
 
                 }
@@ -318,7 +319,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                            Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
 
 
                         }
@@ -330,7 +331,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 
                         progressDialog.dismiss();
                         //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
-                        Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
+                      //  Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -485,7 +486,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                         @Override
                         public void run() {
                             alertDialog.dismiss();
-
+                            setLog("el usuario solicito el producto para aprobacion");
                             Intent intent = new Intent(mContext, HomeActivity.class);
                             intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
                                     Intent.FLAG_ACTIVITY_NEW_TASK);
@@ -596,7 +597,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                         } catch (JSONException e) {
 
                             progressDialog.dismiss();
-                            Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_LONG).show();
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_LONG).show();
                             e.printStackTrace();
                         }
                     }
@@ -604,7 +605,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                     @Override
                     public void Failed(String error) {
                         progressDialog.dismiss();
-                        Toast.makeText(mContext, "Error=" , Toast.LENGTH_LONG).show();
+                        //Toast.makeText(mContext, "Error=" , Toast.LENGTH_LONG).show();
 
                     }
                 });
@@ -751,7 +752,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                                 } else {
                                     //loading_spinnerId.setVisibility(View.GONE);
 
-                                    Toast.makeText(mContext, "error en consumo profile", Toast.LENGTH_SHORT).show();
+                                   // Toast.makeText(mContext, "error en consumo profile", Toast.LENGTH_SHORT).show();
                                 }
                             }
 
@@ -764,7 +765,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 
                     @Override
                     public void Failed(String error) {
-                        Toast.makeText(mContext, "Failed" + error, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "Failed" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -776,12 +777,51 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 
 
         if (isInternetPresent) {
+            setLog("le da informacion  al usuario del vendedor con el producto "+product_SellerId+"");
             GetProfile(product_SellerId);
         } else {
             PrefManager prefManager = new PrefManager(mContext);
             PrefManager.showSettingsAlert(mContext);
         }
 
+    }
+    private void setLog(String message) {
+        User user = PrefManager.getInstance(mContext).getUser();
+        String id = null;
+        if (user.getId() == "") {
+            id = "1";
+        } else {
+            id = user.getId();
+        }
+
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", message);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.LOG_APP)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            if(status.equals("true")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                            }
+
+
+                        } catch (JSONException e) {
+
+
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
     }
 
 }

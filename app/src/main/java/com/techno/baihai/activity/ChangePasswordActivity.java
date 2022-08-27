@@ -97,7 +97,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
             confirm_passId.setError(getResources().getString(R.string.required1));
             confirm_passId.requestFocus();
         } else {
-
+        setLog("Solicitud de cambio de contraseña por parte de usuario");
             ChangePasswordApi(uid, currentPass, newPass, confirm_newPass, view);
 
         }
@@ -127,6 +127,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                             String message = object.optString("message");
                             if (status.equals("1")) {
                                 CustomSnakbar.showDarkSnakabar(ChangePasswordActivity.this, view, "Reset Password Successfully!");
+                                setLog("Solicitud de envio de correo exitoso para cambio de contraseña");
                                 Handler handler = new Handler();
                                 handler.postDelayed(new Runnable() {
                                     @Override
@@ -154,7 +155,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                     @Override
                     public void Failed(String error) {
                         // progressBar.setVisibility(View.GONE);
-                        Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -162,6 +163,46 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
     public void changePassBackInit(View view) {
         onBackPressed();
+        setLog("Solicitud de paso atras  del menu despues de solicitar cambio de contraseña");
         finish();
+    }
+
+    private void setLog(String message) {
+        User user = PrefManager.getInstance(mContext).getUser();
+        String id = null;
+        if (user.getId() == "") {
+            id = "1";
+        } else {
+            id = user.getId();
+        }
+
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", message);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.LOG_APP)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            if(status.equals("true")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                            }
+
+
+                        } catch (JSONException e) {
+
+
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
     }
 }

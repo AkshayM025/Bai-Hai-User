@@ -253,7 +253,7 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
                     public void Failed(String error) {
                         progressDialog.dismiss();
 
-                        Toast.makeText(mContext, "Failed" + error, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "Failed" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -298,7 +298,7 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
 
             Toast.makeText(getApplicationContext(), "Please enter valid 10 digit phone number", Toast.LENGTH_SHORT).show();
         } else {
-
+            setLog("El usuario solicito actualizar  la informacion de perfil correspondiente");
             UpdateAProfo(uid, name, email, number, view);
 
         }
@@ -457,9 +457,11 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
                     public void onClick(DialogInterface dialog, int which) {
                         switch (which) {
                             case 0:
+                                setLog("Solicito tomar una foto de la galeria");
                                 choosePhotoFromGallary();
                                 break;
                             case 1:
+                                setLog("Solicito tomar una foto con la camara");
                                 takePhotoFromCamera();
                                 break;
                         }
@@ -508,7 +510,7 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
                         file = new File(pathOfImg);
 
 
-                        Toast.makeText(mContext, "HerePath=>  " + pathOfImg, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(mContext, "HerePath=>  " + pathOfImg, Toast.LENGTH_LONG).show();
 
                         image = pathOfImg;
 
@@ -537,7 +539,7 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
                         file = new File(pathOfImg);
 
 
-                        Toast.makeText(mContext, "Here " + pathOfImg, Toast.LENGTH_LONG).show();
+                       // Toast.makeText(mContext, "Here " + pathOfImg, Toast.LENGTH_LONG).show();
 
                         image = pathOfImg;
 
@@ -609,6 +611,7 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
         builder.setPositiveButton("GOTO SETTINGS", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
+                setLog("Solicita permisos adicionales");
                 dialogInterface.cancel();
                 openSetting();
             }
@@ -636,6 +639,45 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
         Log.e("imageStatus: ", String.valueOf(status));
         Log.e("imageMessage", message);
         Log.e("ImageFile: ", String.valueOf(file));
+    }
+
+    private void setLog(String message) {
+        User user = PrefManager.getInstance(mContext).getUser();
+        String id = null;
+        if (user.getId() == "") {
+            id = "1";
+        } else {
+            id = user.getId();
+        }
+
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", message);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.LOG_APP)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            if(status.equals("true")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                            }
+
+
+                        } catch (JSONException e) {
+
+
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
     }
 }
 

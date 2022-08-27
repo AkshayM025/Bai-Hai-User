@@ -12,6 +12,8 @@
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.ACCESS_MEDIA_LOCATION" />
     <uses-permission android:name="com.android.vending.BILLING" />
+    <uses-permission android:name="com.google.android.gms.permission.AD_ID" tools:node="remove"/>
+
 
 
 
@@ -65,6 +67,7 @@
             android:name="com.techno.baihai.activity.MyPaymentHistoryActivity"
             android:configChanges="locale|orientation"
             android:screenOrientation="portrait" />
+
         <activity
             android:name="com.techno.baihai.activity.RewardPointsActivity"
             android:configChanges="locale|orientation"
@@ -185,7 +188,6 @@
             </intent-filter>
         </activity>
 
-
         <!-- _____________________________google_________________________________________________________ -->
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
@@ -213,10 +215,8 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-
                 <data
                     android:scheme="@string/fb_login_protocol_scheme"
                     tools:ignore="ManifestResource" />
@@ -226,6 +226,8 @@
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />
+        <meta-data android:name="com.facebook.sdk.ClientToken"
+            android:value="@string/facebook_client_token"/>
 
 
         <!-- Facebook Share -->
@@ -297,5 +299,8 @@
         </provider>
 
     </application>
-
+    <queries>
+        <provider android:authorities="com.facebook.katana.provider.PlatformProvider" /> <!-- allows app to access Facebook app features -->
+        <provider android:authorities="com.facebook.orca.provider.PlatformProvider" /> <!-- allows sharing to Messenger app -->
+    </queries>
 </manifest>

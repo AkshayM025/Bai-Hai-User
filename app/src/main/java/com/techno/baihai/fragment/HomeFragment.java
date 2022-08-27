@@ -10,13 +10,14 @@ import android.content.res.Configuration;
 import android.content.res.Resources;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -31,15 +32,10 @@ import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
-
-import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.BillingClientStateListener;
-import com.android.billingclient.api.BillingResult;
-import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
@@ -47,10 +43,10 @@ import com.squareup.picasso.Picasso;
 import com.techno.baihai.R;
 import com.techno.baihai.activity.AccountActivity;
 import com.techno.baihai.activity.AwardDialog;
+import com.techno.baihai.activity.HomeActivity;
 import com.techno.baihai.activity.MyProductListActivity;
 import com.techno.baihai.activity.RewardPointsActivity;
 import com.techno.baihai.activity.SubscribeFoundationActivity;
-import com.techno.baihai.activity.StripePaymentActivity;
 import com.techno.baihai.api.Constant;
 import com.techno.baihai.listner.FragmentListener;
 import com.techno.baihai.model.User;
@@ -89,6 +85,9 @@ public class HomeFragment extends Fragment {
     private static final String SHOWCASE_ID = "1";
     private String uid;
     private View view;
+    private RadioButton spanish_btn;
+    private RadioButton english_btn;
+    private RadioGroup radioGroup;
 
 
     public HomeFragment(FragmentListener listener) {
@@ -115,6 +114,7 @@ public class HomeFragment extends Fragment {
 
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
         view = inflater.inflate(R.layout.fragment_home, container, false);
+        //languageAlert(view);
         textCoins= view.findViewById(R.id.id_text_coins);
         textDonation= view.findViewById(R.id.id_text_donation);
         textAwards= view.findViewById(R.id.id_text_prize);
@@ -128,6 +128,7 @@ public class HomeFragment extends Fragment {
         home_profileId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setLog("Paso a  seccion informacion de cuenta desde imagen");
                 startActivity(new Intent(mContext, AccountActivity.class));
 
             }
@@ -150,6 +151,7 @@ public class HomeFragment extends Fragment {
         donation.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setLog("Paso a  seccion de mis donaciones desde home");
                 listener.click(new TabDonateFragment(listener));
 
             }
@@ -159,6 +161,7 @@ public class HomeFragment extends Fragment {
         id_prize.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setLog("Paso a  seccion de mis premios desde home");
                 AwardDialog cdd = new AwardDialog(getActivity());
                 cdd.setCancelable(true);
                 cdd.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
@@ -170,6 +173,7 @@ public class HomeFragment extends Fragment {
         point.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setLog("Paso a  seccion de mis monedas desde home");
                 startActivity(new Intent(mContext, RewardPointsActivity.class));
             }
         });
@@ -177,6 +181,7 @@ public class HomeFragment extends Fragment {
         card.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setLog("Paso a  seccion de dar cosas  gratis desde home");
                 listener.click(new DonationFragment(listener));
 
 
@@ -187,6 +192,7 @@ public class HomeFragment extends Fragment {
         card2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setLog("Paso a  seccion de obtener cosas gratis desde home");
                 startActivity(new Intent(mContext, MyProductListActivity.class));
             }
         });
@@ -209,6 +215,7 @@ public class HomeFragment extends Fragment {
         card4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setLog("Paso a  seccion de suscribir tu fundacion  desde home");
                 startActivity(new Intent(mContext, SubscribeFoundationActivity.class));
             }
         });
@@ -232,7 +239,7 @@ public class HomeFragment extends Fragment {
         card5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                setLog("Paso a  seccion de suscribir a bye-hi desde home");
                 billingClient.launchBillingFlow(
                         getActivity(),
                         BillingFlowParams.newBuilder().setSkuDetails(itemInfo).build()
@@ -250,37 +257,57 @@ public class HomeFragment extends Fragment {
             }
         });*/
         language = view.findViewById(R.id.switch1);
+        String lang = PrefManager.get(mContext, "lang");
+
+        Log.e("lang", lang);
+
+        if (lang.equals("es") && lang != null) {
+            language.setChecked(true);
+
+
+        } else {
+
+            language.setChecked(false);
+
+
+        }
         language.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 // do something, the isChecked will be
                 // true if the switch is in the On position
                 if(isChecked){
                     Toast.makeText(mContext, "Select Spanish", Toast.LENGTH_LONG).show();
-                    updateResources(mContext, "es");
                     PrefManager.save(mContext, "lang", "es");
-                    textAwards.setText("Premios");
+                    updateResources(mContext, "es");
+                    loadFragment(new HomeFragment(listener));
+
+                   /* textAwards.setText("Premios");
                     textCoins.setText("Monedas");
                     textDonation.setText("Donaciones");
-                    textGet.setText("REGALAR COSAS GRATIS");
-                    textGive.setText("OBTENER COSAS GRATIS");
+                    textGet.setText("OBTENER COSAS GRATIS");
+                    textGive.setText("REGALAR COSAS GRATIS");
                     textNonProfit.setText("SUSCRIBE TU FUNDACION");
-                    textSuscribe.setText("SUSCRIBETE");
+                    textSuscribe.setText("SUSCRIBETE");*/
 
-
+                    setLog("Cambio de  lenguaje a Español");
                 }else{
                     Toast.makeText(mContext, "Select English", Toast.LENGTH_LONG).show();
-                    updateResources(mContext, "en");
                     PrefManager.save(mContext, "lang", "en");
-                    textAwards.setText("Awards");
+                    updateResources(mContext, "en");
+                    loadFragment(new HomeFragment(listener));
+
+                    /*textAwards.setText("Awards");
                     textCoins.setText("Coins");
                     textDonation.setText("Donations");
-                    textGet.setText("GIVE FREE STUFF");
-                    textGive.setText("GET FREE STUFF");
+                    textGet.setText("GET FREE STUFF");
+                    textGive.setText("GIVE FREE STUFF");
                     textNonProfit.setText("SUBSCRIBE A NON PROFIT");
-                    textSuscribe.setText("Subscribe");
+                    textSuscribe.setText("Subscribe");*/
+                    setLog("Cambio de  lenguaje a Ingles");
                 }
             }
         });
+
         getUserUpdate();
         if (isInternetPresent) {
         } else {
@@ -296,13 +323,18 @@ public class HomeFragment extends Fragment {
     private static void updateResources(Context context, String language) {
         Locale locale = new Locale(language);
         Locale.setDefault(locale);
-
         Resources resources = context.getResources();
 
         Configuration configuration = resources.getConfiguration();
-        configuration.locale = locale;
+        configuration.setLocale(locale);
 
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+    }
+    private void loadFragment(Fragment fragment) {
+        //switching fragment
+        if (fragment != null) {
+            getParentFragmentManager().beginTransaction().addToBackStack("home").replace(R.id.frameContainer, fragment).commit();
+        }
     }
     private void verifyPurchase(Purchase purchase){
         String requestUrl ="";
@@ -359,6 +391,7 @@ public class HomeFragment extends Fragment {
                     public void Failed(String error) {
                     }
                 });*/
+        setLog("Paso a  verificacion de compra  desde home");
         AcknowledgePurchaseParams acknowledgePurchaseParams
                 = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
         billingClient.acknowledgePurchase(
@@ -510,7 +543,7 @@ public class HomeFragment extends Fragment {
                         } catch (JSONException e) {
                             progressDialog.dismiss();
 
-                            Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
 
@@ -519,7 +552,7 @@ public class HomeFragment extends Fragment {
                     @Override
                     public void Failed(String error) {
                         progressDialog.dismiss();
-                        Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -590,7 +623,7 @@ public class HomeFragment extends Fragment {
         home_usernameId.setText(String.valueOf(user.getUsername()));
 
 
-        Picasso.get().load(user.getImage()).placeholder(R.drawable.profile_img).into(home_profileId);
+        Picasso.get().load(user.getImage()).placeholder(R.drawable.foto_perfil2).into(home_profileId);
         // Log.i(TAG,"image=>"+imagePath);
 
 
@@ -646,14 +679,14 @@ public class HomeFragment extends Fragment {
                                     user.getGuideFree(),
                                     user.getGuideGiveFree()
                             );
-
+                            setLog("Se  visualiza  guia incial por parte del usuario del home");
                             PrefManager.getInstance(getActivity()).userLogin(user2);
 
 
                         } catch (JSONException e) {
 
 
-                            Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -661,6 +694,117 @@ public class HomeFragment extends Fragment {
                     public void Failed(String error) {
                     }
                 });
+    }
+
+    private void setLog(String message) {
+        User user = PrefManager.getInstance(getActivity()).getUser();
+        String id = null;
+        if (user.getId() == "") {
+            id = user.getId();
+        } else {
+            id = user.getId();
+        }
+
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", message);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.LOG_APP)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            if(status.equals("true")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                            }
+
+
+                        } catch (JSONException e) {
+
+
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
+    }
+
+    public void languageAlert(View view) {
+        final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+        View mView = getLayoutInflater().inflate(R.layout.language_alert, null);
+
+        CardView btn_okay = mView.findViewById(R.id.btn_okay);
+
+        english_btn = mView.findViewById(R.id.english_btn);
+        spanish_btn = mView.findViewById(R.id.spanish_btn);
+        radioGroup = mView.findViewById(R.id.radio);
+
+
+        alert.setView(mView);
+        final AlertDialog alertDialog = alert.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.setCanceledOnTouchOutside(false);
+
+
+        String lang = PrefManager.get(mContext, "lang");
+        Log.e("lang", lang);
+
+        if (lang.equals("es") && lang != null) {
+            english_btn.setChecked(false);
+            spanish_btn.setChecked(true);
+        } else {
+            PrefManager.save(mContext, "lang", "en");
+            english_btn.setChecked(true);
+            spanish_btn.setChecked(false);
+            updateResources(mContext, "en");
+
+        }
+
+
+        english_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                Toast.makeText(mContext, "Select English", Toast.LENGTH_LONG).show();
+                updateResources(mContext, "en");
+                PrefManager.save(mContext, "lang", "en");
+                english_btn.setChecked(true);
+                spanish_btn.setChecked(false);
+            }
+        });
+        spanish_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                Toast.makeText(mContext, "Select Spanish", Toast.LENGTH_LONG).show();
+                updateResources(mContext, "es");
+                PrefManager.save(mContext, "lang", "es");
+                english_btn.setChecked(false);
+                spanish_btn.setChecked(true);
+
+            }
+        });
+
+
+        btn_okay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                startActivity(new Intent(mContext, HomeActivity.class));
+            }
+        });
+
+
+        alertDialog.show();
+
     }
 
 

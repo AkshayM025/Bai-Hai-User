@@ -18,15 +18,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
-
-import com.android.billingclient.api.BillingClient;
-import com.android.billingclient.api.BillingClientStateListener;
-import com.android.billingclient.api.BillingResult;
-import com.android.billingclient.api.Purchase;
-import com.android.billingclient.api.PurchasesUpdatedListener;
 import com.google.android.gms.wallet.PaymentsClient;
-import com.google.android.gms.wallet.Wallet;
-import com.google.android.gms.wallet.WalletConstants;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.techno.baihai.R;
 import com.techno.baihai.api.Constant;
@@ -43,7 +35,6 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Locale;
 
 import www.develpoeramit.mapicall.ApiCallBuilder;
@@ -82,7 +73,7 @@ public class HomeActivity extends AppCompatActivity
                 setColorOnBar(R.color.colorPrimaryDark);
                 loadFragment(new ChatFragment(this));
                 navigationView.setSelectedItemId(R.id.chat);
-
+                setLog("El usuario se movio al chat");
 
             } else {
                 setColorOnBar(R.color.colorPrimaryDark);
@@ -91,6 +82,7 @@ public class HomeActivity extends AppCompatActivity
                 navigationView.setSelectedItemId(R.id.home);
                 this.LegalInfo(navigationView);
                 this.sendNotification();
+                setLog("El usuario se al home principal");
 
             }
 
@@ -98,7 +90,7 @@ public class HomeActivity extends AppCompatActivity
         } catch (Exception e) {
             e.printStackTrace();
             Log.e("home", String.valueOf(e));
-            Toast.makeText(this, "home" + e.getMessage(), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(this, "home" + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
 
         String currentDate = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault()).format(new Date());
@@ -127,6 +119,7 @@ public class HomeActivity extends AppCompatActivity
         switch (menuItem.getItemId()) {
             case R.id.home:
                 setColorOnBar(R.color.colorPrimaryDark);
+                setLog("El usuario se redirigio al home con menu inferior");
                 HomeFragment homeFragment = new HomeFragment(this);
                 if (homeFragment != null) {
                     loadFragment(homeFragment);
@@ -137,9 +130,11 @@ public class HomeActivity extends AppCompatActivity
                 break;
             case R.id.chat:
                 setColorOnBar(R.color.colorPrimaryDark);
+                setLog("El usuario se redirigio al chat con menu inferior");
                 loadFragment(new ChatFragment(this));
                 break;
             case R.id.profile:
+                setLog("El usuario se redirigio a informacion de perfil con menu inferior");
                 setColorOnBar(R.color.colorPrimaryDark);
                 startActivity(new Intent(HomeActivity.this, AccountActivity.class));
                 break;
@@ -185,7 +180,7 @@ public class HomeActivity extends AppCompatActivity
 
 
                                 Log.i(TAG, "errorL", e);
-                                Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             }
                         }
@@ -194,7 +189,7 @@ public class HomeActivity extends AppCompatActivity
 
                     @Override
                     public void Failed(String error) {
-                        Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -209,10 +204,11 @@ public class HomeActivity extends AppCompatActivity
             String langua = "Yes";
             String langua1 = "No";
             String lang = PrefManager.get(mContext, "lang");
+            setLog("El usuario  se encuentra en idioma ingles");
             if (lang.equals("es") && lang != null) {
                 langua = "Si";
                 langua1 = "No";
-
+                setLog("El usuario  se encuentra en idioma español");
             }
             android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(mContext);
             // Configura el titulo.
@@ -280,6 +276,7 @@ public class HomeActivity extends AppCompatActivity
                                     user.getGuideFree(),
                                     user.getGuideGiveFree()
                             );
+                            setLog("El usuario confirmo informacion legal");
 
                             PrefManager.getInstance(getApplicationContext()).userLogin(user2);
 
@@ -287,7 +284,7 @@ public class HomeActivity extends AppCompatActivity
 
 
                             Log.i(TAG, "errorL", e);
-                            Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
@@ -314,7 +311,7 @@ public class HomeActivity extends AppCompatActivity
             if (getSupportFragmentManager().getBackStackEntryCount() <= 0) {
                 finish();
             }
-
+            setLog("El usuario presiono boton para salir de atras para salir de app");
             new AlertDialog.Builder(this)
                     .setIcon(android.R.drawable.ic_dialog_alert)
                     .setTitle("Closing Activity")
@@ -335,6 +332,46 @@ public class HomeActivity extends AppCompatActivity
             fragmentManager.popBackStack();
         }
 
+    }
+
+
+    private void setLog(String message) {
+        User user = PrefManager.getInstance(mContext).getUser();
+        String id = null;
+        if (user.getId() == "") {
+            id = "1";
+        } else {
+            id = user.getId();
+        }
+
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", message);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.LOG_APP)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            if(status.equals("true")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                            }
+
+
+                        } catch (JSONException e) {
+
+
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
     }
 
 

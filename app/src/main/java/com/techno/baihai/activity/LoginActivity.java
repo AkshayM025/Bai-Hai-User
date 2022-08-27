@@ -3,7 +3,6 @@ package com.techno.baihai.activity;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlarmManager;
-import android.app.AlertDialog;
 import android.app.Dialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
@@ -13,6 +12,9 @@ import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
+import android.content.res.Configuration;
+import android.content.res.Resources;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Base64;
@@ -21,18 +23,24 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
+import androidx.cardview.widget.CardView;
+import androidx.core.os.LocaleListCompat;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
 import com.facebook.FacebookSdk;
+import com.facebook.appevents.AppEventsLogger;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
@@ -69,11 +77,13 @@ import com.techno.baihai.utils.Utils;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Calendar;
 import java.util.HashMap;
+import java.util.Locale;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
@@ -101,6 +111,13 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private final Context mContext = this;
     private ProgressBar progressBar;
     private Boolean isInternetPresent = false;
+    private RadioGroup radioGroup;
+    private RadioButton spanish_btn;
+    private RadioButton english_btn;
+    private boolean bandera = false;
+    private String bandera2;
+    Context context;
+    Resources resources;
 
 
     @SuppressLint("WrongViewCast")
@@ -109,6 +126,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
         super.onCreate(savedInstanceState);
+
         if (PrefManager.getInstance(this).isLoggedIn()) {
 
             startActivity(new Intent(this, HomeActivity.class));
@@ -144,8 +162,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         regID = getData(getApplicationContext(), "regId", null);
 
         getCurrentLocation();
-
-
+        deleteCache(mContext);
         try {
 
             FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(LoginActivity.this,
@@ -194,20 +211,23 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
         rl_facebook = findViewById(R.id.rl_facbook);
-        login_button = findViewById(R.id.login_button);
-        login_button.setReadPermissions("email");
+        login_button =(LoginButton) findViewById(R.id.login_button);
+        //login_button.setReadPermissions("email", "public_profile");
         login_button.registerCallback(callbackManager, new FacebookCallback<LoginResult>() {
             @Override
             public void onSuccess(LoginResult loginResult) {
+                Log.d(TAG, "facebook:onSuccess");
                 getUserDetails(loginResult);
             }
 
             @Override
             public void onCancel() {
+                Log.d(TAG, "facebook:onCancel");
             }
 
             @Override
             public void onError(FacebookException exception) {
+                Log.e("Error_facebook=>", "error" + exception.getMessage());
             }
         });
         rl_facebook.setOnClickListener(new View.OnClickListener() {
@@ -220,7 +240,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         // Add code to print out the key hash
         try {
             PackageInfo info = getPackageManager().getPackageInfo(
-                    "com.tech.baihai",
+                    "com.techno.baihai",
                     PackageManager.GET_SIGNATURES);
             for (Signature signature : info.signatures) {
                 MessageDigest md = MessageDigest.getInstance("SHA");
@@ -233,10 +253,41 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
         findViewById(R.id.btn_login).setOnClickListener(this::doLoginIn);
+        String lang = PrefManager.get(mContext, "lang");
+        Log.e("lang", lang);
+        bandera2 = getIntent().getStringExtra("bandera");
+        if(bandera2!=null){
+            bandera=true;
+        }
+        if(bandera==false){
+           languageAlert(this.getCurrentFocus());
+        }
 
 
     }
+    public static void deleteCache(Context context) {
+        try {
+            File dir = context.getCacheDir();
+            deleteDir(dir);
+        } catch (Exception e) { e.printStackTrace();}
+    }
 
+    public static boolean deleteDir(File dir) {
+        if (dir != null && dir.isDirectory()) {
+            String[] children = dir.list();
+            for (int i = 0; i < children.length; i++) {
+                boolean success = deleteDir(new File(dir, children[i]));
+                if (!success) {
+                    return false;
+                }
+            }
+            return dir.delete();
+        } else if(dir!= null && dir.isFile()) {
+            return dir.delete();
+        } else {
+            return false;
+        }
+    }
 
     public void doLoginIn(View view) {
 
@@ -295,6 +346,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                                 Toast.makeText(mContext, "Notification sended",
                                         Toast.LENGTH_SHORT).show();
+                                setLog("Envio notificacion de donacion");
 
 
                             }
@@ -304,7 +356,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                             progressBar.setVisibility(View.GONE);
                             Log.i(TAG, "errorL", e);
-                            Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                           // Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
 
@@ -314,7 +366,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     @Override
                     public void Failed(String error) {
                         progressBar.setVisibility(View.GONE);
-                        Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
     }
@@ -380,7 +432,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                             result.getString("guide_free"),
                                             result.getString("guide_give_free")
                                     );
-
+                                    setLog("Login de usuario "+result.getString("name")+"");
                                     PrefManager.getInstance(getApplicationContext()).userLogin(user);
                                     startActivity(new Intent(mContext, HomeActivity.class).
                                             setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_CLEAR_TASK |
@@ -391,7 +443,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 } else if (status.equals("0")) {
 
                                     progressBar.setVisibility(View.GONE);
-                                    Toast.makeText(mContext, "" + message, Toast.LENGTH_SHORT).show();
+                                    //Toast.makeText(mContext, "" + message, Toast.LENGTH_SHORT).show();
                                 }
 
 
@@ -399,7 +451,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                                 progressBar.setVisibility(View.GONE);
                                 Log.i(TAG, "errorL", e);
-                                Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
                                 e.printStackTrace();
                             }
 
@@ -409,7 +461,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                         @Override
                         public void Failed(String error) {
                             progressBar.setVisibility(View.GONE);
-                            Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
                         }
                     });
 
@@ -557,12 +609,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
                                 try {
                                     socialLoginApi(user.getDisplayName(), String.valueOf(user.getPhotoUrl()),
-                                            user.getEmail(), "", user.getUid());
+                                            user.getEmail(), "", user.getUid(),"google");
                                 } catch (Exception exception) {
                                     exception.printStackTrace();
                                     System.out.println(exception);
 
-                                    Toast.makeText(mContext, "" + exception, Toast.LENGTH_LONG).show();
+                                    //Toast.makeText(mContext, "" + exception, Toast.LENGTH_LONG).show();
                                 }
 
                             }
@@ -613,7 +665,6 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     //**********************Facebook Integration******************************************
     protected void facebookSDKInitialize() {
-        FacebookSdk.sdkInitialize(getApplicationContext());
         callbackManager = CallbackManager.Factory.create();
     }
 
@@ -648,7 +699,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             Log.e("username---->", "" + username);
                             Log.e("email---->", "" + email);
 
-                            socialLoginApi(username, imageUrl, email, "", socialId);
+                            socialLoginApi(username, imageUrl, email, "", socialId,"facebook");
 
                         } catch (Exception e) {
 
@@ -665,7 +716,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
     }
 
-    private void socialLoginApi(String firstName, String imageUrl, String email, String mobile, String socialId) {
+    private void socialLoginApi(String firstName, String imageUrl, String email, String mobile, String socialId,String typered) {
 
         final ProgressDialog progressDialog;
         progressDialog = new ProgressDialog(LoginActivity.this);
@@ -673,7 +724,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         progressDialog.show();
 
         Call<ResponseBody> call = APIClient.loadInterface().socialLogin
-                (firstName, email, "9823145677", socialId, Preference.get(LoginActivity.this, Preference.REGISTER_ID), imageUrl, latitude, longitude);
+                (firstName, email, "0", socialId, Preference.get(LoginActivity.this, Preference.REGISTER_ID), imageUrl, latitude, longitude);
 
         // (firstName,lastName,email,socialId,PrefManager.getString(Constant.REGISTER_ID),"","","");
 
@@ -704,6 +755,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
                                 );
+                                setLog("El usuario ingreso por una red social "+typered+""+userData.getString("name")+"");
                             }
 
                             PrefManager.getInstance(getApplicationContext()).userLogin(user);
@@ -730,6 +782,141 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 t.printStackTrace();
             }
         });
+    }
+    private static void updateResources(Context context, String language) {
+        Locale locale = new Locale(language);
+        Locale.setDefault(locale);
+
+        Resources resources = context.getResources();
+
+        Configuration configuration = resources.getConfiguration();
+        configuration.locale = locale;
+
+        resources.updateConfiguration(configuration, resources.getDisplayMetrics());
+    }
+    public void languageAlert(View view) {
+        final androidx.appcompat.app.AlertDialog.Builder alert = new androidx.appcompat.app.AlertDialog.Builder(mContext);
+        View mView = getLayoutInflater().inflate(R.layout.language_alert, null);
+
+        CardView btn_okay = mView.findViewById(R.id.btn_okay);
+
+        english_btn = mView.findViewById(R.id.english_btn);
+        spanish_btn = mView.findViewById(R.id.spanish_btn);
+        radioGroup = mView.findViewById(R.id.radio);
+
+
+        alert.setView(mView);
+        final AlertDialog alertDialog = alert.create();
+        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog.setCanceledOnTouchOutside(false);
+
+
+        String lang = PrefManager.get(mContext, "lang");
+        Log.e("lang", lang);
+
+        if (lang.equals("es") && lang != null) {
+            PrefManager.save(mContext, "lang", "es");
+            updateResources(mContext, "es");
+            english_btn.setChecked(false);
+            spanish_btn.setChecked(true);
+            context = LocaleHelper.setLocale(mContext, "es");
+            resources = context.getResources();
+        } else {
+            PrefManager.save(mContext, "lang", "en");
+            english_btn.setChecked(true);
+            spanish_btn.setChecked(false);
+            updateResources(mContext, "en");
+            context = LocaleHelper.setLocale(mContext, "en");
+            resources = context.getResources();
+
+        }
+
+
+        english_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                Toast.makeText(mContext, "Select English", Toast.LENGTH_LONG).show();
+                PrefManager.save(mContext, "lang", "en");
+                updateResources(mContext, "en");
+                context = LocaleHelper.setLocale(mContext, "en");
+                resources = context.getResources();
+                english_btn.setChecked(true);
+                spanish_btn.setChecked(false);
+            }
+        });
+        spanish_btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+
+                Toast.makeText(mContext, "Select Spanish", Toast.LENGTH_LONG).show();;
+                PrefManager.save(mContext, "lang", "es");
+                updateResources(mContext, "es");
+                context = LocaleHelper.setLocale(mContext, "es");
+                resources = context.getResources();
+                english_btn.setChecked(false);
+                spanish_btn.setChecked(true);
+
+            }
+        });
+
+
+        btn_okay.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                alertDialog.dismiss();
+                bandera=true;
+                Intent intent = new Intent(mContext, LoginActivity.class);
+                intent.putExtra("bandera", "true");
+                startActivity(intent);
+                finish();
+
+            }
+        });
+
+
+        alertDialog.show();
+
+    }
+    private void setLog(String message) {
+        User user = PrefManager.getInstance(mContext).getUser();
+        String id = null;
+        if (user.getId() == "") {
+            id = "1";
+        } else {
+            id = user.getId();
+        }
+
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", message);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.LOG_APP)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            if(status.equals("true")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                            }
+
+
+                        } catch (JSONException e) {
+
+
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
     }
 
 

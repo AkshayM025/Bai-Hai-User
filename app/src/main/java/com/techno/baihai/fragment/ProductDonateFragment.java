@@ -68,7 +68,7 @@ import www.develpoeramit.mapicall.ApiCallBuilder;
 import static android.app.Activity.RESULT_OK;
 
 
-public class ProductDonateFragment extends Fragment implements Spinner.OnItemSelectedListener {
+public class  ProductDonateFragment extends Fragment implements Spinner.OnItemSelectedListener {
 
     private static final String TAG = "ProductDonateFrag";
     private static final int AUTOCOMPLETE_REQUEST_CODE = 111;
@@ -162,7 +162,7 @@ public class ProductDonateFragment extends Fragment implements Spinner.OnItemSel
 
                 usedTxt = "";
                 usedTxt = pr_donateYesid.getText().toString().trim();
-                Toast.makeText(mContext, "Used=>" + usedTxt, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, "Used=>" + usedTxt, Toast.LENGTH_SHORT).show();
 
 
             }
@@ -180,7 +180,7 @@ public class ProductDonateFragment extends Fragment implements Spinner.OnItemSel
 
                 usedTxt = "";
                 usedTxt = pr_donateNoid.getText().toString().trim();
-                Toast.makeText(mContext, "Used=>" + usedTxt, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, "Used=>" + usedTxt, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -411,7 +411,7 @@ public class ProductDonateFragment extends Fragment implements Spinner.OnItemSel
                         @Override
                         public void onError(ANError anError) {
                             progressDialog.dismiss();
-                            Toast.makeText(mContext, "apifall" + anError, Toast.LENGTH_LONG).show();
+                           // Toast.makeText(mContext, "apifall" + anError, Toast.LENGTH_LONG).show();
 
 
                         }
@@ -499,13 +499,13 @@ public class ProductDonateFragment extends Fragment implements Spinner.OnItemSel
 
                                 progressDialog.dismiss();
 
-                                Toast.makeText(mContext, "Status" + message, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(mContext, "Status" + message, Toast.LENGTH_SHORT).show();
                             }
 
                         } catch (JSONException e) {
                             progressDialog.dismiss();
                             e.printStackTrace();
-                            Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
 
 
                         }
@@ -518,7 +518,7 @@ public class ProductDonateFragment extends Fragment implements Spinner.OnItemSel
 
                         progressDialog.dismiss();
                         //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
-                        Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -601,7 +601,7 @@ public class ProductDonateFragment extends Fragment implements Spinner.OnItemSel
 
                     } catch (Exception e) {
                         e.printStackTrace();
-                        Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
+                       // Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
                     }
                 }
                 break;

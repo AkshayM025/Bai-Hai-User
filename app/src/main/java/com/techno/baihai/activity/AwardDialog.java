@@ -29,6 +29,7 @@ import com.techno.baihai.utils.DataManager;
 import com.techno.baihai.utils.PrefManager;
 
 import org.jetbrains.annotations.NotNull;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -99,7 +100,7 @@ public class    AwardDialog extends Dialog {
         }
 
         if (isInternetPresent) {
-            GetBaiHaiPaymentTransactionApi();
+            GetBaiHaiPaymentTransactionApi(uid);
         } else {
             PrefManager.showSettingsAlert(mContext);
 
@@ -158,7 +159,7 @@ public class    AwardDialog extends Dialog {
                                     awardMaxCoin = result.optString("max_coin");
                                     awardImage = result.optString("image");
                                     awardMessage = result.optString("message");
-
+                                setLog("se envio informacion de premios  a usuario");
 
                                 }
 
@@ -166,7 +167,7 @@ public class    AwardDialog extends Dialog {
                             } else {
                                 progressDialog.dismiss();
 
-                                Toast.makeText(mContext, "" + message, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(mContext, "" + message, Toast.LENGTH_SHORT).show();
 
                             }
 
@@ -187,8 +188,84 @@ public class    AwardDialog extends Dialog {
                     }
                 });
     }
+    private void GetBaiHaiPaymentTransactionApi(String Uid) {
 
-    private void GetBaiHaiPaymentTransactionApi() {
+
+        final ProgressDialog progressDialog;
+        progressDialog = new ProgressDialog(mContext);
+        progressDialog.setMessage("Please wait...");
+        progressDialog.show();
+
+
+        HashMap<String, String> parms = new HashMap<>();
+        parms.put("user_id", Uid);
+
+
+        ApiCallBuilder.build(mContext)
+                .isShowProgressBar(false)
+                .setUrl(Constant.BASE_URL + "get_coin_history?")
+                .setParam(parms)
+                .execute(new ApiCallBuilder.onResponse() {
+                    @Override
+                    public void Success(String response) {
+
+
+                        Log.e("selectedresponse=>", "-------->" + response);
+
+
+                        try {
+
+                            JSONObject object = new JSONObject(response);
+                            String status = object.optString("status");
+                            JSONArray result = object.optJSONArray("result");
+                            if (status.equals("1")) {
+                                progressDialog.dismiss();
+                                ArrayList<RewardsHistoryModel.Result> lista= new ArrayList<RewardsHistoryModel.Result>();
+                                for (int i = 0; i < result.length(); i++) {
+                                    JSONObject object1 = result.getJSONObject(i);
+
+                                    String id = object1.getString("id");
+                                    String name = object1.getString("name");
+                                    String mincoin = object1.getString("min_coin");
+                                    String maxcoin = object1.getString("max_coin");
+                                    String image = object1.getString("image");
+                                    String message = object1.getString("message");
+
+                                    RewardsHistoryModel.Result object2 = new RewardsHistoryModel.Result(id,name,mincoin,maxcoin,image,message);
+                                    lista.add(object2);
+                                }
+
+                                madapter = new AdapterCoinModel(mContext, lista);
+
+                                recycleViewbaihaiId.removeAllViews();
+                                recycleViewbaihaiId.setAdapter(madapter);
+
+
+                            } else {
+                                progressDialog.dismiss();
+
+                                //Toast.makeText(mContext, "" + message, Toast.LENGTH_SHORT).show();
+
+                            }
+
+                        } catch (JSONException e) {
+                            progressDialog.dismiss();
+                            Log.e("selectedresponse=>",""+e.getMessage());
+                            // Toast.makeText(mContext, "" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+
+                    }
+
+                    @Override
+                    public void Failed(String error) {
+                        progressDialog.dismiss();
+                        Log.e("Failed=>",""+error);
+                        //    Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
+    private void GetBaiHaiPaymentTransactionApi2() {
 
         DataManager.getInstance().showProgressMessage(mContext, "Please wait...");
 
@@ -243,6 +320,44 @@ public class    AwardDialog extends Dialog {
             }
         });
 
+    }
+    private void setLog(String message) {
+        User user = PrefManager.getInstance(mContext).getUser();
+        String id = null;
+        if (user.getId() == "") {
+            id = "1";
+        } else {
+            id = user.getId();
+        }
+
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", message);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.LOG_APP)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            if(status.equals("true")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                            }
+
+
+                        } catch (JSONException e) {
+
+
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
     }
 
 

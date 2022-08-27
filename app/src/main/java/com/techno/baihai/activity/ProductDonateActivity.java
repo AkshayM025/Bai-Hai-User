@@ -169,6 +169,7 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
             @Override
             public void onClick(View v) {
                 // listener.click(new T(listener));
+                setLog("el producto que donara el usuario es usado");
                 pr_donateYesid.setBackgroundColor(Color.parseColor("#257712"));
                 pr_donateNoid.setBackgroundColor(Color.parseColor("#727272"));
                 pr_donateYesid.setTextColor(Color.parseColor("#FFFFFF"));
@@ -176,7 +177,7 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
 
                 usedTxt = "";
                 usedTxt = pr_donateYesid.getText().toString().trim();
-                Toast.makeText(mContext, "Used=>" + usedTxt, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, "Used=>" + usedTxt, Toast.LENGTH_SHORT).show();
 
 
             }
@@ -188,6 +189,7 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
         pr_donateNoid.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                setLog("el producto que donara el usuario no es usado");
                 pr_donateYesid.setBackgroundColor(Color.parseColor("#727272"));
                 pr_donateNoid.setBackgroundColor(Color.parseColor("#257712"));
                 pr_donateYesid.setTextColor(Color.parseColor("#000000"));
@@ -195,7 +197,7 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
 
                 usedTxt = "";
                 usedTxt = pr_donateNoid.getText().toString().trim();
-                Toast.makeText(mContext, "Used=>" + usedTxt, Toast.LENGTH_SHORT).show();
+                //Toast.makeText(mContext, "Used=>" + usedTxt, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -231,6 +233,8 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
             public void onClick(View view) {
 
                 if (isInternetPresent) {
+
+                    setLog("el usuario dono un producto");
                     Validate(view);
                 } else {
                     PrefManager prefManager = new PrefManager(mContext);
@@ -448,6 +452,8 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
 
 
                                     finish();
+
+                                    setLog("se cargo el producto donado por el usuario "+p_name+"");
                                     startActivity(new Intent(mContext, ThankyouPointActivity.class));
                                     Animatoo.animateInAndOut(mContext);
 
@@ -469,7 +475,7 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
                         @Override
                         public void onError(ANError anError) {
                             progressDialog.dismiss();
-                            Toast.makeText(mContext, "apifall" + anError, Toast.LENGTH_LONG).show();
+                           // Toast.makeText(mContext, "apifall" + anError, Toast.LENGTH_LONG).show();
 
 
                         }
@@ -555,13 +561,13 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
 
                                 progressDialog.dismiss();
 
-                                Toast.makeText(mContext, "Status" + message, Toast.LENGTH_SHORT).show();
+                                //Toast.makeText(mContext, "Status" + message, Toast.LENGTH_SHORT).show();
                             }
 
                         } catch (JSONException e) {
                             progressDialog.dismiss();
                             e.printStackTrace();
-                            Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
 
 
                         }
@@ -574,7 +580,7 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
 
                         progressDialog.dismiss();
                         //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
-                        Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
+                        //Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -605,7 +611,7 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
             pictureDialog.show();
 
         } else {
-            Toast.makeText(mContext, "Some feilds null", Toast.LENGTH_SHORT).show();
+            Toast.makeText(mContext, "Some fields in image  are null", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -762,7 +768,44 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
         intent.setData(uri);
         startActivityForResult(intent, 101);
     }
+    private void setLog(String message) {
+        User user = PrefManager.getInstance(mContext).getUser();
+        String id = null;
+        if (user.getId() == "") {
+            id = "1";
+        } else {
+            id = user.getId();
+        }
 
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", message);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.LOG_APP)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            if(status.equals("true")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                            }
+
+
+                        } catch (JSONException e) {
+
+
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
+    }
 
     public void onBackFromUploadProduct(View view) {
         onBackPressed();

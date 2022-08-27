@@ -188,7 +188,7 @@ public class SplashActivity extends AppCompatActivity {
                     });
 
         } catch (Exception e) {
-            Toast.makeText(context, "Error=>" + e, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(context, "Error=>" + e, Toast.LENGTH_SHORT).show();
 
             e.printStackTrace();
         }
@@ -237,14 +237,14 @@ public class SplashActivity extends AppCompatActivity {
                 switch (index) {
                     case 0: // first button
 
-                        Toast.makeText(getApplicationContext(), "Selected button number " + index, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), "Selected button number " + index, Toast.LENGTH_LONG).show();
                         updateResources(context,"en");
                         PrefManager.save(context,"language","en");
 
                         break;
                     case 1: // secondbutton
 
-                        Toast.makeText(getApplicationContext(), "Selected button number " + index, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(getApplicationContext(), "Selected button number " + index, Toast.LENGTH_LONG).show();
                         updateResources(context,"es");
                         PrefManager.save(context,"english","es");
 

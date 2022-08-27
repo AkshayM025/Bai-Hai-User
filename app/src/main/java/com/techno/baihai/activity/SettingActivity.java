@@ -1,6 +1,7 @@
 package com.techno.baihai.activity;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.content.res.Resources;
@@ -19,9 +20,17 @@ import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 
 import com.techno.baihai.R;
+import com.techno.baihai.api.Constant;
+import com.techno.baihai.model.User;
 import com.techno.baihai.utils.PrefManager;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.util.HashMap;
 import java.util.Locale;
+
+import www.develpoeramit.mapicall.ApiCallBuilder;
 
 public class SettingActivity extends AppCompatActivity {
 
@@ -65,75 +74,43 @@ public class SettingActivity extends AppCompatActivity {
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
     }
 
-    public void languageAlert(View view) {
-        final AlertDialog.Builder alert = new AlertDialog.Builder(this);
-        View mView = getLayoutInflater().inflate(R.layout.language_alert, null);
 
-        CardView btn_okay = mView.findViewById(R.id.btn_okay);
-
-        english_btn = mView.findViewById(R.id.english_btn);
-        spanish_btn = mView.findViewById(R.id.spanish_btn);
-        radioGroup = mView.findViewById(R.id.radio);
-
-
-        alert.setView(mView);
-        final AlertDialog alertDialog = alert.create();
-        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        alertDialog.setCanceledOnTouchOutside(false);
-
-
-        String lang = PrefManager.get(mContext, "lang");
-        Log.e("lang", lang);
-
-        if (lang.equals("es") && lang != null) {
-            english_btn.setChecked(false);
-            spanish_btn.setChecked(true);
+    private void setLog(String message) {
+        User user = PrefManager.getInstance(mContext).getUser();
+        String id = null;
+        if (user.getId() == "") {
+            id = "1";
         } else {
-            PrefManager.save(mContext, "lang", "en");
-            english_btn.setChecked(true);
-            spanish_btn.setChecked(false);
-            updateResources(mContext, "en");
-
+            id = user.getId();
         }
 
-
-        english_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                Toast.makeText(getApplicationContext(), "Select English", Toast.LENGTH_LONG).show();
-                updateResources(mContext, "en");
-                PrefManager.save(mContext, "lang", "en");
-                english_btn.setChecked(true);
-                spanish_btn.setChecked(false);
-            }
-        });
-        spanish_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                Toast.makeText(getApplicationContext(), "Select Spanish", Toast.LENGTH_LONG).show();
-                updateResources(mContext, "es");
-                PrefManager.save(mContext, "lang", "es");
-                english_btn.setChecked(false);
-                spanish_btn.setChecked(true);
-
-            }
-        });
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", message);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.LOG_APP)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            if(status.equals("true")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                            }
 
 
-        btn_okay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog.dismiss();
-                startActivity(new Intent(mContext, HomeActivity.class));
-            }
-        });
+                        } catch (JSONException e) {
 
 
-        alertDialog.show();
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
 
+                    public void Failed(String error) {
+                    }
+                });
     }
 }

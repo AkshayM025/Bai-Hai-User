@@ -185,7 +185,7 @@ public class SupportActivity extends AppCompatActivity implements FAQListener {
                     public void Failed(String error) {
                         progressDialog.dismiss();
                         swipLayout.setRefreshing(false);
-                        Toast.makeText(mContext, "Check Your Connection " + error, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(mContext, "Check Your Connection " + error, Toast.LENGTH_LONG).show();
                     }
                 });
 
@@ -193,7 +193,7 @@ public class SupportActivity extends AppCompatActivity implements FAQListener {
 
     @Override
     public void click(String faq_id) {
-
+ setLog("Se solicita informacion de faq"+faq_id+"");
         GetFAQResultApi(faq_id);
 
     }
@@ -292,13 +292,50 @@ public class SupportActivity extends AppCompatActivity implements FAQListener {
                     public void Failed(String error) {
                         progressDialog.dismiss();
                         swipLayout.setRefreshing(false);
-                        Toast.makeText(mContext, "Check Your Connection " + error, Toast.LENGTH_LONG).show();
+                        //Toast.makeText(mContext, "Check Your Connection " + error, Toast.LENGTH_LONG).show();
                     }
                 });
 
     }
 
+    private void setLog(String message) {
+        User user = PrefManager.getInstance(mContext).getUser();
+        String id = null;
+        if (user.getId() == "") {
+            id = "1";
+        } else {
+            id = user.getId();
+        }
 
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_id", id);
+        parms1.put("activity", message);
+        ApiCallBuilder.build(mContext)
+                .setUrl(Constant.BASE_URL + Constant.LOG_APP)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        try {
+                            Log.e("selectedresponse=>", "-------->" + response);
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            if(status.equals("true")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                            }
+
+
+                        } catch (JSONException e) {
+
+
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+                    }
+                });
+    }
 
 
 
