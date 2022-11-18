@@ -50,7 +50,6 @@ import com.techno.baihai.utils.RealPathUtil;
 import com.techno.baihai.utils.Tools;
 
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -62,9 +61,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import www.develpoeramit.mapicall.ApiCallBuilder;
 
 

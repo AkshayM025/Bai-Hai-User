@@ -178,24 +178,10 @@ public class HomeFragment extends Fragment {
             }
         });
         card = view.findViewById(R.id.card);
-        card.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setLog("Paso a  seccion de dar cosas  gratis desde home");
-                listener.click(new DonationFragment(listener));
 
-
-            }
-        });
 
         card2 = view.findViewById(R.id.card2);
-        card2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setLog("Paso a  seccion de obtener cosas gratis desde home");
-                startActivity(new Intent(mContext, MyProductListActivity.class));
-            }
-        });
+
         card3 = view.findViewById(R.id.card3);
         card3.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -212,13 +198,7 @@ public class HomeFragment extends Fragment {
             }
         });
         card4 = view.findViewById(R.id.card4);
-        card4.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                setLog("Paso a  seccion de suscribir tu fundacion  desde home");
-                startActivity(new Intent(mContext, SubscribeFoundationActivity.class));
-            }
-        });
+
         card5 = view.findViewById(R.id.card5);
         billingClient = BillingClient.newBuilder(mContext)
                 .enablePendingPurchases()
@@ -236,6 +216,7 @@ public class HomeFragment extends Fragment {
                     }
                 }).build();
         connectToGooglePlayBilling();
+
         card5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -244,6 +225,29 @@ public class HomeFragment extends Fragment {
                         getActivity(),
                         BillingFlowParams.newBuilder().setSkuDetails(itemInfo).build()
                 );
+            }
+        });
+        card.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setLog("Paso a  seccion de dar cosas  gratis desde home");
+                listener.click(new DonationFragment(listener));
+
+
+            }
+        });
+        card2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setLog("Paso a  seccion de obtener cosas gratis desde home");
+                startActivity(new Intent(mContext, MyProductListActivity.class));
+            }
+        });
+        card4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                setLog("Paso a  seccion de suscribir tu fundacion  desde home");
+                startActivity(new Intent(mContext, SubscribeFoundationActivity.class));
             }
         });
         getUserUpdate();
@@ -344,68 +348,68 @@ public class HomeFragment extends Fragment {
         String purchaseValid = Integer.toString(purchase.getPurchaseState());
         User user = PrefManager.getInstance(getActivity()).getUser();
         String id = user.getId();
+        if (user.getId() == "") {
+            id = user.getId();
+        } else {
+            id = user.getId();
+        }
 
-/*
         HashMap<String, String> parms1 = new HashMap<>();
         parms1.put("user_id", id);
-        parms1.put("purchase_token", purchaseToken);
-        parms1.put("purchase_time", purchaseTime);
-        parms1.put("purchase_order_id", purchaseOrderId);
-        parms1.put("purchase_valid", purchaseValid);
+        parms1.put("activity", "0");
         ApiCallBuilder.build(mContext)
-                .setUrl(Constant.BASE_URL + Constant.PAY)
+                .setUrl(Constant.BASE_URL + Constant.SUSCRIBE)
                 .setParam(parms1)
                 .execute(new ApiCallBuilder.onResponse() {
                     public void Success(String response) {
                         try {
                             Log.e("selectedresponse=>", "-------->" + response);
                             JSONObject object = new JSONObject(response);
-                            String isValid = object.getString("isValid");
-                            if(isValid.equals("true")){
-                                AcknowledgePurchaseParams acknowledgePurchaseParams
-                                        = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
-                                billingClient.acknowledgePurchase(
-                                        acknowledgePurchaseParams,
-                                        new AcknowledgePurchaseResponseListener() {
-                                            @Override
-                                            public void onAcknowledgePurchaseResponse(@NonNull BillingResult billingResult) {
-                                                if(billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK){
-                                                    Toast.makeText(mContext,"ACKNOLOWGED",Toast.LENGTH_LONG).show();
+                            String message = object.getString("message");
+                            setLog("Paso a  verificacion de compra  desde home");
+                            AcknowledgePurchaseParams acknowledgePurchaseParams
+                                    = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
+                            billingClient.acknowledgePurchase(
+                                    acknowledgePurchaseParams,
+                                    new AcknowledgePurchaseResponseListener() {
+                                        @Override
+                                        public void onAcknowledgePurchaseResponse(@NonNull BillingResult billingResult) {
+                                            if(billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK){
+                                                Toast.makeText(mContext,"ACKNOLOWGED",Toast.LENGTH_LONG).show();
+                                                User user2 = new User(
+                                                        user.getId(),
+                                                        user.getUsername(),
+                                                        user.getEmail(),
+                                                        user.getPassword(),
+                                                        user.getPhone(),
+                                                        user.getImage(),
+                                                        user.getLegalinfo(),
+                                                        user.getGuide(),
+                                                        user.getGuideFree(),
+                                                        user.getGuideGiveFree(),
+                                                        "1"
+                                                );
+                                                PrefManager.getInstance(getActivity()).userLogin(user2);
 
-                                                }
                                             }
                                         }
-                                );
-                            }
-
+                                    }
+                            );
 
 
                         } catch (JSONException e) {
 
 
-                            Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
                             e.printStackTrace();
                         }
                     }
 
                     public void Failed(String error) {
                     }
-                });*/
-        setLog("Paso a  verificacion de compra  desde home");
-        AcknowledgePurchaseParams acknowledgePurchaseParams
-                = AcknowledgePurchaseParams.newBuilder().setPurchaseToken(purchase.getPurchaseToken()).build();
-        billingClient.acknowledgePurchase(
-                acknowledgePurchaseParams,
-                new AcknowledgePurchaseResponseListener() {
-                    @Override
-                    public void onAcknowledgePurchaseResponse(@NonNull BillingResult billingResult) {
-                        if(billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK){
-                            Toast.makeText(mContext,"ACKNOLOWGED",Toast.LENGTH_LONG).show();
+                });
 
-                        }
-                    }
-                }
-        );
+
 
     }
     private void connectToGooglePlayBilling(){
@@ -677,7 +681,8 @@ public class HomeFragment extends Fragment {
                                     user.getLegalinfo(),
                                     "1",
                                     user.getGuideFree(),
-                                    user.getGuideGiveFree()
+                                    user.getGuideGiveFree(),
+                                    user.getSuscribe()
                             );
                             setLog("Se  visualiza  guia incial por parte del usuario del home");
                             PrefManager.getInstance(getActivity()).userLogin(user2);

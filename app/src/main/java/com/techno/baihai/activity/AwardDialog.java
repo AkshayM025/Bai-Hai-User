@@ -15,7 +15,6 @@ import android.view.View;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Toast;
 
 import com.marozzi.roundbutton.RoundButton;
 import com.techno.baihai.R;
@@ -126,6 +125,7 @@ public class    AwardDialog extends Dialog {
                 .isShowProgressBar(false)
                 .setUrl(Constant.BASE_URL + "get_user_level?")
                 .setParam(parms)
+
                 .execute(new ApiCallBuilder.onResponse() {
                     @Override
                     public void Success(String response) {
@@ -145,6 +145,7 @@ public class    AwardDialog extends Dialog {
                                 //   https://www.shipit.ng/BaiHai/webservice/get_profile?user_id=1
 
                                 JSONObject result = object.optJSONObject("result");
+                                JSONObject result2 = object.optJSONObject("result2");
                                 String awardId = "null";
                                 String awardName = "null";
                                 String awardMinCoin = "null";
@@ -218,6 +219,7 @@ public class    AwardDialog extends Dialog {
                             JSONObject object = new JSONObject(response);
                             String status = object.optString("status");
                             JSONArray result = object.optJSONArray("result");
+                            JSONArray result2 = object.optJSONArray("result2");
                             if (status.equals("1")) {
                                 progressDialog.dismiss();
                                 ArrayList<RewardsHistoryModel.Result> lista= new ArrayList<RewardsHistoryModel.Result>();
@@ -231,8 +233,8 @@ public class    AwardDialog extends Dialog {
                                     String image = object1.getString("image");
                                     String message = object1.getString("message");
 
-                                    RewardsHistoryModel.Result object2 = new RewardsHistoryModel.Result(id,name,mincoin,maxcoin,image,message);
-                                    lista.add(object2);
+                                    RewardsHistoryModel.Result object3 = new RewardsHistoryModel.Result(id,name,mincoin,maxcoin,image,message);
+                                    lista.add(object3);
                                 }
 
                                 madapter = new AdapterCoinModel(mContext, lista);

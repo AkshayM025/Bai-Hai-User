@@ -5,6 +5,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -13,7 +14,10 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Matrix;
+import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.provider.Settings;
@@ -32,6 +36,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
@@ -51,6 +56,7 @@ import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
 import com.karumi.dexter.listener.PermissionRequest;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
+import com.makeramen.roundedimageview.RoundedImageView;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
 import com.smarteist.autoimageslider.SliderView;
@@ -71,6 +77,10 @@ import org.json.JSONObject;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -83,6 +93,8 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
     private static final String TAG = "ProductDonateFrag";
     private static final int AUTOCOMPLETE_REQUEST_CODE = 111;
     private static ActivityProductDonateBinding binding;
+
+
     Context mContext = ProductDonateActivity.this;
     CardView iv_donate, tv_donate;
     ImageView pickImg;
@@ -115,15 +127,17 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
     private LinearLayout sliderDotspanel;
     private int dotscount;
     private ImageView[] dots;
+    private ImageView btnRemoveImage;
     private ImageView image2;
     private ProSliderAdapter proSliderAdapter;
     private HashMap<String, File> fileHashMap;
     private ProgressDialog progressDialog;
     private Options options;
-
+    static SliderView imageSlider;
+    static RoundedImageView image1;
     public static void Task() {
-        binding.imageSlider.setVisibility(View.GONE);
-        binding.image1.setVisibility(View.VISIBLE);
+        imageSlider.setVisibility(View.GONE);
+        image1.setVisibility(View.VISIBLE);
     }
 
     @Override
@@ -142,8 +156,9 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
         isInternetPresent = PrefManager.isNetworkConnected(mContext);
 
         category = new ArrayList<String>();
-
-
+        //set  imageSlider
+        imageSlider = findViewById(R.id.imageSlider);
+        image1 = findViewById(R.id.image1);
         //Initializing Spinner
         spinner = findViewById(R.id.spinner);
 
@@ -306,8 +321,8 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
                     }).check();
 
         });
-
-        binding.btnRemoveimage.setVisibility(View.GONE);
+        btnRemoveImage = findViewById(R.id.btn_removeimage);
+        btnRemoveImage.setVisibility(View.GONE);
 
 
     }
@@ -520,8 +535,12 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
                                     JSONArray jArray = object.optJSONArray("result");
                                     // Log.e(TAG, "result=>" + jArray);
                                     //Initializing the ArrayList
+                                    if (lang.equals("es") && lang != null) {
+                                        category.add("Seleccionar Categoria");
+                                    }else{
+                                        category.add("Select Category");
+                                    }
 
-                                    category.add("Select Category");
 
 
                                     if (jArray != null) {
@@ -625,8 +644,10 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
     private void takePhotoFromCamera() {
 
         Intent cameraIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-        if (cameraIntent.resolveActivity(mContext.getPackageManager()) != null)
+        if (cameraIntent.resolveActivity(mContext.getPackageManager()) != null){
             startActivityForResult(cameraIntent, 0);
+        }
+
 
     }
 
@@ -636,24 +657,25 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
         try {
             if (resultCode == Activity.RESULT_OK && requestCode == 100) {
                 returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
+
                 image2.setVisibility(View.GONE);
                 //  myPagerAdapter = new MyPagerAdapter(mContext, returnValue);
                 // photos_viewpager.setAdapter(myPagerAdapter);
                 rl_Pager.setVisibility(View.GONE);
-                binding.btnRemoveimage.setVisibility(View.GONE);
-                binding.imageSlider.setVisibility(View.VISIBLE);
-
+                btnRemoveImage.setVisibility(View.GONE);
+                imageSlider.setVisibility(View.VISIBLE);
+                rotateImages();
                 proSliderAdapter = new ProSliderAdapter(getApplicationContext(), returnValue);
 
-                binding.imageSlider.setSliderAdapter(proSliderAdapter);
+                imageSlider.setSliderAdapter(proSliderAdapter);
                 proSliderAdapter.notifyDataSetChanged();
-                binding.imageSlider.setIndicatorAnimation(IndicatorAnimationType.THIN_WORM); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
-                binding.imageSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
-                binding.imageSlider.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
-                binding.imageSlider.setIndicatorSelectedColor(Color.WHITE);
-                binding.imageSlider.setIndicatorUnselectedColor(Color.GRAY);
-                binding.imageSlider.setScrollTimeInSec(4); //set scroll delay in seconds :
-                binding.imageSlider.startAutoCycle();
+                imageSlider.setIndicatorAnimation(IndicatorAnimationType.THIN_WORM); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
+                imageSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+                imageSlider.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
+                imageSlider.setIndicatorSelectedColor(Color.WHITE);
+                imageSlider.setIndicatorUnselectedColor(Color.GRAY);
+                imageSlider.setScrollTimeInSec(4); //set scroll delay in seconds :
+                imageSlider.startAutoCycle();
 
 
                 SharePost();
@@ -721,6 +743,72 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
 
     }
 
+
+
+    public  void rotateImages() {
+        if (returnValue.size() > 0) {
+            //     images = new ArrayList<>();
+            for (int i = 0; i < returnValue.size(); i++) {
+
+                String path = returnValue.get(i);
+                Log.e("vcfgxb", String.valueOf(returnValue.size()));
+                    InputStream in = null;
+                    try {
+                        in = new FileInputStream(returnValue.get(i));
+                    } catch (FileNotFoundException e) {
+                        Log.e("TAG","originalFilePath is not valid", e);
+                    }
+
+                    BitmapFactory.Options options = new BitmapFactory.Options();
+                    Bitmap bitmap = BitmapFactory.decodeStream(in, null, options);
+                    Matrix matrix = new Matrix();
+
+                    matrix.postRotate(90);
+
+                     bitmap= Bitmap.createScaledBitmap(bitmap, bitmap.getWidth(), bitmap.getHeight(), true);
+
+                     bitmap = Bitmap.createBitmap(bitmap, 0, 0, bitmap.getWidth(), bitmap.getHeight(), matrix, true);
+                    ByteArrayOutputStream stream = new ByteArrayOutputStream();
+                    bitmap.compress(Bitmap.CompressFormat.JPEG, 50, stream);
+
+                    byte[] byteArray = stream.toByteArray();
+
+                    // Storing Back
+                    FileOutputStream outStream = null;
+                    try {
+                        outStream = new FileOutputStream(returnValue.get(i));
+                        outStream.write(byteArray);
+                        outStream.close();
+                    } catch (Exception e) {
+                        Log.e("TAG","could not save", e);
+                    }
+
+
+
+            }
+
+
+        } else {
+
+            CustomSnakbar.showDarkSnakabar(mContext, binding.getRoot(), "Please Select Image!");
+        }
+    }
+
+    public Bitmap getBitmapFromUri(Uri imageUri) {
+
+        getContentResolver().notifyChange(imageUri, null);
+        ContentResolver cr = getContentResolver();
+        Bitmap bitmap;
+
+        try {
+            bitmap = android.provider.MediaStore.Images.Media.getBitmap(cr, imageUri);
+            return bitmap;
+        }
+        catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
 
     public Uri getImageUri(Context inContext, Bitmap inImage) {
         ByteArrayOutputStream bytes = new ByteArrayOutputStream();

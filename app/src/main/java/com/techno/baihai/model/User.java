@@ -12,8 +12,9 @@ public class User {
     private final String guide;
     private final String guide_free;
     private final String guide_give_free;
+    private final String suscribe;
 
-    public User(String id, String username, String email, String password, String phone, String image,String legal_info,String guide,String guide_free,String guide_give_free) {
+    public User(String id, String username, String email, String password, String phone, String image,String legal_info,String guide,String guide_free,String guide_give_free,String suscribe) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -24,6 +25,7 @@ public class User {
         this.guide = guide;
         this.guide_free = guide_free;
         this.guide_give_free = guide_give_free;
+        this.suscribe=suscribe;
 
     }
 
@@ -49,6 +51,10 @@ public class User {
 
     public String getLegalinfo() {
         return legal_info;
+    }
+
+    public String getSuscribe() {
+        return suscribe;
     }
 
     public String getGuide() {

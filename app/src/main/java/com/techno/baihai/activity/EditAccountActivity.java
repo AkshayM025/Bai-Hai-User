@@ -223,7 +223,7 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
                                 }
 
 
-                                User user = new User(user_ID, username, email, password, mobile, image, legal_info, guide, guide_free, guide_give_free);
+                                User user = new User(user_ID, username, email, password, mobile, image, legal_info, guide, guide_free, guide_give_free,"false");
                                 Picasso.get().load(image).placeholder(R.drawable.profile_img).into(civ_User);
 
                                 PrefManager.getInstance(getApplicationContext()).userLogin(user);
@@ -392,7 +392,7 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
                                 }
 
 
-                                User user = new User(user_ID, username, email, password, mobile, image, legal_info, guide, guide_free, guide_give_free);
+                                User user = new User(user_ID, username, email, password, mobile, image, legal_info, guide, guide_free, guide_give_free,"false");
                                 Picasso.get().load(image).placeholder(R.drawable.profile_img).into(civ_User);
 
                                 PrefManager.getInstance(getApplicationContext()).userLogin(user);

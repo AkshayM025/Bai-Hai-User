@@ -144,6 +144,7 @@
                             android:id="@+id/point"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginLeft="@dimen/_8sdp"
                             android:gravity="center"
                             android:orientation="vertical">
 
@@ -554,7 +555,7 @@
                             android:layout_gravity="center"
                             android:layout_marginTop="12dp"
                             android:gravity="center"
-                            android:text="Subscribe"
+                            android:text="@string/subscribe"
                             android:textColor="@color/colorBlack"
                             android:textSize="12sp" />
                     </LinearLayout>

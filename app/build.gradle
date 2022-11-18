@@ -7,8 +7,8 @@ android {
         applicationId "com.techno.baihai"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 39
-        versionName "39.2"
+        versionCode 52
+        versionName "52.2"
         multiDexEnabled true
         archivesBaseName = "BaiHaiUser"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -86,7 +86,10 @@ dependencies {
 
 ///firebase__________________________________________________________
     implementation "com.google.firebase:firebase-core:18.0.2"
-    implementation "com.google.firebase:firebase-auth:20.0.2"
+    implementation('com.google.firebase:firebase-auth') {
+        exclude module: "play-services-safetynet"
+    }
+    implementation'com.google.firebase:firebase-auth'
   //  implementation "com.google.firebase:firebase-storage:19.2.1"
    // implementation "com.google.firebase:firebase-perf:19.0.11"
    // implementation 'com.firebaseui:firebase-ui-database:7.1.1'
@@ -124,7 +127,7 @@ dependencies {
     implementation("com.squareup.okhttp3:okhttp")
     implementation("com.squareup.okhttp3:logging-interceptor")
 
-    implementation 'com.github.smarteist:autoimageslider:1.4.0'
+    implementation 'com.github.smarteist:autoimageslider:1.4.0-appcompat'
 
    // implementation 'io.github.rockerhieu:emojicon:1.4.0'
 

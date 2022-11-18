@@ -144,7 +144,7 @@ public class AccountActivity extends AppCompatActivity {
             public void onSuccess(Sharer.Result result) {
                 Log.e("TAG", "Facebook Share Success");
                 //logoutFacebook();
-
+                UpdateProfilePoints();
             }
 
             @Override
@@ -213,7 +213,7 @@ public class AccountActivity extends AppCompatActivity {
                             String message = object.optString("message");
                             if (status.equals("1")) {
                                 Toast.makeText(mContext, "You get +3Coins, Check Your Wallet...!!" + message, Toast.LENGTH_LONG).show();
-                                setLog("gano 3 puntos por ingresar a cuenta");
+                                setLog("gano 3 puntos por ingresar por compartir");
 
                             } else {
                                 progressDialog.dismiss();
@@ -441,6 +441,12 @@ public class AccountActivity extends AppCompatActivity {
     public void yourFoundationsInit(View view) {
 
         startActivity(new Intent(AccountActivity.this, YourFoundations.class));
+    }
+
+    public void yourTutorialsInit(View view) {
+
+        setLog("presiono en boton de tutoriales");
+        startActivity(new Intent(AccountActivity.this, TutorialsActivity.class));
     }
 
     public void myPaymentInit(View view) {

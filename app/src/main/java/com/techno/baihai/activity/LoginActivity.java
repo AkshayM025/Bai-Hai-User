@@ -1,20 +1,15 @@
 package com.techno.baihai.activity;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.Dialog;
-import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.content.res.Resources;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Base64;
@@ -33,14 +28,11 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
-import androidx.core.os.LocaleListCompat;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.FacebookSdk;
-import com.facebook.appevents.AppEventsLogger;
 import com.facebook.GraphRequest;
 import com.facebook.GraphResponse;
 import com.facebook.login.LoginManager;
@@ -81,7 +73,6 @@ import java.io.File;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Locale;
 
@@ -269,6 +260,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         try {
             File dir = context.getCacheDir();
             deleteDir(dir);
+
         } catch (Exception e) { e.printStackTrace();}
     }
 
@@ -371,6 +363,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 });
     }
 
+
     private void userLoginIn(View view) {
 
         final String email = et_Email.getText().toString();
@@ -411,6 +404,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                 String message = object.getString("message");
 
                                 Log.e(TAG, "STATUS_:" + status);
+                                Log.e(TAG, "MESSAGE_:" + message);
 
                                 if (status.equals("1")) {
                                     progressBar.setVisibility(View.GONE);
@@ -430,7 +424,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                             result.getString("legal_info"),
                                             result.getString("guide"),
                                             result.getString("guide_free"),
-                                            result.getString("guide_give_free")
+                                            result.getString("guide_give_free"),
+                                            result.getString("suscribe")
                                     );
                                     setLog("Login de usuario "+result.getString("name")+"");
                                     PrefManager.getInstance(getApplicationContext()).userLogin(user);
@@ -751,7 +746,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                         userData.getString("legal_info"),
                                         userData.getString("guide"),
                                         userData.getString("guide_free"),
-                                        userData.getString("guide_give_free")
+                                        userData.getString("guide_give_free"),
+                                        userData.getString("suscribe")
 
 
                                 );
@@ -795,7 +791,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
     }
     public void languageAlert(View view) {
-        final androidx.appcompat.app.AlertDialog.Builder alert = new androidx.appcompat.app.AlertDialog.Builder(mContext);
+        final AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
         View mView = getLayoutInflater().inflate(R.layout.language_alert, null);
 
         CardView btn_okay = mView.findViewById(R.id.btn_okay);
@@ -806,9 +802,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
 
         alert.setView(mView);
-        final AlertDialog alertDialog = alert.create();
-        alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        alertDialog.setCanceledOnTouchOutside(false);
+        final AlertDialog alertDialog1 = alert.create();
+        alertDialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+        alertDialog1.setCanceledOnTouchOutside(false);
 
 
         String lang = PrefManager.get(mContext, "lang");
@@ -866,7 +862,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         btn_okay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                alertDialog.dismiss();
+                alertDialog1.dismiss();
                 bandera=true;
                 Intent intent = new Intent(mContext, LoginActivity.class);
                 intent.putExtra("bandera", "true");
@@ -875,9 +871,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
             }
         });
-
-
-        alertDialog.show();
+        alertDialog1.show();
 
     }
     private void setLog(String message) {

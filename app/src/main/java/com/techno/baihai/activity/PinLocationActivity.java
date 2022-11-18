@@ -17,6 +17,8 @@ import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -51,8 +53,9 @@ public class PinLocationActivity extends AppCompatActivity implements LocationLi
     private GoogleMap mMap;
     double lat = 0, lng = 0;
     String code, addressLoc = "";
-
+    private TextView tv_address1;
     private Animation myAnim;
+    private ImageView imgmarker;
 
     @RequiresApi(api = Build.VERSION_CODES.M)
     @Override
@@ -61,6 +64,8 @@ public class PinLocationActivity extends AppCompatActivity implements LocationLi
         binding = DataBindingUtil.setContentView(this, R.layout.activity_pin_location);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setTitle(R.string.select_location);
+        tv_address1 =findViewById(R.id.tv_address1);
+        imgmarker = findViewById(R.id.img_marker);
         initLocation();
         bindMap();
 
@@ -83,7 +88,7 @@ public class PinLocationActivity extends AppCompatActivity implements LocationLi
         if (Tools.get().isLocationEnabled(this, locationManager) && location != null) {
             lat = location.getLatitude();
             lng = location.getLongitude();
-            binding.tvAddress1.setText(Tools.getCompleteAddressString(this, location.getLatitude(), location.getLongitude()));
+            tv_address1.setText(Tools.getCompleteAddressString(this, location.getLatitude(), location.getLongitude()));
         }
     }
 
@@ -102,8 +107,9 @@ public class PinLocationActivity extends AppCompatActivity implements LocationLi
                     public void onCameraIdle() {
                         lat = mMap.getCameraPosition().target.latitude;
                         lng = mMap.getCameraPosition().target.longitude;
-                        binding.tvAddress1.setText(Tools.getCompleteAddressString(PinLocationActivity.this, lat, lng));
-                        binding.imgMarker.startAnimation(myAnim);
+                        tv_address1.setText(Tools.getCompleteAddressString(PinLocationActivity.this, lat, lng));
+                        imgmarker.startAnimation(myAnim);
+                        imgmarker.startAnimation(myAnim);
                     }
                 });
             }

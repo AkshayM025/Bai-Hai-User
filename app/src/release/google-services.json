@@ -1,15 +1,15 @@
 {
   "project_info": {
     "project_number": "20389193233",
-    "project_id": "bai-hai-user",
-    "storage_bucket": "bai-hai-user.appspot.com"
+    "project_id": "bye-hi-user",
+    "storage_bucket": "bye-hi-user.appspot.com"
   },
   "client": [
     {
       "client_info": {
         "mobilesdk_app_id": "1:20389193233:android:554b14d4e3e27cb62d33b0",
         "android_client_info": {
-          "package_name": "com.techno.baihai"
+          "package_name": "com.techno.byehi"
         }
       },
       "oauth_client": [
@@ -17,7 +17,7 @@
           "client_id": "20389193233-8vupjgue22esjf1mulckvicu7289oj4c.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.techno.baihai",
+            "package_name": "com.techno.byehi",
             "certificate_hash": "a4fe22329d525a987ec36366ed2dd257c1e46df9"
           }
         },
@@ -25,7 +25,7 @@
           "client_id": "20389193233-jra8jl4lqc3gkti2if8oaftdefnhnhgb.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.techno.baihai",
+            "package_name": "com.techno.byehi",
             "certificate_hash": "e7a4a8916d6f9107e899d34204d5a35419f3e1d8"
           }
         },

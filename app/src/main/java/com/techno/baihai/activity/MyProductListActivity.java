@@ -38,7 +38,6 @@ import com.techno.baihai.model.User;
 import com.techno.baihai.utils.GPSTracker;
 import com.techno.baihai.utils.PrefManager;
 
-import org.jetbrains.annotations.NotNull;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,9 +48,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
-import retrofit2.Call;
-import retrofit2.Callback;
-import retrofit2.Response;
 import smartdevelop.ir.eram.showcaseviewlib.GuideView;
 import smartdevelop.ir.eram.showcaseviewlib.config.DismissType;
 import smartdevelop.ir.eram.showcaseviewlib.config.Gravity;
@@ -794,7 +790,8 @@ public class MyProductListActivity extends AppCompatActivity {
                                         user.getLegalinfo(),
                                         user.getGuide(),
                                         "1",
-                                        user.getGuideGiveFree()
+                                        user.getGuideGiveFree(),
+                                        user.getSuscribe()
                                 );
 
                                 PrefManager.getInstance(mContext).userLogin(user2);

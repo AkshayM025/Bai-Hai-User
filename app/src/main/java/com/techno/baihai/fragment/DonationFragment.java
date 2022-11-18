@@ -9,8 +9,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
@@ -188,7 +186,8 @@ public class DonationFragment extends Fragment implements View.OnClickListener {
                                     user.getLegalinfo(),
                                     user.getGuide(),
                                     user.getGuideFree(),
-                                    "1"
+                                    "1",
+                                    user.getSuscribe()
                             );
 
                             PrefManager.getInstance(getActivity()).userLogin(user2);

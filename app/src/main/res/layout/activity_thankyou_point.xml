@@ -84,6 +84,7 @@
                     android:layout_margin="16dp"
                     android:gravity="center"
                     android:text="@string/product_donations"
+                    android:id="@+id/text_info"
                     android:textColor="@color/colorBlack"
                     android:textSize="20sp"
                     android:textStyle="bold" />

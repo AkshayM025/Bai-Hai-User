@@ -19,18 +19,11 @@ import com.google.firebase.messaging.RemoteMessage;
 import com.techno.baihai.activity.ChattingBotActivity;
 import com.techno.baihai.activity.DriverInfoActivity;
 import com.techno.baihai.activity.HomeActivity;
-import com.techno.baihai.activity.LoginActivity;
-import com.techno.baihai.activity.ProductDonateActivity;
 import com.techno.baihai.activity.RatingActivity;
-import com.techno.baihai.activity.StripePaymentActivity;
-import com.techno.baihai.fragment.AcceptedChatListFragment;
-import com.techno.baihai.fragment.ChatEnquiryFragment;
-import com.techno.baihai.fragment.ChatFragment;
 import com.techno.baihai.utils.PrefManager;
 
 import org.json.JSONObject;
 
-import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 import java.util.Random;
@@ -119,6 +112,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             PendingIntent pendingIntent = null;
             String chatRequestStatus = object.optString("key4");
             String chatStatus = object.optString("key");
+            String message = object.optString("key1");
             String chatStatus1 = object.optString("key2");
             String Chatresult = object.optString("type");
 
@@ -286,13 +280,46 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                         PendingIntent.FLAG_ONE_SHOT);
             }
 
+            if(message.equals("Product Aproved")){
+                msg=chatStatus;
+                title="Product Aproved";
+                intent = new Intent(this, HomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+
+                pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                        PendingIntent.FLAG_ONE_SHOT);
+            }
+
+            if(message.equals("Fundation Aproved")){
+                msg=chatStatus;
+                title="Foundation Aproved";
+                intent = new Intent(this, HomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+
+                pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                        PendingIntent.FLAG_ONE_SHOT);
+            }
+
+            if(messageBody.equals("Please help us  donate products to Bye-Hi")){
+                msg="Stop! Don't throw that out! Upload it instead and help others";
+                title="Donate Products";
+                intent = new Intent(this, HomeActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
+
+
+                pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                        PendingIntent.FLAG_ONE_SHOT);
+            }
+
 
 if((messageBody.equals("message user") && (currentTime.getDate()== 16 ))
         || Chatresult.equals("insert_chat") ||
         chatStatus1.equals("Accepted")  ||
         status.equals("Complete") ||
         status.equals("Accept") ||
-        status.equals("Rejected") || chatRequestStatus.equals("You have new chat request")){
+        status.equals("Rejected") || chatRequestStatus.equals("You have new chat request")  ||messageBody.equals("Please help us  donate products to Bye-Hi") ||message.equals("Product Aproved") || message.equals("Fundation Aproved")){
     String channelId = getString(R.string.default_notification_channel_id);
     Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)

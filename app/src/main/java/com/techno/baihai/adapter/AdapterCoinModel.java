@@ -1,7 +1,6 @@
 package com.techno.baihai.adapter;
 
 import android.content.Context;
-import android.net.Uri;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 
@@ -12,7 +11,6 @@ import com.bumptech.glide.Glide;
 import com.techno.baihai.R;
 import com.techno.baihai.databinding.AdapterBaihaiTransactionBinding;
 import com.techno.baihai.databinding.ItemCoinhistoryBinding;
-import com.techno.baihai.model.CoinHistoryModel;
 import com.techno.baihai.model.RewardsHistoryModel;
 
 import java.util.ArrayList;

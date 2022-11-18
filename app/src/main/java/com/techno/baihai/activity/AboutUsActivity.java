@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import com.techno.baihai.api.Constant;
 import com.techno.baihai.model.User;
 import com.techno.baihai.utils.PrefManager;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -71,6 +73,7 @@ AboutUsActivity extends AppCompatActivity {
                 mp1.start();
             });
         });
+
 
     }
 

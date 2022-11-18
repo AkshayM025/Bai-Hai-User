@@ -285,7 +285,7 @@ public class CategoryFragment extends Fragment {
 
                         }
 
-                        adapter = new SliderAdapter(getActivity(), myProductModeListls);
+                        adapter = new SliderAdapter(getActivity(),myProductModeListls);
 
                         sliderView.setSliderAdapter(adapter);
                         adapter.notifyDataSetChanged();

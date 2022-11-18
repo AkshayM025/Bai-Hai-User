@@ -92,7 +92,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
     private String product_categoryName;
     private SliderAdapter adapter;
     private List<MyProductModeListl> myProductModeListls;
-
+    SliderView sliderView;
     private Circle mCircle;
     private Marker mMarker;
     private GoogleMap mMap;
@@ -115,24 +115,25 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
     private ProSliderAdapter proSliderAdapter;
     private FragmentProductCategoryBinding binding;
 
-        private void initilizeMap() {
-            SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
-                    .findFragmentById(R.id.map);
-            assert mapFragment != null;
-            mapFragment.getMapAsync(this);
-        }
+    private void initilizeMap() {
+        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        assert mapFragment != null;
+        mapFragment.getMapAsync(this);
+    }
 
-        @Override
-        public  void onResume(){
-                super.onResume();
-                initilizeMap();
-        }
+    @Override
+    public  void onResume(){
+        super.onResume();
+        initilizeMap();
+    }
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         binding = DataBindingUtil.setContentView(this, R.layout.fragment_product_category);
+        sliderView = findViewById(R.id.imageSlider);
         PrefManager.isConnectingToInternet(this);
         isInternetPresent = PrefManager.isNetworkConnected(this);
 
@@ -181,7 +182,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 
         } catch (Exception exception) {
             exception.printStackTrace();
-           // Toast.makeText(mContext, "error datos" , Toast.LENGTH_LONG).show();
+            // Toast.makeText(mContext, "error datos" , Toast.LENGTH_LONG).show();
         }
 
         GetSliderProductList(productId);
@@ -247,7 +248,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                         progressDialog.dismiss();
                         try {
                             if(!response.equals("") && response!=null  ){
-                               myProductModeListls = new ArrayList<>();
+                                myProductModeListls = new ArrayList<>();
                                 JSONObject object = new JSONObject(response);
                                 String status = object.optString("status");
                                 String message = object.optString("message");
@@ -256,7 +257,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                                 JSONObject object2 = object1.optJSONObject("user_details");
                                 JSONObject object3 = object1.optJSONObject("category_details");
                                 if (status.equals("1") && !object1.equals("")) {
-                                   // Log.e("get_image_2=>", "" + commentModel.getResult().getImage1());
+                                    // Log.e("get_image_2=>", "" + commentModel.getResult().getImage1());
 
                                     if (object1.optString("image1").split("images/").length == 2) {
                                         myProductModeListls.add(new MyProductModeListl(productId, object1.optString("user_id"),
@@ -296,19 +297,19 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 
                                     adapter = new SliderAdapter(getApplicationContext(), myProductModeListls);
 
-                                    binding.imageSlider.setSliderAdapter(adapter);
+                                    sliderView.setSliderAdapter(adapter);
                                     adapter.notifyDataSetChanged();
-                                    binding.imageSlider.setIndicatorAnimation(IndicatorAnimationType.THIN_WORM); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
-                                    binding.imageSlider.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
-                                    binding.imageSlider.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
-                                    binding.imageSlider.setIndicatorSelectedColor(Color.WHITE);
-                                    binding.imageSlider.setIndicatorUnselectedColor(Color.GRAY);
-                                    binding.imageSlider.setScrollTimeInSec(4); //set scroll delay in seconds :
-                                    binding.imageSlider.startAutoCycle();
+                                    sliderView.setIndicatorAnimation(IndicatorAnimationType.THIN_WORM); //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
+                                    sliderView.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION);
+                                    sliderView.setAutoCycleDirection(SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH);
+                                    sliderView.setIndicatorSelectedColor(Color.WHITE);
+                                    sliderView.setIndicatorUnselectedColor(Color.GRAY);
+                                    sliderView.setScrollTimeInSec(4); //set scroll delay in seconds :
+                                    sliderView.startAutoCycle();
 
 
                                 } else {
-                                   binding.imageSlider.setVisibility(View.GONE);
+                                    binding.imageSlider.setVisibility(View.GONE);
                                     binding.productImgdetailsId.setVisibility(View.VISIBLE);
 
                                     Toast.makeText(mContext, "You have no new product\nnear by ", Toast.LENGTH_SHORT).show();
@@ -319,7 +320,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 
                         } catch (JSONException e) {
                             e.printStackTrace();
-                           // Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
+                            // Toast.makeText(mContext, "Exception" + e, Toast.LENGTH_SHORT).show();
 
 
                         }
@@ -331,7 +332,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 
                         progressDialog.dismiss();
                         //CustomSnakbar.showDarkSnakabar(mContext, mview, "" + error);
-                      //  Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
+                        //  Toast.makeText(mContext, "Error" + error, Toast.LENGTH_SHORT).show();
                     }
                 });
 
@@ -427,6 +428,46 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
         final AlertDialog alertDialog = alert.create();
         alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         alertDialog.setCanceledOnTouchOutside(true);
+        User user = PrefManager.getInstance(mContext).getUser();
+        if(user.getSuscribe().equals("1")){
+            btn_okay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    String myCustomMessage = iv_message_product.getText().toString().trim();
+                    if (!myCustomMessage.equalsIgnoreCase("")) {
+                        alertDialog.dismiss();
+                        if (isInternetPresent) {
+                            User user = PrefManager.getInstance(mContext).getUser();
+                            if(user.getSuscribe().equals("1")){
+                                GetChatStatusApi(myCustomMessage);
+                            }else {
+                                iv_message_product.setHint(R.string.message_suscribe);
+                                iv_message_product.setFocusable(false);
+                                iv_message_product.setEnabled(false);
+                                iv_message_product.setCursorVisible(false);
+                                iv_message_product.setKeyListener(null);
+                                iv_message_product.setBackgroundColor(Color.TRANSPARENT);
+                            }
+
+                        } else {
+                            PrefManager prefManager = new PrefManager(mContext);
+                            PrefManager.showSettingsAlert(mContext);
+                        }
+                    } else {
+                        Toast.makeText(mContext, "Please enter message..!!", Toast.LENGTH_LONG).show();
+                    }
+
+                }
+            });
+        }else {
+            iv_message_product.setHint(R.string.message_suscribe);
+            iv_message_product.setFocusable(false);
+            iv_message_product.setEnabled(false);
+            iv_message_product.setCursorVisible(false);
+            iv_message_product.setKeyListener(null);
+            iv_message_product.setBackgroundColor(Color.TRANSPARENT);
+            btn_okay.setOnClickListener(null);
+        }
         btn_exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -434,24 +475,8 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 
             }
         });
-        btn_okay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                String myCustomMessage = iv_message_product.getText().toString().trim();
-                if (!myCustomMessage.equalsIgnoreCase("")) {
-                    alertDialog.dismiss();
-                    if (isInternetPresent) {
-                        GetChatStatusApi(myCustomMessage);
-                    } else {
-                        PrefManager prefManager = new PrefManager(mContext);
-                        PrefManager.showSettingsAlert(mContext);
-                    }
-                } else {
-                    Toast.makeText(mContext, "Please enter message..!!", Toast.LENGTH_LONG).show();
-                }
 
-            }
-        });
+
         alertDialog.show();
 
 
@@ -563,36 +588,36 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                         // do anything with response
                         try {
                             if(!response.equals("") && response!=null  ){
-                            JSONObject object = new JSONObject(response);
-                            String status = object.optString("status");
-                            message = object.optString("message");
-                            Log.e("status", status);
-                            Log.d("TAG", "STATUS_:" + status);
+                                JSONObject object = new JSONObject(response);
+                                String status = object.optString("status");
+                                message = object.optString("message");
+                                Log.e("status", status);
+                                Log.d("TAG", "STATUS_:" + status);
 
-                            if (status.equals("1")) {
+                                if (status.equals("1")) {
 
-                                JSONObject result = object.getJSONObject("result");
-
-
-                                String status_id = result.optString("id");
-                                String seller_id = result.optString("seller_id");
-
-                                Status = result.optString("status");
-
-                                PrefManager.setString("Status", Status);
-                                PrefManager.setString("SellerId", seller_id);
-
-                                Log.e("", "status=>" + Status);
-                                ConfirmationDialog(message);
+                                    JSONObject result = object.getJSONObject("result");
 
 
-                            } else if (status.equals("0")) {
+                                    String status_id = result.optString("id");
+                                    String seller_id = result.optString("seller_id");
 
-                                progressDialog.dismiss();
-                                Toast.makeText(CategoryProductActivity.this, " " + message, Toast.LENGTH_LONG).show();
+                                    Status = result.optString("status");
 
+                                    PrefManager.setString("Status", Status);
+                                    PrefManager.setString("SellerId", seller_id);
+
+                                    Log.e("", "status=>" + Status);
+                                    ConfirmationDialog(message);
+
+
+                                } else if (status.equals("0")) {
+
+                                    progressDialog.dismiss();
+                                    Toast.makeText(CategoryProductActivity.this, " " + message, Toast.LENGTH_LONG).show();
+
+                                }
                             }
-                        }
 
                         } catch (JSONException e) {
 
@@ -703,10 +728,15 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                                     if (result != null) {
                                         guide_give_free = result.optString("guide_give_free");
                                     }
+
+                                    String suscribe = "null";
+                                    if (result != null) {
+                                        suscribe = result.optString("suscribe");
+                                    }
                                     // Log.e("image=>", "-------->" + image);
 
 
-                                    User user = new User(user_ID, username, email, password, mobile, image, legal_info, guide, guide_free, guide_give_free);
+                                    User user = new User(user_ID, username, email, password, mobile, image, legal_info, guide, guide_free, guide_give_free,suscribe);
 
                                     PrefManager.getInstance(getApplicationContext()).userLogin(user);
 
@@ -752,7 +782,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                                 } else {
                                     //loading_spinnerId.setVisibility(View.GONE);
 
-                                   // Toast.makeText(mContext, "error en consumo profile", Toast.LENGTH_SHORT).show();
+                                    // Toast.makeText(mContext, "error en consumo profile", Toast.LENGTH_SHORT).show();
                                 }
                             }
 
@@ -825,3 +855,4 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
     }
 
 }
+

@@ -9,7 +9,8 @@ import android.content.Context;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.techno.baihai.R;
 import com.techno.baihai.api.Constant;
@@ -31,6 +32,8 @@ public class RewardPointsActivity extends AppCompatActivity {
     private final Context mContext = this;
     private String uid;
     private String TAG = "RewardPointsActivity";
+    private ImageView rewardCancelId;
+    private TextView rewards_pointsID,thanks_points;
     ActivityRewardPointsBinding binding;
 
     @Override
@@ -41,8 +44,10 @@ public class RewardPointsActivity extends AppCompatActivity {
 
         PrefManager.isConnectingToInternet(this);
         isInternetPresent = PrefManager.isNetworkConnected(this);
-
-        binding.rewardCancelId.setOnClickListener(new View.OnClickListener() {
+        rewardCancelId = findViewById(R.id.reward_cancelId);
+        rewards_pointsID= findViewById(R.id.rewards_pointsID);
+        thanks_points= findViewById(R.id.thanks_points);
+        rewardCancelId.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 finish();
@@ -86,6 +91,7 @@ public class RewardPointsActivity extends AppCompatActivity {
                         try {
 
                             JSONObject object = new JSONObject(response);
+
                             String status = object.optString("status");
                             String message = object.optString("message");
                             if (status.equals("1")) {
@@ -93,14 +99,20 @@ public class RewardPointsActivity extends AppCompatActivity {
                                 //   https://www.shipit.ng/BaiHai/webservice/get_profile?user_id=1
 
                                 JSONObject result = object.optJSONObject("result");
-
+                                JSONObject result2 = object.optJSONObject("result2");
+                                JSONObject result3 = object.optJSONObject("result3");
 
                                 String rewardPoints = "null";
                                 if (result != null) {
-                                    rewardPoints = result.optString("total_coins");
-                                    binding.rewardsPointsID.setText(rewardPoints);
+                                    rewardPoints = "You have "+result.optString("total_coins");
+                                    if(result2 != null){
+                                        rewardPoints=rewardPoints+" coins and you need "+result2.optString("min_coin")+" coins  to next award";
+                                    }
+                                    String text ="Your last activity that give  you points was: "+result3.optString("description");
+                                    thanks_points.setText(text);
+                                    rewards_pointsID.setText(rewardPoints);
                                 }
-setLog("el usuario reviso su puntaje");
+                                setLog("el usuario reviso su puntaje");
 
                             } else {
                                 progressDialog.dismiss();

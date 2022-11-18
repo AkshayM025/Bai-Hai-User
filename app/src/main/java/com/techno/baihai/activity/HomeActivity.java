@@ -85,6 +85,10 @@ public class HomeActivity extends AppCompatActivity
                 setLog("El usuario se al home principal");
 
             }
+            BottomNavigationView navBar  = findViewById(R.id.bottom_navigation);
+            navBar.getOrCreateBadge(1).setNumber(3);
+
+
 
 
         } catch (Exception e) {
@@ -101,6 +105,7 @@ public class HomeActivity extends AppCompatActivity
         Log.e("CDate2", mydate);
         Date cTime = Calendar.getInstance().getTime();
         Log.e("CDate3", String.valueOf(cTime));
+        this.sendNotificationDonate();
 
     }
 
@@ -193,7 +198,55 @@ public class HomeActivity extends AppCompatActivity
                     }
                 });
     }
+    private void sendNotificationDonate() {
+        User user = PrefManager.getInstance(this).getUser();
+        HashMap<String, String> parms = new HashMap<>();
+        parms.put("id_user", user.getId());
+        parms.put("message", "Please help us  donate products to Bye-Hi");
+        ApiCallBuilder.build(this)
+                .isShowProgressBar(false)
+                .setUrl(Constant.BASE_URL + "notify_donate?")
+                .setParam(parms)
+//                    .setFile("image", "file_path")
+                .execute(new ApiCallBuilder.onResponse() {
+                    @Override
+                    public void Success(String response) {
+                        Log.d(TAG, "respoLogin:" + response);
 
+                        if (!response.equals("\r\n")) {
+                            try {
+                                JSONObject object = new JSONObject(response);
+                                String status = object.getString("status");
+                                String message = object.getString("message");
+
+                                Log.e(TAG, "STATUS_:" + status);
+
+                                if (status.equals("1")) {
+
+                                    Toast.makeText(mContext, "Notification sended",
+                                            Toast.LENGTH_SHORT).show();
+
+
+                                }
+
+
+                            } catch (JSONException e) {
+
+
+                                Log.i(TAG, "errorL", e);
+                                //Toast.makeText(mContext, "Error:" + e, Toast.LENGTH_SHORT).show();
+                                e.printStackTrace();
+                            }
+                        }
+
+                    }
+
+                    @Override
+                    public void Failed(String error) {
+                        //Toast.makeText(mContext, "" + error, Toast.LENGTH_SHORT).show();
+                    }
+                });
+    }
     public void LegalInfo(View view) {
         User user = PrefManager.getInstance(this).getUser();
 
@@ -274,7 +327,8 @@ public class HomeActivity extends AppCompatActivity
                                     "1",
                                     user.getGuide(),
                                     user.getGuideFree(),
-                                    user.getGuideGiveFree()
+                                    user.getGuideGiveFree(),
+                                    user.getSuscribe()
                             );
                             setLog("El usuario confirmo informacion legal");
 

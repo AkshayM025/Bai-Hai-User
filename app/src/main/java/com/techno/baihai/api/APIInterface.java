@@ -1,6 +1,5 @@
 package com.techno.baihai.api;
 
-import com.techno.baihai.model.CoinHistoryModel;
 import com.techno.baihai.model.GetBaiHaiTransactionModel;
 import com.techno.baihai.model.GetCategoryModel;
 import com.techno.baihai.model.GetUserFoundnTransModel;

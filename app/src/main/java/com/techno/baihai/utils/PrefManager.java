@@ -30,6 +30,8 @@ public class PrefManager {
     private static final String KEY_GUIDE = "keyguide";
     private static final String KEY_GUIDE_FREE = "keyguide_free";
     private static final String KEY_GUIDE_GIVE_FREE = "keyguide_give_free";
+    private static final String KEY_SUSCRIBE = "key_suscribe";
+
     public static SharedPreferences sharedPreferences;
     public static String KEY_BaiHai_Status="KEY_BaiHai_Status";
     public static String Key_AmountId="Key_AmountId";
@@ -170,7 +172,7 @@ public class PrefManager {
         editor.putString(KEY_GUIDE, user.getGuide());
         editor.putString(KEY_GUIDE_FREE, user.getGuideFree());
         editor.putString(KEY_GUIDE_GIVE_FREE, user.getGuideGiveFree());
-
+        editor.putString(KEY_SUSCRIBE, user.getSuscribe());
 
         editor.apply();
     }
@@ -198,7 +200,8 @@ public class PrefManager {
                 sharedPreferences.getString(KEY_LEGAL_INFO, null),
                 sharedPreferences.getString(KEY_GUIDE, null),
                 sharedPreferences.getString(KEY_GUIDE_FREE, null),
-                sharedPreferences.getString(KEY_GUIDE_GIVE_FREE, null)
+                sharedPreferences.getString(KEY_GUIDE_GIVE_FREE, null),
+                sharedPreferences.getString(KEY_SUSCRIBE,null)
 
 
         );

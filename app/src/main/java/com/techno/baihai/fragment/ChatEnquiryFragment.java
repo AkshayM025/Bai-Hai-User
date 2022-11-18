@@ -281,7 +281,7 @@ public class ChatEnquiryFragment extends Fragment {
                                     guide_give_free = result.optString("guide_give_free");
                                 }
 
-                                User user = new User(user_ID, username, email, password, mobile, image, legal_info, guide, guide_free, guide_give_free);
+                                User user = new User(user_ID, username, email, password, mobile, image, legal_info, guide, guide_free, guide_give_free,"false");
 
                                 PrefManager.getInstance(mContext.getApplicationContext()).userLogin(user);
 
