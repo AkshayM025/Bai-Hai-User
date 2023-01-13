@@ -1,14 +1,14 @@
 apply plugin: 'com.android.application'
 apply plugin: 'com.google.gms.google-services'
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdkVersion 33
+    buildToolsVersion "33"
     defaultConfig {
         applicationId "com.techno.baihai"
         minSdkVersion 23
-        targetSdkVersion 30
-        versionCode 52
-        versionName "52.2"
+        targetSdkVersion 33
+        versionCode 55
+        versionName "55.2"
         multiDexEnabled true
         archivesBaseName = "BaiHaiUser"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -21,9 +21,6 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
-    lintOptions {
-        abortOnError false
-    }
     buildFeatures{
         viewBinding true
     }
@@ -34,6 +31,10 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
+    lint {
+        abortOnError false
+    }
+    namespace 'com.techno.baihai'
 
     allprojects {
         repositories {

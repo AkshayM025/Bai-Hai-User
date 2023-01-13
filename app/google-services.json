@@ -2,7 +2,7 @@
   "project_info": {
     "project_number": "20389193233",
     "project_id": "bai-hai-user",
-    "storage_bucket": "bye-hi-user.appspot.com"
+    "storage_bucket": "bai-hai-user.appspot.com"
   },
   "client": [
     {
@@ -13,14 +13,6 @@
         }
       },
       "oauth_client": [
-        {
-          "client_id": "20389193233-8vupjgue22esjf1mulckvicu7289oj4c.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "com.techno.baihai",
-            "certificate_hash": "a4fe22329d525a987ec36366ed2dd257c1e46df9"
-          }
-        },
         {
           "client_id": "20389193233-jra8jl4lqc3gkti2if8oaftdefnhnhgb.apps.googleusercontent.com",
           "client_type": 1,

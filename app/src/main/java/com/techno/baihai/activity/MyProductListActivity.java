@@ -292,13 +292,14 @@ public class MyProductListActivity extends AppCompatActivity {
     }
 
     private void GetProductList() {
-
+        popupDistance ="Unlimited";
         String distance = "";
         if (!popupDistance.equals("0")) {
 
             if (popupDistance.equals("Unlimited") || popupDistance.equals("ilimitado")) {
 
                 distance = "10000";
+
             } else {
                 distance = PrefManager.get(mContext, PrefManager.KEY_DISTANCE).split(" ")[0];
 
@@ -308,9 +309,13 @@ public class MyProductListActivity extends AppCompatActivity {
         }
         if (spinner.getSelectedItemPosition() != 0) {
             CatId = "" + spinner.getSelectedItemPosition() + "";
+            if(CatId.equals("-1")){
+                CatId="0";
+            }
         } else {
             CatId = "0";
         }
+
         fillte = "DESC";
         Log.e("distance", distance);
         Log.e("latitude", latitude);

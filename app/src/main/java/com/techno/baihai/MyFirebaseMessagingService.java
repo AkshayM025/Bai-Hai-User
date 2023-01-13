@@ -162,8 +162,14 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     intent.putExtra("driver_number", driver_number);
 
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
-                            PendingIntent.FLAG_ONE_SHOT);
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                        pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                                PendingIntent.FLAG_MUTABLE);
+                    }else{
+                        pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                                PendingIntent.FLAG_ONE_SHOT);
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
 
@@ -181,8 +187,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     //intent.putExtra("driver_id", driver_id);
                     intent.putExtra("request_id", request_id);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
-                            PendingIntent.FLAG_ONE_SHOT);
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                        pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                                PendingIntent.FLAG_MUTABLE);
+                    }else{
+                        pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                                PendingIntent.FLAG_ONE_SHOT);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.e("excep", String.valueOf(e));
@@ -197,8 +208,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     title = object.optString("key4");
                     intent = new Intent(this, HomeActivity.class);
                     intent.putExtra("Chatrequest", "1");
-                    pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
-                            PendingIntent.FLAG_ONE_SHOT);
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                        pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                                PendingIntent.FLAG_MUTABLE);
+                    }else{
+                        pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                                PendingIntent.FLAG_ONE_SHOT);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
 
@@ -214,8 +230,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 
 
-                    pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
-                            PendingIntent.FLAG_ONE_SHOT);
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                        pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                                PendingIntent.FLAG_MUTABLE);
+                    }else{
+                        pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                                PendingIntent.FLAG_ONE_SHOT);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
 
@@ -257,8 +278,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     //intent.putExtra("driver_id", driver_id);
                     //intent.putExtra("request_id", request_id);
                     intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                    pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
-                            PendingIntent.FLAG_ONE_SHOT);
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                        pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                                PendingIntent.FLAG_MUTABLE);
+                    }else{
+                        pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                                PendingIntent.FLAG_ONE_SHOT);
+                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                     Log.e("excep", String.valueOf(e));
@@ -276,8 +302,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 
 
-                pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
-                        PendingIntent.FLAG_ONE_SHOT);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                    pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                            PendingIntent.FLAG_MUTABLE);
+                }else{
+                    pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                            PendingIntent.FLAG_ONE_SHOT);
+                }
             }
 
             if(message.equals("Product Aproved")){
@@ -287,8 +318,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 
 
-                pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
-                        PendingIntent.FLAG_ONE_SHOT);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                    pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                            PendingIntent.FLAG_MUTABLE);
+                }else{
+                    pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                            PendingIntent.FLAG_ONE_SHOT);
+                }
             }
 
             if(message.equals("Fundation Aproved")){
@@ -298,8 +334,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 
 
-                pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
-                        PendingIntent.FLAG_ONE_SHOT);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                    pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                            PendingIntent.FLAG_MUTABLE);
+                }else{
+                    pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                            PendingIntent.FLAG_ONE_SHOT);
+                }
             }
 
             if(messageBody.equals("Please help us  donate products to Bye-Hi")){
@@ -309,8 +350,13 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 
 
-                pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
-                        PendingIntent.FLAG_ONE_SHOT);
+                if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                    pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                            PendingIntent.FLAG_MUTABLE);
+                }else{
+                    pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                            PendingIntent.FLAG_ONE_SHOT);
+                }
             }
 
 

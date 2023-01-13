@@ -95,7 +95,7 @@ AboutUsActivity extends AppCompatActivity {
     }
 
     private void launchMarket() {
-        Uri uri = Uri.parse("http://play.google.com/store/apps/details?id=" + "com.facebook.katana");
+        Uri uri = Uri.parse("http://play.google.com/store/apps/details?id=" + "com.techno.baihai");
         Intent myAppLinkToMarket = new Intent(Intent.ACTION_VIEW, uri);
         try {
             startActivity(myAppLinkToMarket);
