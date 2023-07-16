@@ -8,7 +8,6 @@ import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Address;
 import android.location.Geocoder;
-import android.media.Image;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Log;
@@ -39,7 +38,6 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
-import com.google.gson.Gson;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
 import com.smarteist.autoimageslider.SliderAnimations;
@@ -51,7 +49,6 @@ import com.techno.baihai.adapter.SliderAdapter;
 import com.techno.baihai.api.Constant;
 import com.techno.baihai.databinding.FragmentProductCategoryBinding;
 import com.techno.baihai.listner.FragmentListener;
-import com.techno.baihai.model.GetProDetailModel;
 import com.techno.baihai.model.MyProductModeListl;
 import com.techno.baihai.model.User;
 import com.techno.baihai.utils.GPSTracker;
@@ -60,7 +57,6 @@ import com.techno.baihai.utils.Preference;
 
 import org.json.JSONException;
 import org.json.JSONObject;
-import org.w3c.dom.Text;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -71,13 +67,12 @@ import java.util.Locale;
 import de.hdodenhof.circleimageview.CircleImageView;
 import www.develpoeramit.mapicall.ApiCallBuilder;
 
-//
 public class
 CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback {
 
     Context mContext = this;
     FragmentListener listener;
-    ImageView  catImageView, product_ImgdetailsId;
+    ImageView  catImageView;
     CardView chat;
     TextView catTxtViewId, details_locationId, product_DricrptionId;
     LinearLayout layout_status;
@@ -107,9 +102,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
     private ImageView img_cancel;
     private String product_SellerName;
     private TextView sellerNameId;
-    ArrayList<String> returnValue;
 
-    private String show_message;
     private Boolean isInternetPresent = false;
     private ProgressBar loading_spinnerId;
     private ProSliderAdapter proSliderAdapter;
@@ -429,7 +422,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
         alertDialog.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
         alertDialog.setCanceledOnTouchOutside(true);
         User user = PrefManager.getInstance(mContext).getUser();
-        if(user.getSuscribe().equals("1")){
+       // if(user.getSuscribe().equals("1")){
             btn_okay.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -438,16 +431,16 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
                         alertDialog.dismiss();
                         if (isInternetPresent) {
                             User user = PrefManager.getInstance(mContext).getUser();
-                            if(user.getSuscribe().equals("1")){
+                           /* if(user.getSuscribe().equals("1")){*/
                                 GetChatStatusApi(myCustomMessage);
-                            }else {
+                           /* }else {
                                 iv_message_product.setHint(R.string.message_suscribe);
                                 iv_message_product.setFocusable(false);
                                 iv_message_product.setEnabled(false);
                                 iv_message_product.setCursorVisible(false);
                                 iv_message_product.setKeyListener(null);
                                 iv_message_product.setBackgroundColor(Color.TRANSPARENT);
-                            }
+                           }*/
 
                         } else {
                             PrefManager prefManager = new PrefManager(mContext);
@@ -459,7 +452,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
 
                 }
             });
-        }else {
+            /* }else {
             iv_message_product.setHint(R.string.message_suscribe);
             iv_message_product.setFocusable(false);
             iv_message_product.setEnabled(false);
@@ -467,7 +460,7 @@ CategoryProductActivity extends AppCompatActivity implements OnMapReadyCallback 
             iv_message_product.setKeyListener(null);
             iv_message_product.setBackgroundColor(Color.TRANSPARENT);
             btn_okay.setOnClickListener(null);
-        }
+        }*/
         btn_exit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

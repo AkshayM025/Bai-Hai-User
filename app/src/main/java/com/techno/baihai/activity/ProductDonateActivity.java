@@ -1,5 +1,6 @@
 package com.techno.baihai.activity;
 
+
 import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -9,17 +10,16 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Matrix;
-import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.OpenableColumns;
 import android.provider.Settings;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -35,8 +35,10 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.PickVisualMediaRequest;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
@@ -48,13 +50,13 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
-import com.fxn.pix.Options;
-import com.fxn.pix.Pix;
-import com.fxn.utility.PermUtil;
+import com.google.common.net.MediaType;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
+import com.karumi.dexter.listener.DexterError;
 import com.karumi.dexter.listener.PermissionRequest;
+import com.karumi.dexter.listener.PermissionRequestErrorListener;
 import com.karumi.dexter.listener.multi.MultiplePermissionsListener;
 import com.makeramen.roundedimageview.RoundedImageView;
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType;
@@ -80,11 +82,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+
+import io.ak1.pix.models.Ratio;
 import www.develpoeramit.mapicall.ApiCallBuilder;
 
 public class ProductDonateActivity extends AppCompatActivity implements Spinner.OnItemSelectedListener {
@@ -114,7 +120,7 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
     ArrayList<String> category;
     Spinner spinner;
     String usedTxt;
-    ArrayList<String> returnValue;
+    ArrayList<Uri> returnValue = new ArrayList<Uri>();
     String test;
     String p_lat = "", p_lng = "", d_lat = "", d_lng = "";
     MyPlacesAdapter adapter;
@@ -132,9 +138,9 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
     private ProSliderAdapter proSliderAdapter;
     private HashMap<String, File> fileHashMap;
     private ProgressDialog progressDialog;
-    private Options options;
     static SliderView imageSlider;
     static RoundedImageView image1;
+    ActivityResultLauncher<PickVisualMediaRequest> pickMedia;
     public static void Task() {
         imageSlider.setVisibility(View.GONE);
         image1.setVisibility(View.VISIBLE);
@@ -143,6 +149,22 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        pickMedia =registerForActivityResult(
+                new ActivityResultContracts.PickVisualMedia(), uri -> {
+            // Callback is invoked after the user selects a media i tem or closes the
+            // photo picker.
+            if (uri != null) {
+                //Log.d("PhotoPicker", "Selected URI: " + uri.toString());
+               // String info = "/"+uri.toString().split(":")[1].split("//")[1];
+
+                returnValue.add(uri);
+
+            } else {
+                Log.d("PhotoPicker", "No media selected");
+            }
+
+        });
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO);
 
         setContentView(R.layout.activity_product_donate);
@@ -176,7 +198,7 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
                 startActivity(new Intent(mContext, ThankyouPointActivity.class));
             }
         });
-
+// Registers a photo picker activity launcher in single-select mode.
 
         pr_donateYesid = findViewById(R.id.pr_donateYesid);
 
@@ -274,11 +296,25 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
 
 
         image2.setOnClickListener(v -> {
-            Dexter.withActivity(ProductDonateActivity.this)
-                    .withPermissions(Manifest.permission.CAMERA,
-                            Manifest.permission.READ_EXTERNAL_STORAGE,
-                            Manifest.permission.WRITE_EXTERNAL_STORAGE
-                    )
+            String camera =Manifest.permission.CAMERA;
+            //WRITE_EXTERNAL_STORAGE
+            String permission_additional=Manifest.permission.READ_EXTERNAL_STORAGE;
+            String permission_additional2= Manifest.permission.READ_EXTERNAL_STORAGE;
+            String permission_addtional3=Manifest.permission.READ_EXTERNAL_STORAGE;
+            String permission_addtional4=Manifest.permission.READ_EXTERNAL_STORAGE;
+            if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU){
+               permission_additional2=Manifest.permission.READ_MEDIA_VIDEO;
+               permission_additional=Manifest.permission.READ_MEDIA_IMAGES;
+                permission_addtional3=Manifest.permission.READ_MEDIA_AUDIO;
+                permission_addtional4=Manifest.permission.READ_MEDIA_IMAGES;
+            }
+
+            Dexter.withContext(ProductDonateActivity.this)
+                    .withPermissions(camera,
+                            permission_additional,
+                            permission_additional2,
+                            permission_addtional3,
+                            permission_addtional4 )
                     .withListener(new MultiplePermissionsListener() {
                         @Override
                         public void onPermissionsChecked(MultiplePermissionsReport report) {
@@ -287,18 +323,15 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
                                 try {
 
 
-                                    options = Options.init()
-                                            .setRequestCode(100)                                           //Request code for activity results
-                                            .setCount(5)                                                   //Number of images to restict selection count
-                                            .setFrontfacing(true)                                         //Front Facing camera on start
-                                            //.setPreSelectedUrls(returnValue)                               //Pre selected Image Urls
-                                            .setSpanCount(4)                                               //Span count for gallery min 1 & max 5
-                                            .setMode(Options.Mode.All)                                     //Option to select only pictures or videos or both
-                                            .setVideoDurationLimitinSeconds(30)                            //Duration for video recording
-                                            .setScreenOrientation(Options.SCREEN_ORIENTATION_PORTRAIT)     //Orientaion
-                                            .setPath("pix/bai-hai");                                       //Custom Path For media Storage
+                                   // options.setPreSelectedUrls(ArrayList<Uri> data);
+                                  //  Pix.start(ProductDonateActivity.this, options);
 
-                                    Pix.start(ProductDonateActivity.this, options);
+                                    ActivityResultContracts.PickVisualMedia.VisualMediaType mediaType = (ActivityResultContracts.PickVisualMedia.VisualMediaType)
+                                            ActivityResultContracts.PickVisualMedia.ImageOnly.INSTANCE;
+                                    PickVisualMediaRequest request = new PickVisualMediaRequest.Builder()
+                                            .setMediaType(mediaType)
+                                            .build();
+                                    pickMedia.launch(request);
                                 } catch (Exception e) {
                                     Log.i(TAG, "cdfcsef: " + e.getMessage());
 
@@ -318,6 +351,10 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
                         }
 
 
+                    }).withErrorListener(new PermissionRequestErrorListener() {
+                        @Override public void onError(DexterError error) {
+                            Log.e("Dexter", "There was an error: " + error.toString());
+                        }
                     }).check();
 
         });
@@ -326,6 +363,7 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
 
 
     }
+
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int poistion, long l) {
@@ -367,8 +405,8 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
         }
     }
 
-    @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+   // @Override
+    /*public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (requestCode == PermUtil.REQUEST_CODE_ASK_MULTIPLE_PERMISSIONS) {// If request is cancelled, the result arrays are empty.
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
@@ -377,7 +415,7 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
                 Toast.makeText(ProductDonateActivity.this, "Approve permissions to open Pix ImagePicker", Toast.LENGTH_LONG).show();
             }
         }
-    }
+    }*/
 
     private void Validate(View view) {
 
@@ -655,17 +693,33 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         try {
-            if (resultCode == Activity.RESULT_OK && requestCode == 100) {
-                returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
-
+            if (resultCode == Activity.RESULT_OK || requestCode == 100 ) {
+                /* aqui carga las imagenes*/
+              //  returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
+                // Log.e("TAG",data.getData().getPath());
+                if(returnValue.size()==0) {
+                    returnValue.add(data.getData());
+                }
                 image2.setVisibility(View.GONE);
                 //  myPagerAdapter = new MyPagerAdapter(mContext, returnValue);
                 // photos_viewpager.setAdapter(myPagerAdapter);
                 rl_Pager.setVisibility(View.GONE);
                 btnRemoveImage.setVisibility(View.GONE);
                 imageSlider.setVisibility(View.VISIBLE);
+                if(returnValue.size()>0){
                 rotateImages();
-                proSliderAdapter = new ProSliderAdapter(getApplicationContext(), returnValue);
+                ArrayList<String> dataImg = new ArrayList<String>();
+
+                for (int i = 0; i < returnValue.size(); i++) {
+                    try {
+                        File file = getFile(mContext,returnValue.get(i));//create path from uri
+                        final String[] Info = file.getPath().split(":");
+                        dataImg.add(Info[0]);
+                    }catch(Exception e){
+
+                    }
+                }
+                proSliderAdapter = new ProSliderAdapter(getApplicationContext(), dataImg);
 
                 imageSlider.setSliderAdapter(proSliderAdapter);
                 proSliderAdapter.notifyDataSetChanged();
@@ -678,7 +732,7 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
                 imageSlider.startAutoCycle();
 
 
-                SharePost();
+                SharePost();}
             }
         } catch (Exception e) {
             Log.e("TAG", "cdsf" + e.getMessage());
@@ -692,8 +746,42 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
             Log.e("TAG", "longidbh" + lng);
         }
     }
+    public static File getFile(Context context, Uri uri) throws IOException {
+        File destinationFilename = new File(context.getFilesDir().getPath() + File.separatorChar + queryName(context, uri));
+        try (InputStream ins = context.getContentResolver().openInputStream(uri)) {
+            createFileFromStream(ins, destinationFilename);
+        } catch (Exception ex) {
+            Log.e("Save File", ex.getMessage());
+            ex.printStackTrace();
+        }
+        return destinationFilename;
+    }
 
-    private void SharePost() {
+    public static void createFileFromStream(InputStream ins, File destination) {
+        try (OutputStream os = new FileOutputStream(destination)) {
+            byte[] buffer = new byte[4096];
+            int length;
+            while ((length = ins.read(buffer)) > 0) {
+                os.write(buffer, 0, length);
+            }
+            os.flush();
+        } catch (Exception ex) {
+            Log.e("Save File", ex.getMessage());
+            ex.printStackTrace();
+        }
+    }
+
+    private static String queryName(Context context, Uri uri) {
+        Cursor returnCursor =
+                context.getContentResolver().query(uri, null, null, null, null);
+        assert returnCursor != null;
+        int nameIndex = returnCursor.getColumnIndex(OpenableColumns.DISPLAY_NAME);
+        returnCursor.moveToFirst();
+        String name = returnCursor.getString(nameIndex);
+        returnCursor.close();
+        return name;
+    }
+    private void SharePost() throws IOException {
 
 
         if (returnValue.size() > 0) {
@@ -702,28 +790,27 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
             //     images = new ArrayList<>();
             for (int i = 0; i < returnValue.size(); i++) {
 
-                String path = returnValue.get(i);
                 Log.e("vcfgxb", String.valueOf(returnValue.size()));
 
                 if (i == 0) {
-                    file1 = new File(returnValue.get(0));
+                    file1 =getFile(getApplicationContext(), returnValue.get(i));
                     fileHashMap.put("image1", file1);
                 } else if (i == 1) {
-                    file2 = new File(returnValue.get(1));
+                    file2 =getFile(getApplicationContext(), returnValue.get(i));
                     fileHashMap.put("image2", file2);
 
 
                 } else if (i == 2) {
-                    file3 = new File(returnValue.get(2));
+                    file3 =getFile(getApplicationContext(), returnValue.get(i));
                     fileHashMap.put("image3", file3);
 
 
                 } else if (i == 3) {
-                    file4 = new File(returnValue.get(3));
+                    file4=getFile(getApplicationContext(), returnValue.get(i));
                     fileHashMap.put("image4", file4);
 
                 } else if (i == 4) {
-                    file5 = new File(returnValue.get(4));
+                    file5 = getFile(getApplicationContext(), returnValue.get(i));
                     fileHashMap.put("image5", file5);
 
                 }
@@ -750,11 +837,11 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
             //     images = new ArrayList<>();
             for (int i = 0; i < returnValue.size(); i++) {
 
-                String path = returnValue.get(i);
+
                 Log.e("vcfgxb", String.valueOf(returnValue.size()));
                     InputStream in = null;
                     try {
-                        in = new FileInputStream(returnValue.get(i));
+                        in = new FileInputStream(mContext.getContentResolver().openFileDescriptor(returnValue.get(i), "r").getFileDescriptor());
                     } catch (FileNotFoundException e) {
                         Log.e("TAG","originalFilePath is not valid", e);
                     }
@@ -774,14 +861,14 @@ public class ProductDonateActivity extends AppCompatActivity implements Spinner.
                     byte[] byteArray = stream.toByteArray();
 
                     // Storing Back
-                    FileOutputStream outStream = null;
+                   /* FileOutputStream outStream = null;
                     try {
-                        outStream = new FileOutputStream(returnValue.get(i));
+                        outStream = new FileOutputStream(mContext.getContentResolver().openFileDescriptor(returnValue.get(i), "w").getFileDescriptor());
                         outStream.write(byteArray);
                         outStream.close();
                     } catch (Exception e) {
                         Log.e("TAG","could not save", e);
-                    }
+                    }*/
 
 
 

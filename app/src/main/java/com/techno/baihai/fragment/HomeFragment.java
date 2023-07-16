@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -28,6 +29,8 @@ import com.android.billingclient.api.BillingClient;
 import com.android.billingclient.api.BillingClientStateListener;
 import com.android.billingclient.api.BillingFlowParams;
 import com.android.billingclient.api.BillingResult;
+import com.android.billingclient.api.ProductDetails;
+import com.android.billingclient.api.ProductDetailsResponseListener;
 import com.android.billingclient.api.Purchase;
 import com.android.billingclient.api.PurchasesUpdatedListener;
 
@@ -36,9 +39,12 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatDelegate;
 import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
+
+import com.android.billingclient.api.QueryProductDetailsParams;
 import com.android.billingclient.api.SkuDetails;
 import com.android.billingclient.api.SkuDetailsParams;
 import com.android.billingclient.api.SkuDetailsResponseListener;
+import com.google.common.collect.ImmutableList;
 import com.squareup.picasso.Picasso;
 import com.techno.baihai.R;
 import com.techno.baihai.activity.AccountActivity;
@@ -77,7 +83,7 @@ public class HomeFragment extends Fragment {
     CardView card, card2, card3, card4, card5, donation_2, id_prize2, point2;
     Switch language;
     CircleImageView home_profileId;
-    SkuDetails itemInfo;
+    ProductDetails  itemInfo;
     TextView home_usernameId,textDonation,textAwards,textCoins,textGive,textGet,textNonProfit,textSuscribe;
     String latitude, longitude, guide;
     private boolean checkReward = true;
@@ -221,9 +227,23 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 setLog("Paso a  seccion de suscribir a bye-hi desde home");
+                ImmutableList productDetailsParamsList =
+                        ImmutableList.of(
+                                BillingFlowParams.ProductDetailsParams.newBuilder()
+                                        // retrieve a value for "productDetails" by calling queryProductDetailsAsync()
+                                        .setProductDetails(itemInfo)
+                                        // to get an offer token, call ProductDetails.getSubscriptionOfferDetails()
+                                        // for a list of offers that are available to the user
+                                        .setOfferToken(itemInfo.getSubscriptionOfferDetails().get(0).getOfferToken())
+                                        .build()
+                        );
+
+                BillingFlowParams billingFlowParams1 = BillingFlowParams.newBuilder()
+                        .setProductDetailsParamsList(productDetailsParamsList)
+                        .build();
                 billingClient.launchBillingFlow(
                         getActivity(),
-                        BillingFlowParams.newBuilder().setSkuDetails(itemInfo).build()
+                        billingFlowParams1
                 );
             }
         });
@@ -431,19 +451,25 @@ public class HomeFragment extends Fragment {
     private void getProductDetails(){
         List<String> productsIds = new ArrayList<>();
         productsIds.add("14599");
-        SkuDetailsParams getProductsDetailsQuery = SkuDetailsParams
-                .newBuilder()
-                .setType(BillingClient.SkuType.SUBS)
-                .setSkusList(productsIds)
-                .build();
+
+        QueryProductDetailsParams getProductsDetailsQuery =
+                QueryProductDetailsParams.newBuilder()
+                        .setProductList(
+                                ImmutableList.of(
+                                        QueryProductDetailsParams.Product.newBuilder()
+                                                .setProductId("14599")
+                                                .setProductType(BillingClient.ProductType.SUBS)
+                                                .build()))
+                        .build();
         Activity activity= getActivity();
-        billingClient.querySkuDetailsAsync(
+
+        billingClient.queryProductDetailsAsync(
                 getProductsDetailsQuery,
-                new  SkuDetailsResponseListener() {
-                    @Override
-                    public void onSkuDetailsResponse(@NonNull BillingResult billingResult, @androidx.annotation.Nullable List<SkuDetails> list) {
-                        if(billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && list != null){
-                             itemInfo = list.get(0);
+                new ProductDetailsResponseListener() {
+                    public void onProductDetailsResponse(BillingResult billingResult,
+                                                         List<ProductDetails> productDetailsList) {
+                        if(billingResult.getResponseCode() == BillingClient.BillingResponseCode.OK && productDetailsList != null){
+                            itemInfo = productDetailsList.get(0);
 
                         }
                     }
@@ -461,6 +487,8 @@ public class HomeFragment extends Fragment {
         }
 
     }
+
+
 
     private void GetLevelsApi(String Uid) {
 

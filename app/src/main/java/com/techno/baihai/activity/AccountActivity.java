@@ -25,7 +25,6 @@ import com.facebook.share.Sharer;
 import com.facebook.share.model.ShareLinkContent;
 import com.facebook.share.widget.ShareDialog;
 import com.squareup.picasso.Picasso;
-import com.techno.baihai.BuildConfig;
 import com.techno.baihai.R;
 import com.techno.baihai.api.Constant;
 import com.techno.baihai.model.User;
@@ -50,7 +49,6 @@ public class AccountActivity extends AppCompatActivity {
     Context mContext = AccountActivity.this;
     String imagePath;
     private User user;
-    private Boolean isInternetPresent = false;
     private LinearLayout tv_shareApp;
     private String uid;
     private final int REQUEST_CODE_MY_PICK = 1;
@@ -65,7 +63,6 @@ public class AccountActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_account);
         PrefManager.isConnectingToInternet(this);
-        isInternetPresent = PrefManager.isNetworkConnected(this);
 
 
         profile_imgId = findViewById(R.id.profile_img);
@@ -121,7 +118,7 @@ public class AccountActivity extends AppCompatActivity {
             if (ShareDialog.canShow(ShareLinkContent.class)) {
                 ShareLinkContent linkContent = new ShareLinkContent.Builder()
                         .setQuote("Hey check out my app at:")
-                        .setContentUrl(Uri.parse("https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID))
+                        .setContentUrl(Uri.parse("https://play.google.com/store/apps/details?id=" + getPackageName()))
                         .build();
                 shareDialog.show(linkContent);
             }
@@ -166,7 +163,7 @@ public class AccountActivity extends AppCompatActivity {
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT,
-                "Hey check out my app at:\n https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID);
+                "Hey check out my app at:\n https://play.google.com/store/apps/details?id=" + getPackageName());
         sendIntent.setType("text/plain");
         setResult(RESULT_OK, sendIntent);
         startActivityForResult(Intent.createChooser(sendIntent, "Share with"), REQUEST_CODE_MY_PICK);
@@ -242,14 +239,13 @@ public class AccountActivity extends AppCompatActivity {
 
     }
     public void Deletedata(View view) {
-        User user = PrefManager.getInstance(this).getUser();
 
 
 
             String langua = "Yes";
             String langua1 = "No";
             String lang = PrefManager.get(mContext, "lang");
-            if (lang.equals("es") && lang != null) {
+            if (lang.equals("es") && lang != "") {
                 langua = "Si";
                 langua1 = "No";
 
@@ -283,8 +279,8 @@ public class AccountActivity extends AppCompatActivity {
     }
     void setDeleteData() {
         User user = PrefManager.getInstance(this).getUser();
-        String email = null;
-        if (user.getEmail() == "") {
+        String email ;
+        if (user.getEmail().equals("")) {
             email = user.getId();
         } else {
             email = user.getEmail();
@@ -300,7 +296,6 @@ public class AccountActivity extends AppCompatActivity {
                         try {
                             JSONObject object = new JSONObject(response);
                             String status = object.getString("status");
-                            String uid = user.getId();
                         if(status.equalsIgnoreCase("1")){
                             setLog("El usuario confirmo eliminacion de datos");
                             Toast.makeText(mContext, "You Are Logout Succesfully", Toast.LENGTH_SHORT).show();
@@ -349,7 +344,6 @@ public class AccountActivity extends AppCompatActivity {
 
     public void LogoutBtn(View view) {
 
-        String uid = user.getId();
 
 
         Toast.makeText(mContext, "You Are Logout Succesfully", Toast.LENGTH_SHORT).show();
@@ -458,8 +452,8 @@ public class AccountActivity extends AppCompatActivity {
 
     private void setLog(String message) {
         User user = PrefManager.getInstance(mContext).getUser();
-        String id = null;
-        if (user.getId() == "") {
+        String id ;
+        if (user.getId().equals("")) {
             id = "1";
         } else {
             id = user.getId();

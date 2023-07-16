@@ -31,8 +31,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.app.ActivityCompat;
 
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.techno.baihai.R;
 import com.techno.baihai.utils.GPSTracker;
 import com.techno.baihai.utils.PrefManager;
@@ -175,14 +174,15 @@ public class SplashActivity extends AppCompatActivity {
 
         try {
 
-            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(SplashActivity.this,
-                    new OnSuccessListener<InstanceIdResult>() {
-                        @Override
-                        public void onSuccess(InstanceIdResult instanceIdResult) {
-                            String newToken = instanceIdResult.getToken();
-                            Log.i(TAG, "newtoken=>" + newToken);
-                            Preference.save(SplashActivity.this, Preference.REGISTER_ID, newToken);
 
+
+            FirebaseMessaging.getInstance().getToken().addOnSuccessListener(SplashActivity.this,
+                    new OnSuccessListener<String>() {
+                        @Override
+                        public void onSuccess(String s) {
+                            String newToken = s;
+                            Log.e("newToken=>", newToken);
+                            Preference.save(SplashActivity.this, Preference.REGISTER_ID, newToken);
 
                         }
                     });

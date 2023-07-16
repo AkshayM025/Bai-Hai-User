@@ -27,6 +27,7 @@
                 android:layout_gravity="right"
                 android:layout_marginTop="16dp"
                 android:layout_marginRight="16dp"
+                android:visibility="gone"
                 android:onClick="RegisterUserBtn"
                 android:text="@string/i_am_new"
                 android:textAllCaps="true"
@@ -269,13 +270,14 @@
 
                 <androidx.cardview.widget.CardView
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="70dp"
                     android:layout_marginLeft="16dp"
                     android:layout_marginTop="5dp"
                     android:layout_marginRight="16dp"
                     android:clickable="true"
-                    android:visibility="gone"
-                    app:cardBackgroundColor="@color/colorWhite"
+                    android:onClick="RegisterUserBtn"
+                    android:visibility="visible"
+                    app:cardBackgroundColor="@color/colorGreen"
                     app:cardCornerRadius="8dp"
                     app:cardElevation="5dp"
                     app:cardMaxElevation="5dp"
@@ -283,7 +285,7 @@
                     app:cardUseCompatPadding="true">
 
                     <RelativeLayout
-                        android:id="@+id/iv_insta"
+
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:gravity="center"
@@ -298,7 +300,7 @@
                             android:adjustViewBounds="true"
                             android:padding="2dp"
                             android:scaleType="fitCenter"
-                            android:src="@drawable/ins" />
+                            android:src="@drawable/com_facebook_profile_picture_blank_portrait" />
 
                         <TextView
                             android:layout_width="match_parent"
@@ -306,9 +308,9 @@
                             android:layout_centerVertical="true"
                             android:gravity="center_horizontal"
                             android:padding="10dp"
-                            android:text="Login with Google"
+                            android:text="I am New"
                             android:textAllCaps="false"
-                            android:textColor="@color/colorBlack"
+                            android:textColor="@color/colorWhite"
                             android:textSize="16sp" />
 
                     </RelativeLayout>

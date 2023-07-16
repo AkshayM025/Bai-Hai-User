@@ -45,20 +45,16 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
     Context mContext = this;
     ImageView iv_back;
     String foundationId;
-    Spinner spinner1;
     double lat, lng;
     String latitude, longitude;
     ArrayList<String> foundations;
     AlertDialog.Builder alertDialog;
-    //   MyAdapter myadapter;
     ListView lv;
     private EditText productId, SizeId, mobileId;
     TextView addressId;
     private ProgressBar progressBar;
     private Boolean isInternetPresent = false;
     private String uid;
-    String p_lat = "", p_lng = "", d_lat = "", d_lng = "";
-    MyPlacesAdapter adapter;
     private ImageView img_locationId;
     private String orgName;
     private String orgId;
@@ -94,7 +90,6 @@ public class DonateToFoundationFragment extends AppCompatActivity implements Spi
 
 
         productId = findViewById(R.id.productId);
-        // foundationsSpinner = (TextView) findViewById(R.id.foundationSpinner);
         addressId = findViewById(R.id.addressId);
         img_locationId = findViewById(R.id.img_locationId);
 

@@ -8,23 +8,19 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.ArrayAdapter;
 import android.widget.MediaController;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.app.AppCompatDelegate;
 
-import com.techno.baihai.BuildConfig;
 import com.techno.baihai.R;
 import com.techno.baihai.api.Constant;
 import com.techno.baihai.model.User;
 import com.techno.baihai.utils.PrefManager;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -138,12 +134,12 @@ AboutUsActivity extends AppCompatActivity {
 
     }
 
-    private void ShareApp() {
+    public void ShareApp() {
         setLog("Envia a Compartir aplicacion  desde menu de acerca de nosotros");
         Intent sendIntent = new Intent();
         sendIntent.setAction(Intent.ACTION_SEND);
         sendIntent.putExtra(Intent.EXTRA_TEXT,
-                "Hey check out my app at: https://play.google.com/store/apps/details?id=" + BuildConfig.APPLICATION_ID);
+                "Hey check out my app at: https://play.google.com/store/apps/details?id=" + getPackageName());
         sendIntent.setType("text/plain");
         startActivity(sendIntent);
     }
@@ -167,8 +163,8 @@ AboutUsActivity extends AppCompatActivity {
 
     private void setLog(String message) {
         User user = PrefManager.getInstance(mContext).getUser();
-        String id = null;
-        if (user.getId() == "") {
+        String id ;
+        if (user.getId().equals("")) {
             id = "1";
         } else {
             id = user.getId();

@@ -1,14 +1,21 @@
 package com.techno.baihai.activity;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.Window;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
@@ -20,6 +27,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 import com.google.android.gms.wallet.PaymentsClient;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
+import com.marozzi.roundbutton.RoundButton;
 import com.techno.baihai.R;
 import com.techno.baihai.api.Constant;
 import com.techno.baihai.fragment.ChatFragment;
@@ -28,6 +36,8 @@ import com.techno.baihai.listner.FragmentListener;
 import com.techno.baihai.model.User;
 import com.techno.baihai.utils.PrefManager;
 
+import org.checkerframework.checker.units.qual.A;
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -49,6 +59,8 @@ public class HomeActivity extends AppCompatActivity
     private final Context mContext = this;
     private ProgressBar progressBar;
     private PaymentsClient paymentsClient;
+    private WebView webView;
+    private  AlertDialog alertDialogInfo;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -275,13 +287,22 @@ public class HomeActivity extends AppCompatActivity
                         public void onClick(DialogInterface dialog, int id) {
 
                             setLegal();
-
+                            User user1 = PrefManager.getInstance(mContext).getUser();
+                            if (!user1.getGuide().equals("1")) {
+                                IntroInformation();
+                            }
                         }
                     })
 
                     .setNegativeButton(langua1, new DialogInterface.OnClickListener() {
                         public void onClick(DialogInterface dialog, int id) {
                             dialog.cancel();
+                            User user1 = PrefManager.getInstance(mContext).getUser();
+                            if (!user1.getGuide().equals("1")) {
+                                IntroInformation();
+                            }
+
+
                         }
                     }).create().show();
 
@@ -348,6 +369,48 @@ public class HomeActivity extends AppCompatActivity
                 });
     }
 
+    public void IntroInformation() {
+        User user = PrefManager.getInstance(mContext).getUser();
+
+        String langua = "Yes";
+        String langua1 = "No";
+        String lang = PrefManager.get(mContext, "lang");
+        PrefManager.save(mContext, "legal", "0");
+        setLog("El usuario  se encuentra en idioma ingles");
+        if (lang.equals("es") && lang != null) {
+            langua = "Si";
+            langua1 = "No";
+            setLog("El usuario  se encuentra en idioma español");
+        }
+        final AlertDialog.Builder alert1 = new AlertDialog.Builder(mContext);
+        alert1.setCancelable(false);
+        alert1.setPositiveButton(langua, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                   }
+
+        });
+
+        alert1.setNegativeButton(langua1, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+
+                dialog.cancel();
+            }
+        });
+        alertDialogInfo = alert1.create();
+        alertDialogInfo.dismiss();
+        // Configura el titulo.
+        alertDialogInfo.setTitle(getResources().getString(R.string.title_initial_popup));
+
+        // Configura el mensaje.
+        alertDialogInfo
+                .setMessage(getResources().getString(R.string.initial_popup));
+        alertDialogInfo.show();
+
+
+
+
+
+    }
 
     void setColorOnBar(int color) {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {

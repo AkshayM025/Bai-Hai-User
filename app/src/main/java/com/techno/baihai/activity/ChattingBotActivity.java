@@ -59,7 +59,7 @@ public class ChattingBotActivity extends AppCompatActivity implements View.OnCli
     private APIInterface apiInterface;
     private Utils utils;
     private Boolean isInternetPresent = false;
-    private ImageView iv_send, iv_back;
+    private ImageView iv_send, iv_back,iv_confirm;
     private EditText et_text_messgae;
     private LinearLayout layout_chat;
     private ChatAdapter adaper;
@@ -73,6 +73,7 @@ public class ChattingBotActivity extends AppCompatActivity implements View.OnCli
     private TextView tv_name_receiver;
     private String statusss = "";
     private String popupFillter;
+    private   User user ;
     private static final String TAG = LoginActivity.class.getSimpleName();
 
     @Override
@@ -94,6 +95,7 @@ public class ChattingBotActivity extends AppCompatActivity implements View.OnCli
         ImageView drop = findViewById(R.id.drop_downProductId);
         iv_send = findViewById(R.id.iv_send);
         iv_back = findViewById(R.id.iv_back);
+        iv_confirm = findViewById(R.id.iv_confirm);
 
         et_text_messgae = findViewById(R.id.et_text_messgae);
         recycler_view = findViewById(R.id.recycler_view);
@@ -113,7 +115,7 @@ public class ChattingBotActivity extends AppCompatActivity implements View.OnCli
         // PrefManager.setString(Constant.RECEIVER_ID, getIntent().getStringExtra("id"));
 
         iv_send.setOnClickListener(this);
-
+        iv_confirm.setOnClickListener(this);
         iv_back.setOnClickListener(this);
 
 
@@ -180,9 +182,95 @@ public class ChattingBotActivity extends AppCompatActivity implements View.OnCli
             PrefManager.showSettingsAlert(mContext);
 
         }
+       user =PrefManager.getInstance(this).getUser();
+        if(!user.getId().equals(getChatSellerId)){
+            iv_confirm.setVisibility(View.INVISIBLE);
+        }
+        if(getRecieverId==user.getId() ){
+            iv_confirm.setVisibility(View.VISIBLE);
+        }
+        ValidateConfirmSeller(user);
 
+        if(statusss!= null){
+            if(statusss.equals("3")){
+            AlertConfirm();
+            }
+        }
+    }
+    private boolean ValidateConfirmSeller(User user){
+        final boolean[] resultValidation = {false};
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_info", user.getId());
+        parms1.put("product_info", getProductId);
+
+        ApiCallBuilder.build(this)
+                .setUrl(Constant.BASE_URL + Constant.CONFIRM_SELLER)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        String status = null;
+                        String result = null;
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            status = object.getString("status");
+                            result = object.getString("result");
+                            if(status.equals("1") ){
+                                if(result.equals("1")) {
+                                    Log.e("selectedresponse=>", "-------->exitoso");
+                                    resultValidation[0] = true;
+                                    iv_confirm.setVisibility(View.VISIBLE);
+                                    if(!user.getId().equals(getChatSellerId)){
+                                        AlertConfirm();
+                                    }
+
+                                }else{
+                                    resultValidation[0]=false;
+                                }
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+
+                    }
+                });
+        return resultValidation[0];
     }
 
+
+
+    private boolean ValidateProductUser(User user){
+        final boolean[] resultValidation = {false};
+        HashMap<String, String> parms1 = new HashMap<>();
+        parms1.put("user_info", user.getId());
+        parms1.put("product_info", getProductId);
+
+        ApiCallBuilder.build(this)
+                .setUrl(Constant.BASE_URL + Constant.CONFIRM_PRODUCT)
+                .setParam(parms1)
+                .execute(new ApiCallBuilder.onResponse() {
+                    public void Success(String response) {
+                        String status = null;
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            status = object.getString("status");
+                            if(status.equals("1")){
+                                Log.e("selectedresponse=>", "-------->exitoso" );
+                                resultValidation[0] = true;
+                            }
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    public void Failed(String error) {
+
+                    }
+                });
+        return resultValidation[0];
+    }
     /*  @Override
       public void onBackPressed() {
           if (statusss.equals("1")){
@@ -250,6 +338,42 @@ public class ChattingBotActivity extends AppCompatActivity implements View.OnCli
                     "You don't have internet connection.", false);*/
             }
         }
+    }
+    private void AlertConfirm(){
+        User userdata = PrefManager.getInstance(this).getUser();
+            String langua = "Yes";
+            String langua1 = "No";
+            String lang = PrefManager.get(mContext, "lang");
+            setLog("El usuario  se encuentra en idioma ingles");
+            if (lang.equals("es") && lang != null) {
+                langua = "Si";
+                langua1 = "No";
+                setLog("El usuario  se encuentra en idioma español");
+            }
+            android.app.AlertDialog.Builder alertDialogBuilder = new android.app.AlertDialog.Builder(mContext);
+            // Configura el titulo.
+            alertDialogBuilder.setTitle(getResources().getString(R.string.title_confirm_product));
+
+            // Configura el mensaje.
+            alertDialogBuilder
+                    .setMessage(getResources().getString(R.string.title_confirm_message_product))
+                    .setCancelable(false)
+                    .setPositiveButton(langua, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+
+                            ValidateProductUser(userdata);
+
+                        }
+                    })
+
+                    .setNegativeButton(langua1, new DialogInterface.OnClickListener() {
+                        public void onClick(DialogInterface dialog, int id) {
+                            dialog.cancel();
+                        }
+                    }).create().show();
+
+
+
     }
 
 
@@ -618,7 +742,10 @@ public class ChattingBotActivity extends AppCompatActivity implements View.OnCli
                 setLog("click en boton para envio de mensaje en chat");
                 sendMessage();
                 break;
-
+            case R.id.iv_confirm:
+                setLog("click en boton para confirmacion de entrega");
+                AlertConfirm();
+                break;
 
         }
     }

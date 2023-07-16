@@ -27,8 +27,7 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.StringRequestListener;
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.karumi.dexter.Dexter;
 import com.karumi.dexter.MultiplePermissionsReport;
 import com.karumi.dexter.PermissionToken;
@@ -114,14 +113,13 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
 
         try {
 
-            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(EditAccountActivity.this,
-                    new OnSuccessListener<InstanceIdResult>() {
+            FirebaseMessaging.getInstance().getToken().addOnSuccessListener(EditAccountActivity.this,
+                    new OnSuccessListener<String>() {
                         @Override
-                        public void onSuccess(InstanceIdResult instanceIdResult) {
-                            String newToken = instanceIdResult.getToken();
+                        public void onSuccess(String s) {
+                            String newToken = s;
                             Log.e("newToken=>", newToken);
                             Preference.save(EditAccountActivity.this, Preference.REGISTER_ID, newToken);
-
 
                         }
                     });
@@ -573,7 +571,7 @@ public class EditAccountActivity extends AppCompatActivity implements Compress.o
     public void ProfiePicInit(View view) {
 
 
-        Dexter.withActivity(this)
+        Dexter.withContext(this)
                 .withPermissions(Manifest.permission.CAMERA,
                         Manifest.permission.READ_EXTERNAL_STORAGE,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE

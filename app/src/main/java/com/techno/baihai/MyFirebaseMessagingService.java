@@ -133,6 +133,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             String sender_id="";
             String receiver_image="";
             String product_id="";
+            String delivery="";
 
 
 
@@ -254,7 +255,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     receiver_name = object.optString("sender_name");
                     receiver_image = object.optString("sender_image");
                     product_id = object.optString("product_id");
-
+                    delivery=object.optString("key1");
 
 
                     //  * http://bai-hai.com/webservice/add_rating?
@@ -268,8 +269,12 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                     intent.putExtra("getChatName", receiver_name);
                     intent.putExtra("getChatImgUrl", receiver_image);
 
+                    if(delivery!=""){
+                        intent.putExtra("statusss", "3");
+                    }else{
+                        intent.putExtra("statusss", "1");
+                    }
 
-                    intent.putExtra("statusss", "1");
 
 
 
@@ -344,8 +349,18 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }
 
             if(messageBody.equals("Please help us  donate products to Bye-Hi")){
-                msg="Stop! Don't throw that out! Upload it instead and help others";
-                title="Donate Products";
+                String lang = PrefManager.get(this, "lang");
+                if(lang.equals("es") && lang != null){
+                    title="Donar Productos";
+                    messageBody="por favor ayudanos donando productos";
+                    msg="¡Detente! ¡No tires eso! Súbelo en su lugar y ayuda a otros";
+                }else{
+                    title="Donate Products";
+                    msg="Stop! Don't throw that out! Upload it instead and help others";
+                }
+
+
+
                 intent = new Intent(this, HomeActivity.class);
                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 

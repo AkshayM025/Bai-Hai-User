@@ -255,8 +255,6 @@
                             android:visibility="gone" />
 
                     </LinearLayout>
-
-
                     <ImageView
                         android:id="@+id/iv_send"
                         android:layout_width="@dimen/_35sdp"
@@ -268,6 +266,18 @@
                         android:layout_marginRight="@dimen/_8sdp"
                         android:elevation="@dimen/_5sdp"
                         android:src="@drawable/paperplane" />
+
+                    <ImageView
+                        android:id="@+id/iv_confirm"
+                        android:layout_width="@dimen/_35sdp"
+                        android:layout_height="@dimen/_35sdp"
+                        android:background="@drawable/ellipse"
+                        android:padding="10dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="@dimen/_8sdp"
+                        android:layout_marginRight="@dimen/_8sdp"
+                        android:elevation="@dimen/_5sdp"
+                        android:src="@drawable/ic_baseline_done_24" />
 
 
 

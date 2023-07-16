@@ -4,17 +4,23 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.content.pm.Signature;
 import android.content.res.Configuration;
 import android.content.res.Resources;
+import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.os.Handler;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
+import android.view.Window;
+import android.webkit.WebSettings;
+import android.webkit.WebView;
+import android.webkit.WebViewClient;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ProgressBar;
@@ -48,13 +54,14 @@ import com.google.android.gms.common.api.GoogleApiClient;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.google.firebase.auth.AuthCredential;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
+import com.marozzi.roundbutton.RoundButton;
 import com.techno.baihai.R;
 import com.techno.baihai.api.APIClient;
 import com.techno.baihai.api.Constant;
@@ -66,6 +73,7 @@ import com.techno.baihai.utils.PrefManager;
 import com.techno.baihai.utils.Preference;
 import com.techno.baihai.utils.Utils;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -106,9 +114,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
     private RadioButton spanish_btn;
     private RadioButton english_btn;
     private boolean bandera = false;
+    private BottomNavigationView navigationView;
     private String bandera2;
+    private WebView webView;
     Context context;
     Resources resources;
+
 
 
     @SuppressLint("WrongViewCast")
@@ -156,14 +167,15 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         deleteCache(mContext);
         try {
 
-            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(LoginActivity.this,
-                    new OnSuccessListener<InstanceIdResult>() {
+
+
+            FirebaseMessaging.getInstance().getToken().addOnSuccessListener(LoginActivity.this,
+                    new OnSuccessListener<String>() {
                         @Override
-                        public void onSuccess(InstanceIdResult instanceIdResult) {
-                            String newToken = instanceIdResult.getToken();
+                        public void onSuccess(String s) {
+                            String newToken = s;
                             Log.e("newToken=>", newToken);
                             Preference.save(LoginActivity.this, Preference.REGISTER_ID, newToken);
-
 
                         }
                     });
@@ -247,15 +259,100 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         String lang = PrefManager.get(mContext, "lang");
         Log.e("lang", lang);
         bandera2 = getIntent().getStringExtra("bandera");
+
         if(bandera2!=null){
             bandera=true;
         }
         if(bandera==false){
-           languageAlert(this.getCurrentFocus());
+
+            final AlertDialog.Builder alert = new AlertDialog.Builder(mContext);
+            View mView = getLayoutInflater().inflate(R.layout.language_alert, null);
+
+            CardView btn_okay = mView.findViewById(R.id.btn_okay);
+
+            english_btn = mView.findViewById(R.id.english_btn);
+            spanish_btn = mView.findViewById(R.id.spanish_btn);
+            radioGroup = mView.findViewById(R.id.radio);
+
+
+            alert.setView(mView);
+            final AlertDialog alertDialog1 = alert.create();
+            alertDialog1.dismiss();
+            alertDialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
+            alertDialog1.setCanceledOnTouchOutside(false);
+
+
+            String lang2 = PrefManager.get(mContext, "lang");
+            Log.e("lang", lang);
+
+            if (lang2.equals("es") && lang != null) {
+                PrefManager.save(mContext, "lang", "es");
+                updateResources(mContext, "es");
+                english_btn.setChecked(false);
+                spanish_btn.setChecked(true);
+                context = LocaleHelper.setLocale(mContext, "es");
+                resources = context.getResources();
+            } else {
+                PrefManager.save(mContext, "lang", "en");
+                english_btn.setChecked(true);
+                spanish_btn.setChecked(false);
+                updateResources(mContext, "en");
+                context = LocaleHelper.setLocale(mContext, "en");
+                resources = context.getResources();
+
+            }
+
+
+            english_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    Toast.makeText(mContext, "Select English", Toast.LENGTH_LONG).show();
+                    PrefManager.save(mContext, "lang", "en");
+                    updateResources(mContext, "en");
+                    context = LocaleHelper.setLocale(mContext, "en");
+                    resources = context.getResources();
+                    english_btn.setChecked(true);
+                    spanish_btn.setChecked(false);
+                }
+            });
+            spanish_btn.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+
+
+                    Toast.makeText(mContext, "Select Spanish", Toast.LENGTH_LONG).show();;
+                    PrefManager.save(mContext, "lang", "es");
+                    updateResources(mContext, "es");
+                    context = LocaleHelper.setLocale(mContext, "es");
+                    resources = context.getResources();
+                    english_btn.setChecked(false);
+                    spanish_btn.setChecked(true);
+                }
+            });
+
+
+            btn_okay.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    alertDialog1.dismiss();
+                    bandera=true;
+                    Intent intent = new Intent(mContext, LoginActivity.class);
+                    intent.putExtra("bandera", "true");
+                    startActivity(intent);
+                    finish();
+
+                }
+            });
+
+
         }
 
+        LegalInfo();
 
     }
+
     public static void deleteCache(Context context) {
         try {
             File dir = context.getCacheDir();
@@ -362,6 +459,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     }
                 });
     }
+
 
 
     private void userLoginIn(View view) {
@@ -790,90 +888,7 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
 
         resources.updateConfiguration(configuration, resources.getDisplayMetrics());
     }
-    public void languageAlert(View view) {
-        final AlertDialog.Builder alert = new AlertDialog.Builder(LoginActivity.this);
-        View mView = getLayoutInflater().inflate(R.layout.language_alert, null);
 
-        CardView btn_okay = mView.findViewById(R.id.btn_okay);
-
-        english_btn = mView.findViewById(R.id.english_btn);
-        spanish_btn = mView.findViewById(R.id.spanish_btn);
-        radioGroup = mView.findViewById(R.id.radio);
-
-
-        alert.setView(mView);
-        final AlertDialog alertDialog1 = alert.create();
-        alertDialog1.getWindow().setBackgroundDrawableResource(android.R.color.transparent);
-        alertDialog1.setCanceledOnTouchOutside(false);
-
-
-        String lang = PrefManager.get(mContext, "lang");
-        Log.e("lang", lang);
-
-        if (lang.equals("es") && lang != null) {
-            PrefManager.save(mContext, "lang", "es");
-            updateResources(mContext, "es");
-            english_btn.setChecked(false);
-            spanish_btn.setChecked(true);
-            context = LocaleHelper.setLocale(mContext, "es");
-            resources = context.getResources();
-        } else {
-            PrefManager.save(mContext, "lang", "en");
-            english_btn.setChecked(true);
-            spanish_btn.setChecked(false);
-            updateResources(mContext, "en");
-            context = LocaleHelper.setLocale(mContext, "en");
-            resources = context.getResources();
-
-        }
-
-
-        english_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                Toast.makeText(mContext, "Select English", Toast.LENGTH_LONG).show();
-                PrefManager.save(mContext, "lang", "en");
-                updateResources(mContext, "en");
-                context = LocaleHelper.setLocale(mContext, "en");
-                resources = context.getResources();
-                english_btn.setChecked(true);
-                spanish_btn.setChecked(false);
-            }
-        });
-        spanish_btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-
-                Toast.makeText(mContext, "Select Spanish", Toast.LENGTH_LONG).show();;
-                PrefManager.save(mContext, "lang", "es");
-                updateResources(mContext, "es");
-                context = LocaleHelper.setLocale(mContext, "es");
-                resources = context.getResources();
-                english_btn.setChecked(false);
-                spanish_btn.setChecked(true);
-
-            }
-        });
-
-
-        btn_okay.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                alertDialog1.dismiss();
-                bandera=true;
-                Intent intent = new Intent(mContext, LoginActivity.class);
-                intent.putExtra("bandera", "true");
-                startActivity(intent);
-                finish();
-
-            }
-        });
-        alertDialog1.show();
-
-    }
     private void setLog(String message) {
         User user = PrefManager.getInstance(mContext).getUser();
         String id = null;
@@ -912,6 +927,195 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     }
                 });
     }
+
+    public void LegalInfo() {
+        User user = PrefManager.getInstance(this).getUser();
+
+            String langua = "Yes";
+            String langua1 = "No";
+            String lang = PrefManager.get(mContext, "lang");
+        PrefManager.save(mContext, "legal", "0");
+            setLog("El usuario  se encuentra en idioma ingles");
+            if (lang.equals("es") && lang != null) {
+                langua = "Si";
+                langua1 = "No";
+                setLog("El usuario  se encuentra en idioma español");
+            }
+        final AlertDialog.Builder alert1 = new AlertDialog.Builder(mContext);
+
+            alert1.setCancelable(false);
+            alert1.setPositiveButton(langua, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                PrefManager.save(mContext, "legal", "1");
+                GetTutorialResultApi();
+
+            }
+
+        });
+
+        alert1.setNegativeButton(langua1, new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+
+                                dialog.cancel();
+                                GetTutorialResultApi();
+                            }
+                        });
+             AlertDialog alertDialogInfo = alert1.create();
+             alertDialogInfo.dismiss();
+            // Configura el titulo.
+        alertDialogInfo.setTitle(getResources().getString(R.string.legal_information));
+
+            // Configura el mensaje.
+        alertDialogInfo
+                    .setMessage(getResources().getString(R.string.legal_mesagge));
+        alertDialogInfo.show();
+
+
+
+
+
+    }
+
+    private void GetTutorialResultApi() {
+
+
+        final ProgressDialog progressDialog;
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("Please wait...");
+        progressDialog.show();
+
+        String langua = "EN";
+        String tutorial_id = "2";
+        String lang = PrefManager.get(mContext, "lang");
+        if (lang.equals("es") && lang != null) {
+            langua = "ES";
+            tutorial_id = "1";
+        }
+
+
+        HashMap<String, String> parms = new HashMap<>();
+        parms.put("tutorial_id", tutorial_id);
+        parms.put("language", langua);
+
+        ApiCallBuilder.build(this)
+                .isShowProgressBar(false)
+                .setUrl(Constant.BASE_URL + "get_tutorial?")
+                .setParam(parms)
+                .execute(new ApiCallBuilder.onResponse() {
+                    @Override
+                    public void Success(String response) {
+                        progressDialog.dismiss();
+
+                        Log.e("tutorial_response", String.valueOf(response));
+
+
+                        try {
+                            JSONObject object = new JSONObject(response);
+                            String status = object.getString("status");
+                            Log.d(TAG, "STATUS_:" + status);
+                            try {
+
+
+                                if (status.equals("1")) {
+                                    String url = "";
+                                    JSONArray result = object.optJSONArray("result");
+                                    if (result != null) {
+                                        for (int i = 0; i < result.length(); i++) {
+                                            JSONObject object1 = result.getJSONObject(i);
+                                            url = object1.getString("url");
+                                            Log.d("url", url);
+                                        }
+                                    }
+                                    url="https://www.youtube.com/embed/sjO9uCQ8Gj8";
+                                    final Dialog dialog = new Dialog(mContext);
+                                    dialog.requestWindowFeature(Window.FEATURE_NO_TITLE);
+                                    dialog.setCancelable(false);
+                                    dialog.setContentView(R.layout.dialog_tutorials);
+                                    dialog.getWindow().setBackgroundDrawable(new ColorDrawable(android.graphics.Color.TRANSPARENT));
+
+
+                                    final RoundButton bt = (RoundButton) dialog.findViewById(R.id.bt_success);
+                                    bt.setOnClickListener(new View.OnClickListener() {
+                                        @Override
+                                        public void onClick(View v) {
+                                            bt.startAnimation();
+                                            bt.postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    bt.setResultState(RoundButton.ResultState.SUCCESS);
+
+                                                }
+                                            }, 1000);
+                                            bt.postDelayed(new Runnable() {
+                                                @Override
+                                                public void run() {
+                                                    dialog.dismiss();
+
+                                                    // bt.revertAnimation();
+                                                }
+                                            }, 2000);
+
+                                        }
+                                    });
+                                    String youTubeUrl = url;
+                                    String frameVideo = "<html><body>Tutorials<br><iframe width=\"280\" height=\"300\" " +
+                                            "src='" + youTubeUrl + "' frameborder=\"0\" allowfullscreen>" +
+                                            "</iframe></body></html>";
+                                    webView = dialog.findViewById(R.id.webViewVideo);
+                                    String regexYoutUbe = "^(http(s)?:\\/\\/)?((w){3}.)?youtu(be|.be)?(\\.com)?\\/.+";
+                                    if (youTubeUrl.matches(regexYoutUbe)) {
+                                        webView.setWebViewClient(new WebViewClient() {
+                                            @Override
+                                            public boolean shouldOverrideUrlLoading(WebView view, String url) {
+                                                return false;
+                                            }
+                                        });
+                                        WebSettings webSettings = webView.getSettings();
+                                        webSettings.setJavaScriptEnabled(true);
+                                        webView.loadData(frameVideo, "text/html", "utf-8");
+                                    } else {
+                                        Toast.makeText(LoginActivity.this, "This is other video",
+                                                Toast.LENGTH_SHORT).show();
+                                    }
+
+
+                                    dialog.show();
+
+
+                                } else if (status.equals("0")) {
+
+                                    progressDialog.dismiss();
+                                }
+                            } catch (JSONException e1) {
+                                e1.printStackTrace();
+                            }
+
+
+                        } catch (JSONException e) {
+
+                            progressDialog.dismiss();
+                            Log.i(TAG, "errorL", e);
+                            //Toast.makeText(mContext, "Check Your Network "+e, Toast.LENGTH_LONG).show();
+                            e.printStackTrace();
+                        }
+
+
+                    }
+
+                    @Override
+                    public void Failed(String error) {
+                        progressDialog.dismiss();
+                        //Toast.makeText(mContext, "Check Your Connection " + error, Toast.LENGTH_LONG).show();
+                    }
+                });
+    }
+    @Override
+    protected void onDestroy() {
+
+        super.onDestroy();
+    }
+
+
 
 
 }

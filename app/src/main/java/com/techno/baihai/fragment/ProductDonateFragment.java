@@ -228,7 +228,7 @@ public class  ProductDonateFragment extends Fragment implements Spinner.OnItemSe
         pickImg.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Dexter.withActivity(getActivity())
+                Dexter.withContext(getActivity())
                         .withPermissions(Manifest.permission.CAMERA,
                                 Manifest.permission.READ_EXTERNAL_STORAGE,
                                 Manifest.permission.WRITE_EXTERNAL_STORAGE
@@ -236,6 +236,7 @@ public class  ProductDonateFragment extends Fragment implements Spinner.OnItemSe
                         .withListener(new MultiplePermissionsListener() {
                             @Override
                             public void onPermissionsChecked(MultiplePermissionsReport report) {
+
                                 if (report.areAllPermissionsGranted()) {
 
                                     showPictureDialog();

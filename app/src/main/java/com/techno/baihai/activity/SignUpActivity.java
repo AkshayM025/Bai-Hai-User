@@ -14,8 +14,7 @@ import androidx.appcompat.app.AppCompatDelegate;
 
 import com.blogspot.atifsoftwares.animatoolib.Animatoo;
 import com.google.android.gms.tasks.OnSuccessListener;
-import com.google.firebase.iid.FirebaseInstanceId;
-import com.google.firebase.iid.InstanceIdResult;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.techno.baihai.R;
 import com.techno.baihai.api.Constant;
 import com.techno.baihai.model.User;
@@ -76,14 +75,15 @@ public class SignUpActivity extends AppCompatActivity {
 
         try {
 
-            FirebaseInstanceId.getInstance().getInstanceId().addOnSuccessListener(SignUpActivity.this,
-                    new OnSuccessListener<InstanceIdResult>() {
+
+
+            FirebaseMessaging.getInstance().getToken().addOnSuccessListener(SignUpActivity.this,
+                    new OnSuccessListener<String>() {
                         @Override
-                        public void onSuccess(InstanceIdResult instanceIdResult) {
-                            String newToken = instanceIdResult.getToken();
+                        public void onSuccess(String s) {
+                            String newToken = s;
                             Log.e("newToken=>", newToken);
                             Preference.save(SignUpActivity.this, Preference.REGISTER_ID, newToken);
-
 
                         }
                     });
