@@ -341,15 +341,24 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                     Intent intent = new Intent(mContext, LoginActivity.class);
                     intent.putExtra("bandera", "true");
                     startActivity(intent);
+
                     finish();
 
                 }
             });
 
+            alertDialog1.show();
+
+
+        }else{
+            String legal = PrefManager.get(mContext, "legal");
+            if(!legal.equalsIgnoreCase("2") || legal==null){
+                LegalInfo();
+            }
 
         }
 
-        LegalInfo();
+
 
     }
 
@@ -934,20 +943,24 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
             String langua = "Yes";
             String langua1 = "No";
             String lang = PrefManager.get(mContext, "lang");
-        PrefManager.save(mContext, "legal", "0");
-            setLog("El usuario  se encuentra en idioma ingles");
+         setLog("El usuario  se encuentra en idioma ingles");
             if (lang.equals("es") && lang != null) {
                 langua = "Si";
                 langua1 = "No";
                 setLog("El usuario  se encuentra en idioma español");
             }
+        String video = PrefManager.get(mContext, "Video");
         final AlertDialog.Builder alert1 = new AlertDialog.Builder(mContext);
 
             alert1.setCancelable(false);
             alert1.setPositiveButton(langua, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                PrefManager.save(mContext, "legal", "1");
-                GetTutorialResultApi();
+                PrefManager.save(mContext, "legal", "2");
+
+                if(!video.equalsIgnoreCase("1") || video==null){
+                    GetTutorialResultApi();
+                }
+
 
             }
 
@@ -957,7 +970,9 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                             public void onClick(DialogInterface dialog, int id) {
 
                                 dialog.cancel();
-                                GetTutorialResultApi();
+                                if(!video.equalsIgnoreCase("1") || video==null){
+                                    GetTutorialResultApi();
+                                }
                             }
                         });
              AlertDialog alertDialogInfo = alert1.create();
@@ -1054,11 +1069,12 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                                                     // bt.revertAnimation();
                                                 }
                                             }, 2000);
+                                            PrefManager.save(mContext, "video", "1");
 
                                         }
                                     });
                                     String youTubeUrl = url;
-                                    String frameVideo = "<html><body>Tutorials<br><iframe width=\"280\" height=\"300\" " +
+                                    String frameVideo = "<html><body><iframe width=\"280\" height=\"300\" " +
                                             "src='" + youTubeUrl + "' frameborder=\"0\" allowfullscreen>" +
                                             "</iframe></body></html>";
                                     webView = dialog.findViewById(R.id.webViewVideo);

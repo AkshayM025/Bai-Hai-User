@@ -7,8 +7,8 @@ android {
         applicationId "com.techno.baihai"
         minSdkVersion 23
         targetSdkVersion 33
-        versionCode 79
-        versionName "79.2"
+        versionCode 80
+        versionName "80.2"
         multiDexEnabled true
         archivesBaseName = "BaiHaiUser"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
