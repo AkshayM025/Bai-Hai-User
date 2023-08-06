@@ -190,4 +190,5 @@ dependencies {
 
 }
 apply plugin: 'com.google.firebase.crashlytics'
+apply plugin: 'org.jetbrains.kotlin.android'
 
