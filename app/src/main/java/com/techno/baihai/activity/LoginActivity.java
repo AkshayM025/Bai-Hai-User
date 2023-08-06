@@ -928,7 +928,16 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
                 });
     }
 
-    public void LegalInfo() {
+    private Boolean shouldShowLegalInfo() {
+        return !PrefManager.get(mContext, "legal").equals("1");
+    }
+
+    private void LegalInfo() {
+
+        if (!shouldShowLegalInfo()) {
+            return;
+        }
+
         User user = PrefManager.getInstance(this).getUser();
 
             String langua = "Yes";
@@ -966,14 +975,8 @@ public class LoginActivity extends AppCompatActivity implements GoogleApiClient.
         alertDialogInfo.setTitle(getResources().getString(R.string.legal_information));
 
             // Configura el mensaje.
-        alertDialogInfo
-                    .setMessage(getResources().getString(R.string.legal_mesagge));
+        alertDialogInfo.setMessage(getResources().getString(R.string.legal_mesagge));
         alertDialogInfo.show();
-
-
-
-
-
     }
 
     private void GetTutorialResultApi() {
