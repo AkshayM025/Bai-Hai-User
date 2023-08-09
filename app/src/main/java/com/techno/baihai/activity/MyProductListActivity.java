@@ -69,7 +69,7 @@ public class MyProductListActivity extends AppCompatActivity {
     private RecyclerView.Adapter product_mAdapter;
     private CardView card_view, card_view1, card_view2, card_view3;
     private String latitude, longitude;
-    private List<MyProductModeListl> myProductModeListls;
+    private List<MyProductModeListl> myProductModeList = new ArrayList<>();;
     private TextView location_productId, noDataList;
     private String uid, CatId;
     ArrayList<String> category = new ArrayList<>();
@@ -95,12 +95,13 @@ public class MyProductListActivity extends AppCompatActivity {
         card_view2 = findViewById(R.id.card_view2);
         card_view3 = findViewById(R.id.card_view3);
 
+        search_Product = findViewById(R.id.search_Product);
+
         User user = PrefManager.getInstance(this).getUser();
         uid = String.valueOf(user.getId());
         Log.i(TAG, "user_id: " + uid);
         apiInterface = APIClient.getClient().create(APIInterface.class);
         getCurrentLocation();
-
 
         ImageView drop = findViewById(R.id.drop_downProductId);
 
@@ -135,22 +136,20 @@ public class MyProductListActivity extends AppCompatActivity {
                 popup.show();//showing popup menu
             }
         });
+
         popupDistance = PrefManager.get(mContext, PrefManager.KEY_DISTANCE);
         Log.e("popupDistance", popupDistance);
 
+        // Estado inicial?
+        // distancia unlimited
+        // search vacio
+        // category None
 
-        product_recyclerView = findViewById(R.id.recycleViewProductList);
-        product_recyclerView.setHasFixedSize(true);
-        myProductModeListls = new ArrayList<>();
+        // GetProducts List () <- Solo 1 llamada al api
+        // Loading -Progress Bar
+        // Si la lista está vacía - Mostrar mensaje
+        // Si hay un error - Mostrar mensaje - Retry
 
-        LinearLayoutManager layoutManager
-                = new LinearLayoutManager(getApplicationContext(), LinearLayoutManager.VERTICAL, false);
-
-
-        product_recyclerView.setLayoutManager(layoutManager); // set LayoutManager to RecyclerView
-
-
-        search_Product = findViewById(R.id.search_Product);
         search_Product.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
@@ -176,10 +175,7 @@ public class MyProductListActivity extends AppCompatActivity {
             }
         });
 
-
         spinner =  findViewById(R.id.spinner);
-
-
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override
@@ -187,7 +183,9 @@ public class MyProductListActivity extends AppCompatActivity {
 
                 String item = adapterView.getItemAtPosition(position).toString();
                 Log.e("spinner=>", "" + item);
+
                 GetSearchProduct();
+
                 //Toast.makeText(adapterView.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
 
                 //set as selected item.
@@ -200,10 +198,11 @@ public class MyProductListActivity extends AppCompatActivity {
 
             }
         });
+
         if (isInternetPresent) {
             if (latitude != null && longitude != null) {
                 setLog("entro  y mostro la  lista de productos cercanos");
-                GetProductList();
+//                GetProductList();
 
                 GetCategory();
             } else {
@@ -214,25 +213,30 @@ public class MyProductListActivity extends AppCompatActivity {
             PrefManager.showSettingsAlert(mContext);
         }
 
-
-
-
         noDataList = findViewById(R.id.not_DataList);
 
-
+        initProductList();
     }
 
     @Override
     protected void onResume() {
         if (isInternetPresent) {
-            GetProductList();
+//            GetProductList();
         } else {
             PrefManager prefManager = new PrefManager(mContext);
             PrefManager.showSettingsAlert(mContext);
         }
         super.onResume();
+    }
 
-
+    private void initProductList() {
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
+        product_recyclerView = findViewById(R.id.recycleViewProductList);
+        product_recyclerView.setHasFixedSize(true);
+        product_recyclerView.removeAllViews();
+        product_recyclerView.setAdapter(product_mAdapter);
+        product_recyclerView.setLayoutManager(layoutManager);
+        product_mAdapter = new MyProductListAdapter(this, myProductModeList);
     }
 
     private String getAddress(double latitude, double longitude) {
@@ -291,6 +295,7 @@ public class MyProductListActivity extends AppCompatActivity {
 
     }
 
+    // Fixme: este metodo está retornando una lista vacía
     private void GetProductList() {
         popupDistance ="Unlimited";
         String distance = "";
@@ -352,8 +357,8 @@ public class MyProductListActivity extends AppCompatActivity {
                         try {
 
 
-                            if (myProductModeListls != null) {
-                                myProductModeListls.clear();
+                            if (myProductModeList != null) {
+                                myProductModeList.clear();
                             }
                             if(!response.equals("") && response!=null  ) {
                                 JSONObject object = new JSONObject(response);
@@ -410,7 +415,7 @@ public class MyProductListActivity extends AppCompatActivity {
                                             String product_dateTime = object1.getString("date_time");
 
 
-                                            myProductModeListls.add(new MyProductModeListl(product_id, seller_id, seller_name, category_id,
+                                            myProductModeList.add(new MyProductModeListl(product_id, seller_id, seller_name, category_id,
                                                     product_name, product_description, "",
                                                     product_address, "product_used", product_name_imageUrl,
                                                     "", category_image, category_name, product_lat, product_lon, product_status, product_dateTime));
@@ -438,7 +443,7 @@ public class MyProductListActivity extends AppCompatActivity {
 
 
                         }
-                            product_mAdapter = new MyProductListAdapter(getApplicationContext(), myProductModeListls);
+                            product_mAdapter = new MyProductListAdapter(getApplicationContext(), myProductModeList);
                             product_recyclerView.removeAllViews();
 
 
@@ -531,7 +536,7 @@ public class MyProductListActivity extends AppCompatActivity {
                                     JSONArray result = object.optJSONArray("result");
                                     Log.e(TAG, "result=>" + result);
 
-                                    myProductModeListls.clear();
+                                    myProductModeList.clear();
 
                                     if (result != null) {
                                         for (int i = 0; i < result.length(); i++) {
@@ -573,7 +578,7 @@ public class MyProductListActivity extends AppCompatActivity {
                                             String product_status = object1.getString("status");
                                             String product_dateTime = object1.getString("date_time");
 
-                                            myProductModeListls.add(new MyProductModeListl(product_id, seller_id,
+                                            myProductModeList.add(new MyProductModeListl(product_id, seller_id,
                                                     seller_name, category_id,
                                                     product_name, product_description, "",
                                                     product_address, product_used, product_name_imageUrl,
@@ -586,7 +591,7 @@ public class MyProductListActivity extends AppCompatActivity {
 
                                     } else {
 
-                                        myProductModeListls.clear();
+                                        myProductModeList.clear();
                                         product_recyclerView.removeAllViews();
                                         noDataList.setVisibility(View.VISIBLE);
 
@@ -597,7 +602,7 @@ public class MyProductListActivity extends AppCompatActivity {
 
                                 } else {
 
-                                    myProductModeListls.clear();
+                                    myProductModeList.clear();
                                     product_recyclerView.removeAllViews();
                                     noDataList.setVisibility(View.VISIBLE);
 
@@ -614,7 +619,7 @@ public class MyProductListActivity extends AppCompatActivity {
 
                         }
 
-                            product_mAdapter = new MyProductListAdapter(getApplicationContext(), myProductModeListls);
+                            product_mAdapter = new MyProductListAdapter(getApplicationContext(), myProductModeList);
                             product_recyclerView.removeAllViews();
 
                             product_recyclerView.setAdapter(product_mAdapter);
