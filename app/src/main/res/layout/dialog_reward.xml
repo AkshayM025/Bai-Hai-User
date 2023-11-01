@@ -1,0 +1,186 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="match_parent"
+    app:cardCornerRadius="@dimen/_16sdp"
+    app:cardUseCompatPadding="true"
+    app:cardElevation="@dimen/_5sdp"
+    app:cardMaxElevation="@dimen/_5sdp"
+    app:cardBackgroundColor="@color/colorWhite"
+    android:background="@android:color/transparent">
+
+    <!--
+
+        <ImageView
+            android:id="@+id/reward_cancelId"
+            android:layout_width="@dimen/margin_35"
+            android:layout_height="@dimen/margin_35"
+            android:layout_margin="@dimen/margin_15"
+            android:src="@drawable/ic_baseline_clear_24"
+            app:tint="@color/black" />
+
+    -->
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="@dimen/_16sdp">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_margin="@dimen/_5sdp"
+                android:orientation="vertical">
+
+
+                <TextView
+                    android:id="@+id/award_levelsId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center"
+                    android:text="@string/your_reward"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_14sdp"
+                    android:textStyle="bold" />
+
+                <!--
+                <androidx.cardview.widget.CardView
+                    android:layout_width="120dp"
+                    android:layout_height="120dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center_horizontal"
+                    android:layout_marginLeft="@dimen/_16sdp"
+                    android:layout_marginRight="@dimen/_16sdp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    app:cardBackgroundColor="@color/colorWhite"
+                    app:cardCornerRadius="@dimen/_15sdp">
+
+
+                    <ImageView
+                        android:id="@+id/award_levelsImg"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_gravity="center_horizontal"
+                        android:adjustViewBounds="true"
+                        android:scaleType="fitXY"
+                        android:src="@drawable/rewards" />
+
+
+                </androidx.cardview.widget.CardView>
+
+
+                <TextView
+                    android:id="@+id/award_levelsMsg"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:layout_marginTop="@dimen/_5sdp"
+                    android:gravity="center"
+                    android:text="@string/msg"
+                    android:textColor="@color/colorGreen"
+                    android:textSize="@dimen/_14sdp"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/award_levelsMaxCoin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="16dp"
+                    android:layout_marginRight="16dp"
+                    android:gravity="center"
+                    android:text="@string/your_reward"
+                    android:textColor="@color/black"
+                    android:textSize="@dimen/_11sdp"
+                    android:textStyle="bold" />
+
+               -->
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="@dimen/_20sdp"
+                    android:layout_marginTop="@dimen/_10sdp"
+                    android:layout_marginRight="@dimen/_20sdp"
+                    android:gravity="center"
+                    android:orientation="vertical">
+
+
+                  <!--  <com.marozzi.roundbutton.RoundButton
+                        android:id="@+id/bt_awardedsuccess"
+                        style="@style/TextStyle194"
+                        android:layout_width="match_parent"
+                        android:layout_height="35dp"
+                        android:gravity="center"
+                        android:text="@string/ok"
+                        app:rb_animation_alpha="false"
+                        app:rb_animation_corner_radius="@dimen/_20sdp"
+                        app:rb_animation_duration="500"
+                        app:rb_animation_progress_color="@color/colorAccent"
+                        app:rb_animation_progress_padding="8dp"
+                        app:rb_animation_progress_width="2dp"
+                        app:rb_background_color="@android:color/transparent"
+                        app:rb_background_color_pressed="@color/colorPrimary"
+                        app:rb_corner_color="@color/colorPrimary"
+                        app:rb_corner_color_pressed="@color/colorPrimary"
+                        app:rb_corner_width="1dp"
+                        app:rb_success_resource="@drawable/ic_done_white_48dp"
+                        app:rb_text_color="@color/colorPrimary"
+                        app:rb_text_color_pressed="@android:color/white" />
+-->
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/colorGray"/>
+
+
+
+                <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+                    android:id="@+id/foundationSwipeId"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/_20sdp">
+
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/recycleViewbaihaiId"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentStart="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_alignParentTop="true" />
+
+
+                </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+
+            </LinearLayout>
+
+    </RelativeLayout>
+
+    <ImageView
+        android:id="@+id/award_cancelId"
+        android:layout_width="@dimen/_20sdp"
+        android:layout_height="@dimen/_20sdp"
+        android:layout_marginLeft="@dimen/_8sdp"
+        android:layout_marginTop="@dimen/_8sdp"
+        android:src="@drawable/ic_baseline_clear_24"
+        app:tint="@color/black" />
+
+
+</androidx.cardview.widget.CardView>
+
+
+
+
+

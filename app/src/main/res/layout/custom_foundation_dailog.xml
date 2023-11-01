@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/_5sdp"
+        app:cardBackgroundColor="@color/colorWhite"
+        app:cardMaxElevation="@dimen/_5sdp"
+        app:cardElevation="@dimen/_5sdp"
+        app:cardCornerRadius="@dimen/_5sdp"
+        app:cardUseCompatPadding="true">
+
+        <ImageView
+            android:id="@+id/fond_cancelId"
+            android:layout_width="@dimen/_20sdp"
+            android:layout_height="@dimen/_20sdp"
+            android:layout_marginLeft="@dimen/_8sdp"
+            android:layout_marginTop="@dimen/_8sdp"
+            android:visibility="visible"
+            android:src="@drawable/ic_baseline_clear_24"
+            app:tint="@color/colorBlack" />
+
+
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/_5sdp"
+            android:padding="@dimen/_5sdp"
+            android:orientation="vertical">
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"
+                android:text="@string/foundation"
+                android:textColor="@color/colorBlack"
+                android:fontFamily="@font/baloo_tamma_regular"
+                android:textSize="@dimen/_14sdp"
+                android:textAllCaps="false"
+                android:textStyle="bold" />
+
+
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/textsize14"
+                android:textStyle="bold"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:textColor="@color/colorBlack"
+                android:visibility="visible"
+                android:fontFamily="@font/baloo_tamma_regular"
+                android:text="@string/text_fnd"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"/>
+            <!--
+            <TextView
+                android:id="@+id/custom_coinsId"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/coins5"
+                android:textSize="@dimen/_16sdp"
+                android:textStyle="bold"
+                android:visibility="visible"
+                android:layout_marginTop="@dimen/_5sdp"
+                android:textColor="@color/colorGreen"
+                android:fontFamily="@font/baloo_tamma_regular"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center"/>
+
+-->
+
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:layout_marginLeft="@dimen/_25sdp"
+                android:layout_marginTop="@dimen/_16sdp"
+                android:layout_marginRight="@dimen/_25sdp"
+                android:layout_marginBottom="@dimen/_16sdp"
+                android:orientation="vertical">
+
+                <com.marozzi.roundbutton.RoundButton
+                    android:id="@+id/registerFndId"
+                    style="@style/TextStyle194"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_30sdp"
+                    android:gravity="center"
+                    android:text="@string/ok"
+                    android:textSize="@dimen/_14sdp"
+                    android:fontFamily="@font/aladin"
+                    app:rb_animation_alpha="true"
+                    app:rb_animation_corner_radius="@dimen/_20sdp"
+                    app:rb_animation_duration="500"
+                    app:rb_animation_progress_color="@color/colorAccent"
+                    app:rb_animation_progress_padding="8dp"
+                    app:rb_animation_progress_width="2dp"
+                    app:rb_background_color="@android:color/transparent"
+                    app:rb_background_color_pressed="@color/colorPrimary"
+                    app:rb_corner_color="@color/colorPrimary"
+                    app:rb_corner_color_pressed="@color/colorPrimary"
+                    app:rb_corner_width="1dp"
+                    app:rb_success_resource="@drawable/ic_done_white_48dp"
+                    app:rb_text_color="@color/colorPrimary"
+                    app:rb_text_color_pressed="@android:color/white" />
+
+                <!--  <com.marozzi.roundbutton.RoundButton
+                      android:id="@+id/bt_round"
+                      style="@style/TextStyle194"
+                      android:layout_width="match_parent"
+                      android:layout_height="35dp"
+                      android:gravity="center"
+                      android:text="@string/ok"
+                      app:rb_animation_alpha="false"
+                      app:rb_animation_corner_radius="20dp"
+                      app:rb_animation_duration="500"
+                      app:rb_animation_progress_color="@color/colorPrimaryDark"
+                      app:rb_animation_progress_padding="8dp"
+                      app:rb_animation_progress_width="2dp"
+                      app:rb_background_color="@android:color/transparent"
+                      app:rb_background_color_pressed="@color/colorPrimary"
+                      app:rb_corner_color="@color/colorPrimary"
+                      app:rb_corner_color_pressed="@color/colorPrimary"
+                      app:rb_corner_radius="4dp"
+                      app:rb_corner_width="1dp"
+                      app:rb_text_color="@color/colorPrimary"
+                      app:rb_text_color_pressed="@android:color/white" />
+-->
+
+            </LinearLayout>
+
+
+
+
+
+
+        </LinearLayout>
+
+
+
+
+    </androidx.cardview.widget.CardView>
+
+
+</RelativeLayout>
