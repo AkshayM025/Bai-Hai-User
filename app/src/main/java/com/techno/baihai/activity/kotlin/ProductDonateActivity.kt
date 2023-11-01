@@ -1,7 +1,6 @@
 package com.techno.baihai.activity.kotlin
 
 
-import android.Manifest
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Context
@@ -24,7 +23,7 @@ import android.widget.Toast
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.PickVisualMediaRequest
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.activity.result.contract.ActivityResultContracts.PickVisualMedia.ImageOnly
+import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.databinding.DataBindingUtil
@@ -33,11 +32,6 @@ import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.StringRequestListener
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.MultiplePermissionsReport
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType
 import com.smarteist.autoimageslider.SliderAnimations
 import com.smarteist.autoimageslider.SliderView
@@ -49,8 +43,10 @@ import com.techno.baihai.databinding.ActivityProductDonateBinding
 import com.techno.baihai.service.MyPlacesAdapter
 import com.techno.baihai.utils.CustomSnakbar
 import com.techno.baihai.utils.GPSTracker
+import com.techno.baihai.utils.ImagePickerDialog
 import com.techno.baihai.utils.PrefManager
 import com.techno.baihai.utils.Tools
+import com.techno.baihai.utils.Utilities
 import org.json.JSONException
 import org.json.JSONObject
 import www.develpoeramit.mapicall.ApiCallBuilder
@@ -69,8 +65,6 @@ class ProductDonateActivity : AppCompatActivity(), AdapterView.OnItemSelectedLis
 
     private var binding: ActivityProductDonateBinding? = null
     var mContext: Context? = this@ProductDonateActivity
-//    var iv_donate: CardView? = null
-//    var tv_donate: CardView? = null
     var uid: String? = null
     var image: String? = null
     var lat = 0.0
@@ -78,36 +72,32 @@ class ProductDonateActivity : AppCompatActivity(), AdapterView.OnItemSelectedLis
     var latitude: String? = null
     var longitude: String? = null
     var view: View? = null
-//    var et_productDesc: EditText? = null
-//    var et_productName: EditText? = null
-//    var pr_donateYesid: TextView? = null
-//    var pr_donateNoid: TextView? = null
-//    var et_productLocation: TextView? = null
+
     var category_name: String? = null
     var category_id: String? = null
     private var catid: String? = null
     var category: ArrayList<String?>? = null
-//    var spinner: Spinner? = null
     private var usedTxt: String? = null
     private var returnValue = ArrayList<Uri?>()
     var test: String? = null
 
     var adapter: MyPlacesAdapter? = null
-//    private var map_location: ImageView? = null
     private var isInternetPresent = false
     private var file1: File? = null
     private var file2: File? = null
     private var file3: File? = null
     private var file4: File? = null
     private var file5: File? = null
-//    private var rl_Pager: RelativeLayout? = null
     private var photos_viewpager: ViewPager? = null
-//    private var sliderDotspanel: LinearLayout? = null
-//    private var btnRemoveImage: ImageView? = null
+    private val imagePickerDialog = ImagePickerDialog.newInstance()
+    private var imagePathList: ArrayList<String?> = ArrayList()
+    private var imagePath: String? = null
+
+
     private var proSliderAdapter: ProductAdapter? = null
     private var fileHashMap: HashMap<String, File?>? = null
     private var progressDialog: ProgressDialog? = null
-    var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>? = null
+    private var pickMedia: ActivityResultLauncher<PickVisualMediaRequest>? = null
 
 
     companion object {
@@ -163,6 +153,7 @@ class ProductDonateActivity : AppCompatActivity(), AdapterView.OnItemSelectedLis
         }
     }
 
+    @RequiresApi(Build.VERSION_CODES.TIRAMISU)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         pickMedia = registerForActivityResult<PickVisualMediaRequest, Uri>(
@@ -176,6 +167,8 @@ class ProductDonateActivity : AppCompatActivity(), AdapterView.OnItemSelectedLis
                 Log.d("PhotoPicker", "No media selected")
             }
         }
+
+
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
         setContentView(R.layout.activity_product_donate)
         binding = DataBindingUtil.setContentView(this, R.layout.activity_product_donate)
@@ -241,72 +234,124 @@ class ProductDonateActivity : AppCompatActivity(), AdapterView.OnItemSelectedLis
             val prefManager = PrefManager(mContext)
             PrefManager.showSettingsAlert(mContext)
         }
-        photos_viewpager = findViewById(R.id.photos_viewpager)
-        binding?.image1?.setOnClickListener {
-            val camera = Manifest.permission.CAMERA
-            //WRITE_EXTERNAL_STORAGE
-            var permission_additional =
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            var permission_additional2 =
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            var permission_addtional3 =
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            var permission_addtional4 =
-                Manifest.permission.READ_EXTERNAL_STORAGE
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                permission_additional2 = Manifest.permission.READ_MEDIA_VIDEO
-                permission_additional = Manifest.permission.READ_MEDIA_IMAGES
-                permission_addtional3 = Manifest.permission.READ_MEDIA_AUDIO
-                permission_addtional4 = Manifest.permission.READ_MEDIA_IMAGES
-            }
-            Dexter.withContext(this@ProductDonateActivity)
-                .withPermissions(
-                    camera,
-                    permission_additional,
-                    permission_additional2,
-                    permission_addtional3,
-                    permission_addtional4
-                )
-                .withListener(object : MultiplePermissionsListener {
-                    override fun onPermissionsChecked(report: MultiplePermissionsReport) {
-                        if (report.areAllPermissionsGranted()) {
-                            try {
-
-
-                                // options.setPreSelectedUrls(ArrayList<Uri> data);
-                                //  Pix.start(ProductDonateActivity.this, options);
-                                val mediaType: ActivityResultContracts.PickVisualMedia.VisualMediaType =
-                                    ImageOnly as ActivityResultContracts.PickVisualMedia.VisualMediaType
-                                val request: PickVisualMediaRequest =
-                                    PickVisualMediaRequest.Builder()
-                                        .setMediaType(mediaType)
-                                        .build()
-                                pickMedia!!.launch(request)
-                            } catch (e: Exception) {
-                                Log.i(
-                                    TAG,
-                                    "cdfcsef: " + e.message
-                                )
+        /*                binding?.image1?.setOnClickListener {
+                            val camera = Manifest.permission.CAMERA
+                            //WRITE_EXTERNAL_STORAGE
+                            var permission_additional =
+                                Manifest.permission.READ_EXTERNAL_STORAGE
+                            var permission_additional2 =
+                                Manifest.permission.READ_EXTERNAL_STORAGE
+                            var permission_addtional3 =
+                                Manifest.permission.READ_EXTERNAL_STORAGE
+                            var permission_addtional4 =
+                                Manifest.permission.READ_EXTERNAL_STORAGE
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                permission_additional2 = Manifest.permission.READ_MEDIA_VIDEO
+                                permission_additional = Manifest.permission.READ_MEDIA_IMAGES
+                                permission_addtional3 = Manifest.permission.READ_MEDIA_AUDIO
+                                permission_addtional4 = Manifest.permission.READ_MEDIA_IMAGES
                             }
-                        } else {
-                            showSettingDialogue()
-                        }
+                            Dexter.withContext(this@ProductDonateActivity)
+                                .withPermissions(
+                                    camera,
+                                    permission_additional,
+                                    permission_additional2,
+                                    permission_addtional3,
+                                    permission_addtional4
+                                )
+                                .withListener(object : MultiplePermissionsListener {
+                                    override fun onPermissionsChecked(report: MultiplePermissionsReport) {
+                                        if (report.areAllPermissionsGranted()) {
+                                            try {
+
+
+                                                // options.setPreSelectedUrls(ArrayList<Uri> data);
+                                                //  Pix.start(ProductDonateActivity.this, options);
+                                                val mediaType: ActivityResultContracts.PickVisualMedia.VisualMediaType =
+                                                    ImageOnly as ActivityResultContracts.PickVisualMedia.VisualMediaType
+                                                val request: PickVisualMediaRequest =
+                                                    PickVisualMediaRequest.Builder()
+                                                        .setMediaType(mediaType)
+                                                        .build()
+                                                pickMedia!!.launch(request)
+                                            } catch (e: Exception) {
+                                                Log.i(
+                                                    TAG,
+                                                    "cdfcsef: " + e.message
+                                                )
+                                            }
+                                        } else {
+                                            showSettingDialogue()
+                                        }
+                                    }
+
+                                    override fun onPermissionRationaleShouldBeShown(
+                                        permissions: List<PermissionRequest>,
+                                        token: PermissionToken
+                                    ) {
+                                        token.continuePermissionRequest()
+                                    }
+                                }).withErrorListener { error ->
+                                    Log.e(
+                                        "Dexter",
+                                        "There was an error: $error"
+                                    )
+                                }.check()
+                        }*/
+        binding?.image1?.setOnClickListener {
+            if (imagePathList.size != 5) {
+                imagePickerDialog.setShowImageOnly(true)
+//                imagePickerDialog.setShowCamera(false)
+                imagePickerDialog.show(supportFragmentManager, "imagePicker")
+                imagePickerDialog.setImageListener(object : ImagePickerDialog.ImagePickerListener {
+                    override fun onImageSelected(imageFile: File) {
+                        imagePath = imageFile.path
+                        Log.e("addProduct", "File-docPath-->>$imageFile")
+
+                        imagePathList.add(imagePath.toString())
+                        Log.e("addProduct", "File-imagePathList-->>$imagePathList")
+
+//                        setUpAdapter()
+
                     }
 
-                    override fun onPermissionRationaleShouldBeShown(
-                        permissions: List<PermissionRequest>,
-                        token: PermissionToken
-                    ) {
-                        token.continuePermissionRequest()
-                    }
-                }).withErrorListener { error ->
-                    Log.e(
-                        "Dexter",
-                        "There was an error: $error"
-                    )
-                }.check()
+                })
+            } else {
+                Utilities.showMessage(this, "You can select image up-to 5")
+            }
         }
-        binding?.btnRemoveimage?.setVisibility(View.GONE)
+
+        binding?.btnRemoveimage?.visibility = View.GONE
+    }
+
+    private fun setUpAdapter() {
+        binding?.image1?.visibility = View.GONE
+
+        binding?.rlPager!!.visibility = View.GONE
+        binding?.btnRemoveimage!!.visibility = View.GONE
+        imageSlider!!.visibility = View.VISIBLE
+        proSliderAdapter = ProductAdapter(applicationContext, imagePathList)
+        imageSlider!!.setSliderAdapter(proSliderAdapter!!)
+        proSliderAdapter!!.notifyDataSetChanged()
+        imageSlider!!.setIndicatorAnimation(IndicatorAnimationType.THIN_WORM) //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
+        imageSlider!!.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION)
+        imageSlider!!.autoCycleDirection =
+            SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH
+        imageSlider!!.indicatorSelectedColor = Color.WHITE
+        imageSlider!!.indicatorUnselectedColor = Color.GRAY
+        imageSlider!!.scrollTimeInSec = 4 //set scroll delay in seconds :
+        imageSlider!!.startAutoCycle()
+        SharePost()
+
+
+        proSliderAdapter?.setOnItemClickListener(object :
+            ProductAdapter.OnClickListener {
+            override fun onItemClick(currentItem: ArrayList<String>?) {
+
+                proSliderAdapter?.notifyDataSetChanged()
+
+            }
+        })
     }
 
     override fun onItemSelected(adapterView: AdapterView<*>, view: View, poistion: Int, l: Long) {
@@ -542,9 +587,9 @@ class ProductDonateActivity : AppCompatActivity(), AdapterView.OnItemSelectedLis
 
     public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        try {
+    /*    try {
             if (resultCode == RESULT_OK || requestCode == 100) {
-                /* aqui carga las imagenes*/
+                *//* aqui carga las imagenes*//*
                 //  returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
                 // Log.e("TAG",data.getData().getPath());
                 if (returnValue.size == 0) {
@@ -571,7 +616,7 @@ class ProductDonateActivity : AppCompatActivity(), AdapterView.OnItemSelectedLis
                         } catch (e: Exception) {
                         }
                     }
-                    proSliderAdapter = ProductAdapter(applicationContext, dataImg)
+                    proSliderAdapter = ProductAdapter(applicationContext, imagePathList)
                     imageSlider!!.setSliderAdapter(proSliderAdapter!!)
                     proSliderAdapter!!.notifyDataSetChanged()
                     imageSlider!!.setIndicatorAnimation(IndicatorAnimationType.THIN_WORM) //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
@@ -597,7 +642,7 @@ class ProductDonateActivity : AppCompatActivity(), AdapterView.OnItemSelectedLis
             }
         } catch (e: Exception) {
             Log.e("TAG", "cdsf" + e.message)
-        }
+        }*/
         if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
             lat = data!!.extras!!.getDouble("lat")
             lng = data.extras!!.getDouble("lng")

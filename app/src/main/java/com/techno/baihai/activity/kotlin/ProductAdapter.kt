@@ -8,13 +8,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import com.bumptech.glide.Glide
 import com.smarteist.autoimageslider.SliderViewAdapter
 import com.techno.baihai.R
 import com.techno.baihai.activity.kotlin.ProductDonateActivity.Companion.task
 import java.io.File
 
 
-class ProductAdapter(private val mContext: Context, private var imgArrayList: ArrayList<String>?) :
+class ProductAdapter(mContext: Context, private var imgArrayList: ArrayList<String?>) :
     SliderViewAdapter<ProductAdapter.SliderAdapterVH>() {
 
     var context: Context = mContext
@@ -30,7 +31,7 @@ class ProductAdapter(private val mContext: Context, private var imgArrayList: Ar
         this.itemClickListener = listener
     }
     private fun deleteItem(position: Int) {
-        imgArrayList!!.removeAt(position)
+        imgArrayList.removeAt(position)
         notifyDataSetChanged()
     }
 
@@ -42,13 +43,22 @@ class ProductAdapter(private val mContext: Context, private var imgArrayList: Ar
     }
 
     override fun onBindViewHolder(viewHolder: SliderAdapterVH, position: Int) {
-        Log.e("image=", "" + imgArrayList!![position])
-        val imgFile = File(imgArrayList!![position])
-        if (imgFile.exists()) {
-            val myBitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
-            viewHolder.imageViewBackground.setImageBitmap(myBitmap)
+        Log.e("image=", "" + imgArrayList[position])
+        val item= imgArrayList[position]
+        if (item!=null){
+            Glide.with(context).load(item)
+                .error(R.color.quantum_amber200)
+                .into(viewHolder.imageViewBackground)
         }
-        viewHolder.btnRemoveImage.setOnClickListener { v: View? ->
+
+//        val imgFile = imgArrayList[position]?.let { File(it) }
+//        if (imgFile != null) {
+//            if (imgFile.exists()) {
+//                val myBitmap = BitmapFactory.decodeFile(imgFile.absolutePath)
+//                viewHolder.imageViewBackground.setImageBitmap(myBitmap)
+//            }
+//        }
+        viewHolder.btnRemoveImage.setOnClickListener {
             if (count != -1) {
                 deleteItem(position)
                 notifyDataSetChanged()
@@ -64,7 +74,7 @@ class ProductAdapter(private val mContext: Context, private var imgArrayList: Ar
 
     override fun getCount(): Int {
         //slider view count could be dynamic size
-        return imgArrayList!!.size
+        return imgArrayList.size
     }
 
     class SliderAdapterVH(itemView: View) :
