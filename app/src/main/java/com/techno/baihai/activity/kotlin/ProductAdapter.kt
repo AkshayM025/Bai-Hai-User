@@ -23,7 +23,7 @@ class ProductAdapter(mContext: Context, private var imgArrayList: ArrayList<Stri
 
 
     interface OnClickListener {
-        fun onItemClick(currentItem: ArrayList<String>?)
+        fun onItemClick(currentItem: ArrayList<String?>)
     }
 
     // Setter method for item click listener
@@ -69,6 +69,7 @@ class ProductAdapter(mContext: Context, private var imgArrayList: ArrayList<Stri
             } else {
                 task()
             }
+            itemClickListener?.onItemClick(imgArrayList)
         }
     }
 

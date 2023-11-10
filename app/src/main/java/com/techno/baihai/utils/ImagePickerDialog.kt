@@ -5,25 +5,21 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
+import android.os.Environment
 import android.provider.MediaStore
-import android.provider.OpenableColumns
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import com.karumi.dexter.Dexter
-import com.karumi.dexter.MultiplePermissionsReport
-import com.karumi.dexter.PermissionToken
-import com.karumi.dexter.listener.PermissionRequest
-import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.techno.baihai.databinding.FragmentImagePickerBinding
+import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
@@ -31,9 +27,6 @@ import java.text.SimpleDateFormat
 import java.util.*
 
 class ImagePickerDialog : BottomSheetDialogFragment() {
-    private var cameraPicker: ActivityResultLauncher<Intent>? = null
-    private var imageVideoPicker: ActivityResultLauncher<Intent>? = null
-    private var position: Int? = 1
 
     private var binding: FragmentImagePickerBinding? = null
     private val _binding get() = binding!!
@@ -48,17 +41,10 @@ class ImagePickerDialog : BottomSheetDialogFragment() {
     private var isImage: Boolean? = false
     private var isMedia: Boolean? = false
     private var listener: ImagePickerListener? = null
-    private var onMediaPickedListener: ((List<File>) -> Unit)? = null
-
-    fun setOnMediaPickedListener(listener: (List<File>) -> Unit) {
-        onMediaPickedListener = listener
-    }
-
 
     interface ImagePickerListener {
         fun onImageSelected(imageFile: File)
     }
-
     fun setImageListener(listeners: ImagePickerListener) {
         listener = listeners
     }
@@ -79,73 +65,16 @@ class ImagePickerDialog : BottomSheetDialogFragment() {
         isVideo = isVideos
     }
 
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
+    ): View? {
+//        return inflater.inflate(R.layout.fragment_image_picker, container, false)
         binding = FragmentImagePickerBinding.inflate(inflater, container, false)
         return binding!!.root
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-        imageVideoPicker =
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == Activity.RESULT_OK) {
-                    val selectedMediaFiles = mutableListOf<File>()
-                    val selectedMediaClipData = result.data?.clipData
-
-                    if (selectedMediaClipData != null) {
-                        // Multiple items were selected
-                        for (i in 0 until selectedMediaClipData.itemCount) {
-                            val uri = selectedMediaClipData.getItemAt(i).uri
-                            val file = uriToFile(uri)
-                            if (file != null) {
-                                selectedMediaFiles.add(file)
-                            }
-                        }
-                    } else {
-                        // Single item was selected
-                        val uri = result.data?.data
-                        if (uri != null) {
-                            val file = uriToFile(uri)
-                            if (file != null) {
-                                selectedMediaFiles.add(file)
-                            }
-                        }
-                    }
-
-                    //  onMediaPickedListener?.invoke(selectedMediaFiles)
-                    listener?.onImageSelected(selectedMediaFiles[0])
-
-                }
-            }
-
-        cameraPicker =
-
-            registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-                if (result.resultCode == Activity.RESULT_OK) {
-                    val uri = result.data?.data
-                    Log.e("cameraPath", uri.toString())
-
-
-                    if (uri != null) {
-                        val file = uriToFile(uri)
-                        if (file != null) {
-                            Log.e("cameraPath", file.path)
-                            // onMediaPickedListener?.invoke(listOf(file))
-                            listener?.onImageSelected(file)
-
-
-                        }
-                    } else {
-                        Log.e("cameraPath", "null")
-
-                    }
-                }
-            }
 
         if (isCamera == true) {
             binding?.buttonCapture?.visibility = View.VISIBLE
@@ -154,19 +83,22 @@ class ImagePickerDialog : BottomSheetDialogFragment() {
 
         }
 
-
         binding?.buttonCapture?.setOnClickListener {
 
-            position = 0
-            checkAndRequestPermissions(position!!)
-
+            if (checkCameraPermissionAndCaptureImage()) {
+                openCamera()
+            } else {
+                requestCameraPermission()
+            }
         }
 
 
         binding?.buttonPickGallery?.setOnClickListener {
-            position = 1
-            checkAndRequestPermissions(position!!)
-
+            if (checkCameraPermissionAndCaptureImage()) {
+                pickImageFromGallery()
+            } else {
+                requestCameraPermission()
+            }
 
         }
     }
@@ -180,112 +112,82 @@ class ImagePickerDialog : BottomSheetDialogFragment() {
         }
     }
 
-    private fun checkAndRequestPermissions(position: Int) {
-        dismiss()
-        val camera = Manifest.permission.CAMERA
-        var permissionAdditional = Manifest.permission.READ_EXTERNAL_STORAGE
-        var permissionAdditional1 = Manifest.permission.READ_EXTERNAL_STORAGE
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            permissionAdditional = Manifest.permission.READ_MEDIA_VIDEO
-            permissionAdditional1 = Manifest.permission.READ_MEDIA_IMAGES
-        }
-        Dexter.withContext(this.activity)
-            .withPermissions(
-                camera,
-                permissionAdditional,
-                permissionAdditional1,
-            )
-            .withListener(object : MultiplePermissionsListener {
-                override fun onPermissionsChecked(report: MultiplePermissionsReport) {
-                    if (report.areAllPermissionsGranted()) {
 
-                        choosePicker(position)
-                    } else {
-                        // showSettingDialogue()
-                        checkAndRequestPermissions(position)
-                    }
-                }
-
-                override fun onPermissionRationaleShouldBeShown(
-                    permissions: List<PermissionRequest>,
-                    token: PermissionToken
-                ) {
-                    token.continuePermissionRequest()
-                }
-            }).withErrorListener { error ->
-                Log.e(
-                    "Dexter",
-                    "There was an error: $error"
-                )
-            }.check()
-
-
+    private fun checkCameraPermissionAndCaptureImage(): Boolean {
+        return ContextCompat.checkSelfPermission(
+            requireContext(), Manifest.permission.CAMERA
+        ) == PackageManager.PERMISSION_GRANTED
     }
 
-    private fun choosePicker(position: Int) {
-        when (position) {
-            0 -> {
-                openCamera()
-            }
-
-            1 -> {
-                pickImageFromGallery()
-            }
-
-            else -> {
-                pickImageFromGallery()
-
-            }
-        }
+    private fun requestCameraPermission() {
+        ActivityCompat.requestPermissions(
+            requireActivity(),
+            arrayOf(Manifest.permission.CAMERA, Manifest.permission.READ_EXTERNAL_STORAGE),
+            cameraRequestCode
+        )
     }
 
     private fun openCamera() {
-        /*        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                val photoFile: File? = try {
-                    createImageFiles()
-                } catch (ex: IOException) {
-                    null
-                }
-                photoFile?.also {
-                    val photoURI: Uri = FileProvider.getUriForFile(
-                        requireContext(), "com.it.twiker.fileprovider", it
-                    )
-                    imageUri = photoURI
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    startActivityForResult(intent, cameraRequestCode)
-                }*/
+//        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//        val photoFile: File? = try {
+//            createImageFiles()
+//        } catch (ex: IOException) {
+//            null
+//        }
+//        photoFile?.also {
+//            val photoURI: Uri = FileProvider.getUriForFile(
+//                requireContext(), "com.it.twiker.fileprovider", it
+//            )
+//            imageUri = photoURI
+//            intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+//            startActivityForResult(intent, cameraRequestCode)
+//        }
         takePhotoFromCamera()
     }
 
     @SuppressLint("QueryPermissionsNeeded")
     private fun takePhotoFromCamera() {
         val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (cameraIntent.resolveActivity(requireActivity().packageManager) != null)
-            startActivityForResult(cameraIntent, cameraRequestCode)
-        //  cameraPicker?.launch(cameraIntent)
+        if (cameraIntent.resolveActivity(requireActivity().packageManager) != null) startActivityForResult(
+            cameraIntent,
+            cameraRequestCode
+        )
+    }
+
+    @Throws(IOException::class)
+    private fun createImageFile(): File {
+        val timeStamp: String =
+            SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val storageDir: File? = requireActivity().getExternalFilesDir(null)
+        return File.createTempFile("JPEG_${timeStamp}_", ".jpg", storageDir)
+    }
+
+    private fun createImageFiles(): File {
+        // Create a unique file name based on the timestamp
+        val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+        val imageFileName = "JPEG_$timeStamp.jpg"
+
+        // Get the directory for storing images
+        val storageDir = requireActivity().getExternalFilesDir(Environment.DIRECTORY_PICTURES)
+
+        // Create the image file
+        val imageFile = File(storageDir, imageFileName)
+
+        // Save the current path
+        var currentPhotoPath = imageFile.absolutePath
+
+        return imageFile
     }
 
 
-    private fun uriToFile(uri: Uri): File? {
-        val cursor = requireContext().contentResolver.query(uri, null, null, null, null)
-        return cursor?.use {
-            val nameIndex = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
-            it.moveToFirst()
-            val name = it.getString(nameIndex)
-            val file = File(requireContext().cacheDir, name)
-            val outputStream = file.outputStream()
-
-            try {
-                val inputStream = requireContext().contentResolver.openInputStream(uri)
-                inputStream?.copyTo(outputStream)
-                inputStream?.close()
-                outputStream.close()
-                file
-            } catch (e: Exception) {
-                e.printStackTrace()
-                null
-            }
-        }
+    private fun getImageUri(inContext: Context, inImage: Bitmap): Uri? {
+        val bytes = ByteArrayOutputStream()
+        inImage.compress(Bitmap.CompressFormat.JPEG, 100, bytes)
+        val path = MediaStore.Images.Media.insertImage(
+            inContext.contentResolver, inImage,
+            "Title", null
+        )
+        return Uri.parse(path)
     }
 
     private fun getImageFile(inContext: Context, inImage: Bitmap, fileName: String): File? {
@@ -303,10 +205,11 @@ class ImagePickerDialog : BottomSheetDialogFragment() {
     }
 
     private fun pickImageFromGallery() {
-
+//        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+//        startActivityForResult(intent, galleryRequestCode)
         val intent =
             Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI).apply {
-                addCategory(Intent.CATEGORY_OPENABLE)
+//            addCategory(Intent.CATEGORY_OPENABLE)
                 type = if (isVideo == true) {
                     "video/*"
                 } else if (isImage == true) {
@@ -316,11 +219,9 @@ class ImagePickerDialog : BottomSheetDialogFragment() {
                 } else {
                     "image/*"
                 }
-                putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
-                action = Intent.ACTION_GET_CONTENT
+//                putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+//                action = Intent.ACTION_GET_CONTENT
             }
-        // imageVideoPicker?.launch(intent)
-
         startActivityForResult(intent, galleryRequestCode)
 
     }
@@ -366,33 +267,11 @@ class ImagePickerDialog : BottomSheetDialogFragment() {
 
 
                 galleryRequestCode -> {
-                    val selectedMediaFiles = mutableListOf<File>()
-                    val selectedMediaClipData = data?.clipData
-
-                    if (selectedMediaClipData != null) {
-                        // Multiple items were selected
-                        for (i in 0 until selectedMediaClipData.itemCount) {
-                            val uri = selectedMediaClipData.getItemAt(i).uri
-                            val file = uriToFile(uri)
-                            if (file != null) {
-                                selectedMediaFiles.add(file)
-                            }
-                        }
-                        listener?.onImageSelected(selectedMediaFiles[0])
-
-                    } else {
-                        // Single item was selected
-                        val selectedImageUri = data?.data
-
-                        selectedImageUri?.let {
-                            val img_file = Utilities.uriToFile(requireContext(), it)
-                            listener?.onImageSelected(img_file!!)
-                            dismiss()
-                        }
-
-                        //  onMediaPickedListener?.invoke(selectedMediaFiles)
-
-
+                    val selectedImageUri = data?.data
+                    selectedImageUri?.let {
+                        val img_file = Utilities.uriToFile(requireContext(), it)
+                        listener?.onImageSelected(img_file!!)
+                        dismiss()
                     }
                 }
             }

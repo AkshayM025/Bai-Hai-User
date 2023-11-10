@@ -1,6 +1,7 @@
 package com.techno.baihai.activity.kotlin
 
 
+import android.Manifest
 import android.app.AlertDialog
 import android.app.ProgressDialog
 import android.content.Context
@@ -12,7 +13,6 @@ import android.graphics.Matrix
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.MediaStore
 import android.provider.OpenableColumns
 import android.provider.Settings
 import android.util.Log
@@ -32,6 +32,11 @@ import com.androidnetworking.AndroidNetworking
 import com.androidnetworking.error.ANError
 import com.androidnetworking.interfaces.StringRequestListener
 import com.blogspot.atifsoftwares.animatoolib.Animatoo
+import com.karumi.dexter.Dexter
+import com.karumi.dexter.MultiplePermissionsReport
+import com.karumi.dexter.PermissionToken
+import com.karumi.dexter.listener.PermissionRequest
+import com.karumi.dexter.listener.multi.MultiplePermissionsListener
 import com.smarteist.autoimageslider.IndicatorView.animation.type.IndicatorAnimationType
 import com.smarteist.autoimageslider.SliderAnimations
 import com.smarteist.autoimageslider.SliderView
@@ -103,10 +108,9 @@ class ProductDonateActivity : AppCompatActivity(), AdapterView.OnItemSelectedLis
     companion object {
         private const val TAG = "ProductDonate"
         private const val AUTOCOMPLETE_REQUEST_CODE = 111
-        var imageSlider: SliderView? = null
         @JvmStatic
         fun task() {
-            imageSlider!!.visibility = View.GONE
+//            binding?.imageSlider?!!.visibility = View.GONE
 //            binding.visibility = View.VISIBLE
         }
 
@@ -177,9 +181,7 @@ class ProductDonateActivity : AppCompatActivity(), AdapterView.OnItemSelectedLis
         PrefManager.isConnectingToInternet(mContext)
         isInternetPresent = PrefManager.isNetworkConnected(mContext)
         category = ArrayList()
-        //set  imageSlider
-        imageSlider = findViewById(R.id.imageSlider)
-        //Initializing Spinner
+
 
         //Adding an Item Selected Listener to our Spinner
         //As we have implemented the class Spinner.OnItemSelectedListener to this class iteself we are passing this to setOnItemSelectedListener
@@ -234,52 +236,87 @@ class ProductDonateActivity : AppCompatActivity(), AdapterView.OnItemSelectedLis
             val prefManager = PrefManager(mContext)
             PrefManager.showSettingsAlert(mContext)
         }
-        /*                binding?.image1?.setOnClickListener {
-                            val camera = Manifest.permission.CAMERA
-                            //WRITE_EXTERNAL_STORAGE
-                            var permission_additional =
-                                Manifest.permission.READ_EXTERNAL_STORAGE
-                            var permission_additional2 =
-                                Manifest.permission.READ_EXTERNAL_STORAGE
-                            var permission_addtional3 =
-                                Manifest.permission.READ_EXTERNAL_STORAGE
-                            var permission_addtional4 =
-                                Manifest.permission.READ_EXTERNAL_STORAGE
-                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-                                permission_additional2 = Manifest.permission.READ_MEDIA_VIDEO
-                                permission_additional = Manifest.permission.READ_MEDIA_IMAGES
-                                permission_addtional3 = Manifest.permission.READ_MEDIA_AUDIO
-                                permission_addtional4 = Manifest.permission.READ_MEDIA_IMAGES
-                            }
-                            Dexter.withContext(this@ProductDonateActivity)
-                                .withPermissions(
-                                    camera,
-                                    permission_additional,
-                                    permission_additional2,
-                                    permission_addtional3,
-                                    permission_addtional4
+        binding?.image1?.setOnClickListener {
+            val camera = Manifest.permission.CAMERA
+            //WRITE_EXTERNAL_STORAGE
+            var permission_additional =
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            var permission_additional2 =
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            var permission_addtional3 =
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            var permission_addtional4 =
+                Manifest.permission.READ_EXTERNAL_STORAGE
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                permission_additional2 = Manifest.permission.READ_MEDIA_VIDEO
+                permission_additional = Manifest.permission.READ_MEDIA_IMAGES
+                permission_addtional3 = Manifest.permission.READ_MEDIA_AUDIO
+                permission_addtional4 = Manifest.permission.READ_MEDIA_IMAGES
+            }
+            Dexter.withContext(this@ProductDonateActivity)
+                .withPermissions(
+                    camera,
+                    permission_additional,
+                    permission_additional2,
+                    permission_addtional3,
+                    permission_addtional4
+                )
+                .withListener(object : MultiplePermissionsListener {
+                    override fun onPermissionsChecked(report: MultiplePermissionsReport) {
+                        if (report.areAllPermissionsGranted()) {
+                            try {
+                                if (imagePathList.size != 5) {
+                                    imagePickerDialog.setShowImageOnly(true)
+//                imagePickerDialog.setShowCamera(false)
+                                    imagePickerDialog.show(
+                                        supportFragmentManager,
+                                        "imagePicker"
+                                    )
+                                    imagePickerDialog.setImageListener(object :
+                                        ImagePickerDialog.ImagePickerListener {
+                                        override fun onImageSelected(imageFile: File) {
+                                            imagePath = imageFile.path
+                                            Log.e(
+                                                "addProduct",
+                                                "File-docPath-->>$imageFile"
+                                            )
+
+                                            imagePathList.add(imagePath.toString())
+                                            Log.e(
+                                                "addProduct",
+                                                "File-imagePathList-->>$imagePathList"
+                                            )
+
+                                            setUpAdapter()
+
+
+                                        }
+
+                                    })
+                                } else {
+                                    mContext?.let { it1 ->
+                                        Utilities.showMessage(
+                                            it1,
+                                            "You can select image up-to 5"
+                                        )
+                                    }
+                                }
+
+                                // options.setPreSelectedUrls(ArrayList<Uri> data);
+                                //  Pix.start(ProductDonateActivity.this, options);
+//                                                val mediaType: ActivityResultContracts.PickVisualMedia.VisualMediaType =
+//                                                    ActivityResultContracts.PickVisualMedia.ImageOnly as ActivityResultContracts.PickVisualMedia.VisualMediaType
+//                                                val request: PickVisualMediaRequest =
+//                                                    PickVisualMediaRequest.Builder()
+//                                                        .setMediaType(mediaType)
+//                                                        .build()
+//                                                pickMedia!!.launch(request)
+                            } catch (e: Exception) {
+                                Log.i(
+                                    TAG,
+                                    "cdfcsef: " + e.message
                                 )
-                                .withListener(object : MultiplePermissionsListener {
-                                    override fun onPermissionsChecked(report: MultiplePermissionsReport) {
-                                        if (report.areAllPermissionsGranted()) {
-                                            try {
-
-
-                                                // options.setPreSelectedUrls(ArrayList<Uri> data);
-                                                //  Pix.start(ProductDonateActivity.this, options);
-                                                val mediaType: ActivityResultContracts.PickVisualMedia.VisualMediaType =
-                                                    ImageOnly as ActivityResultContracts.PickVisualMedia.VisualMediaType
-                                                val request: PickVisualMediaRequest =
-                                                    PickVisualMediaRequest.Builder()
-                                                        .setMediaType(mediaType)
-                                                        .build()
-                                                pickMedia!!.launch(request)
-                                            } catch (e: Exception) {
-                                                Log.i(
-                                                    TAG,
-                                                    "cdfcsef: " + e.message
-                                                )
-                                            }
+                            }
                                         } else {
                                             showSettingDialogue()
                                         }
@@ -297,58 +334,51 @@ class ProductDonateActivity : AppCompatActivity(), AdapterView.OnItemSelectedLis
                                         "There was an error: $error"
                                     )
                                 }.check()
-                        }*/
-        binding?.image1?.setOnClickListener {
-            if (imagePathList.size != 5) {
-                imagePickerDialog.setShowImageOnly(true)
-//                imagePickerDialog.setShowCamera(false)
-                imagePickerDialog.show(supportFragmentManager, "imagePicker")
-                imagePickerDialog.setImageListener(object : ImagePickerDialog.ImagePickerListener {
-                    override fun onImageSelected(imageFile: File) {
-                        imagePath = imageFile.path
-                        Log.e("addProduct", "File-docPath-->>$imageFile")
-
-                        imagePathList.add(imagePath.toString())
-                        Log.e("addProduct", "File-imagePathList-->>$imagePathList")
-
-//                        setUpAdapter()
-
-                    }
-
-                })
-            } else {
-                Utilities.showMessage(this, "You can select image up-to 5")
-            }
         }
+
+
 
         binding?.btnRemoveimage?.visibility = View.GONE
     }
 
     private fun setUpAdapter() {
+
         binding?.image1?.visibility = View.GONE
 
-        binding?.rlPager!!.visibility = View.GONE
-        binding?.btnRemoveimage!!.visibility = View.GONE
-        imageSlider!!.visibility = View.VISIBLE
+        binding?.rlPager?.visibility = View.GONE
+        binding?.btnRemoveimage?.visibility = View.GONE
+        binding?.imageSlider?.visibility = View.VISIBLE
         proSliderAdapter = ProductAdapter(applicationContext, imagePathList)
-        imageSlider!!.setSliderAdapter(proSliderAdapter!!)
+        binding?.imageSlider?.setSliderAdapter(proSliderAdapter!!)
         proSliderAdapter!!.notifyDataSetChanged()
-        imageSlider!!.setIndicatorAnimation(IndicatorAnimationType.THIN_WORM) //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
-        imageSlider!!.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION)
-        imageSlider!!.autoCycleDirection =
+        binding?.imageSlider?.setIndicatorAnimation(IndicatorAnimationType.THIN_WORM) //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
+        binding?.imageSlider?.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION)
+        binding?.imageSlider?.autoCycleDirection =
             SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH
-        imageSlider!!.indicatorSelectedColor = Color.WHITE
-        imageSlider!!.indicatorUnselectedColor = Color.GRAY
-        imageSlider!!.scrollTimeInSec = 4 //set scroll delay in seconds :
-        imageSlider!!.startAutoCycle()
-        SharePost()
+        binding?.imageSlider?.indicatorSelectedColor = Color.WHITE
+        binding?.imageSlider?.indicatorUnselectedColor = Color.GRAY
+        binding?.imageSlider?.scrollTimeInSec = 4 //set scroll delay in seconds :
+        binding?.imageSlider?.startAutoCycle()
+        sharePost()
 
 
         proSliderAdapter?.setOnItemClickListener(object :
             ProductAdapter.OnClickListener {
-            override fun onItemClick(currentItem: ArrayList<String>?) {
+            override fun onItemClick(currentItem: ArrayList<String?>) {
+                imagePathList = currentItem
+                if (imagePathList.isEmpty()) {
+                    binding?.image1?.visibility = View.VISIBLE
+                    binding?.imageSlider?.visibility = View.GONE
 
+                } else {
+                    binding?.image1?.visibility = View.GONE
+
+                    binding?.rlPager?.visibility = View.GONE
+                    binding?.btnRemoveimage?.visibility = View.GONE
+                    binding?.imageSlider?.visibility = View.VISIBLE
+                }
                 proSliderAdapter?.notifyDataSetChanged()
+
 
             }
         })
@@ -361,6 +391,21 @@ class ProductDonateActivity : AppCompatActivity(), AdapterView.OnItemSelectedLis
 
     override fun onNothingSelected(adapterView: AdapterView<*>?) {
 
+    }
+
+    @Deprecated("Deprecated in Java")
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
+            if (data != null) {
+                lat = data.extras?.getDouble("lat") ?: 0.0
+                lng = data.extras?.getDouble("lng") ?: 0.0
+
+            }
+            binding?.etProductLocation?.text = Tools.getCompleteAddressString(mContext, lat, lng);
+            Log.e("TAG", "latisda$lat");
+            Log.e("TAG", "longidbh$lng");
+        }
     }
 
     private val currentLocation: Unit
@@ -548,157 +593,55 @@ class ProductDonateActivity : AppCompatActivity(), AdapterView.OnItemSelectedLis
             })
     }
 
-    private fun showPictureDialog() {
-        if (mContext != null) {
-            val pictureDialog = AlertDialog.Builder(mContext)
-            pictureDialog.setTitle("Select Action")
-            val pictureDialogItems = arrayOf(
-                "Select photo from gallery",
-                "Capture photo from camera"
-            )
-            pictureDialog.setItems(
-                pictureDialogItems
-            ) { dialog, which ->
-                when (which) {
-                    0 -> choosePhotoFromGallary()
-                    1 -> takePhotoFromCamera()
-                }
-            }
-            pictureDialog.show()
-        } else {
-            Toast.makeText(mContext, "Some fields in image  are null", Toast.LENGTH_SHORT).show()
-        }
-    }
-
-    private fun choosePhotoFromGallary() {
-        val pickPhoto = Intent(
-            Intent.ACTION_PICK,
-            MediaStore.Images.Media.EXTERNAL_CONTENT_URI
-        )
-        startActivityForResult(pickPhoto, 1)
-    }
-
-    private fun takePhotoFromCamera() {
-        val cameraIntent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        if (cameraIntent.resolveActivity(mContext!!.packageManager) != null) {
-            startActivityForResult(cameraIntent, 0)
-        }
-    }
-
-    public override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-    /*    try {
-            if (resultCode == RESULT_OK || requestCode == 100) {
-                *//* aqui carga las imagenes*//*
-                //  returnValue = data.getStringArrayListExtra(Pix.IMAGE_RESULTS);
-                // Log.e("TAG",data.getData().getPath());
-                if (returnValue.size == 0) {
-                    returnValue.add(data!!.data)
-                }
-                binding?.image1?.visibility = View.GONE
-                //  myPagerAdapter = new MyPagerAdapter(mContext, returnValue);
-                // photos_viewpager.setAdapter(myPagerAdapter);
-                binding?.rlPager!!.visibility = View.GONE
-                binding?.btnRemoveimage!!.visibility = View.GONE
-                imageSlider!!.visibility = View.VISIBLE
-                if (returnValue.size > 0) {
-                    rotateImages()
-                    val dataImg = ArrayList<String>()
-                    for (i in returnValue.indices) {
-                        try {
-                            val file = getFile(
-                                mContext,
-                                returnValue[i]
-                            ) //create path from uri
-                            val Info = file.path.split(":".toRegex()).dropLastWhile { it.isEmpty() }
-                                .toTypedArray()
-                            dataImg.add(Info[0])
-                        } catch (e: Exception) {
-                        }
-                    }
-                    proSliderAdapter = ProductAdapter(applicationContext, imagePathList)
-                    imageSlider!!.setSliderAdapter(proSliderAdapter!!)
-                    proSliderAdapter!!.notifyDataSetChanged()
-                    imageSlider!!.setIndicatorAnimation(IndicatorAnimationType.THIN_WORM) //set indicator animation by using IndicatorAnimationType. :WORM or THIN_WORM or COLOR or DROP or FILL or NONE or SCALE or SCALE_DOWN or SLIDE and SWAP!!
-                    imageSlider!!.setSliderTransformAnimation(SliderAnimations.SIMPLETRANSFORMATION)
-                    imageSlider!!.autoCycleDirection =
-                        SliderView.AUTO_CYCLE_DIRECTION_BACK_AND_FORTH
-                    imageSlider!!.indicatorSelectedColor = Color.WHITE
-                    imageSlider!!.indicatorUnselectedColor = Color.GRAY
-                    imageSlider!!.scrollTimeInSec = 4 //set scroll delay in seconds :
-                    imageSlider!!.startAutoCycle()
-                    SharePost()
-
-
-                    proSliderAdapter?.setOnItemClickListener(object :
-                        ProductAdapter.OnClickListener {
-                        override fun onItemClick(currentItem: ArrayList<String>?) {
-
-                          proSliderAdapter?.notifyDataSetChanged()
-
-                        }
-                    })
-                }
-            }
-        } catch (e: Exception) {
-            Log.e("TAG", "cdsf" + e.message)
-        }*/
-        if (requestCode == AUTOCOMPLETE_REQUEST_CODE) {
-            lat = data!!.extras!!.getDouble("lat")
-            lng = data.extras!!.getDouble("lng")
-            binding?.etProductLocation!!.text = Tools.getCompleteAddressString(mContext, lat, lng)
-            Log.e("TAG", "latisda$lat")
-            Log.e("TAG", "longidbh$lng")
-        }
-    }
 
     @Throws(IOException::class)
-    private fun SharePost() {
-        if (returnValue.size > 0) {
+    private fun sharePost() {
+        if (imagePathList.size > 0) {
             fileHashMap = HashMap()
 
             //     images = new ArrayList<>();
-            for (i in returnValue.indices) {
+            for (i in imagePathList.indices) {
                 Log.e("vcfgxb", returnValue.size.toString())
                 when (i) {
                     0 -> {
-                        file1 = getFile(
-                            applicationContext,
-                            returnValue[i]
-                        )
-                        fileHashMap!!["image1"] = file1
+//                        file1 = getFile(
+//                            applicationContext,
+//                            returnValue[i]
+//                        )
+
+                        fileHashMap!!["image1"] = imagePathList[i]?.let { File(it) }
                     }
 
                     1 -> {
-                        file2 = getFile(
-                            applicationContext,
-                            returnValue[i]
-                        )
-                        fileHashMap!!["image2"] = file2
+//                        file2 = getFile(
+//                            applicationContext,
+//                            returnValue[i]
+//                        )
+                        fileHashMap!!["image2"] = imagePathList[i]?.let { File(it) }
                     }
 
                     2 -> {
-                        file3 = getFile(
-                            applicationContext,
-                            returnValue[i]
-                        )
-                        fileHashMap!!["image3"] = file3
+//                        file3 = getFile(
+//                            applicationContext,
+//                            returnValue[i]
+//                        )
+                        fileHashMap!!["image3"] = imagePathList[i]?.let { File(it) }
                     }
 
                     3 -> {
-                        file4 = getFile(
-                            applicationContext,
-                            returnValue[i]
-                        )
-                        fileHashMap!!["image4"] = file4
+//                        file4 = getFile(
+//                            applicationContext,
+//                            returnValue[i]
+//                        )
+                        fileHashMap!!["image4"] = imagePathList[i]?.let { File(it) }
                     }
 
                     4 -> {
-                        file5 = getFile(
-                            applicationContext,
-                            returnValue[i]
-                        )
-                        fileHashMap!!["image5"] = file5
+//                        file5 = getFile(
+//                            applicationContext,
+//                            returnValue[i]
+//                        )
+                        fileHashMap!!["image5"] = imagePathList[i]?.let { File(it) }
                     }
                 }
                 Log.e("bfgbf", fileHashMap.toString())
