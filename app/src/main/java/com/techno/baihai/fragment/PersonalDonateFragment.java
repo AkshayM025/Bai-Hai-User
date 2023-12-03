@@ -37,7 +37,6 @@ public class PersonalDonateFragment extends AppCompatActivity {
     ImageView iv_back;
     CardView iv_card1, iv_card2, iv_card3;
     private Boolean isInternetPresent = false;
-    private String uid;
     private String org_id;
     private String org_name;
 
@@ -56,7 +55,7 @@ public class PersonalDonateFragment extends AppCompatActivity {
 
 
         User user = PrefManager.getInstance(mContext).getUser();
-        uid = String.valueOf(user.getId());
+        String uid = String.valueOf(user.getId());
         Log.e("user_id: ", uid);
 
         iv_back = findViewById(R.id.iv_back);

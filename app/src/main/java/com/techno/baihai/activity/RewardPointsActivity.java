@@ -28,11 +28,9 @@ import www.develpoeramit.mapicall.ApiCallBuilder;
 public class RewardPointsActivity extends AppCompatActivity {
 
 
-    private Boolean isInternetPresent = false;
     private final Context mContext = this;
     private String uid;
-    private String TAG = "RewardPointsActivity";
-    private ImageView rewardCancelId;
+    private final String TAG = "RewardPointsActivity";
     private TextView rewards_pointsID,thanks_points;
     ActivityRewardPointsBinding binding;
 
@@ -43,8 +41,8 @@ public class RewardPointsActivity extends AppCompatActivity {
         binding = DataBindingUtil.setContentView(this, R.layout.activity_reward_points);
 
         PrefManager.isConnectingToInternet(this);
-        isInternetPresent = PrefManager.isNetworkConnected(this);
-        rewardCancelId = findViewById(R.id.reward_cancelId);
+        boolean isInternetPresent = PrefManager.isNetworkConnected(this);
+        ImageView rewardCancelId = findViewById(R.id.reward_cancelId);
         rewards_pointsID= findViewById(R.id.rewards_pointsID);
         thanks_points= findViewById(R.id.thanks_points);
         rewardCancelId.setOnClickListener(new View.OnClickListener() {

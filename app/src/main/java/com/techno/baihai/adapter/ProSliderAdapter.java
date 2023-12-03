@@ -22,9 +22,6 @@ public class ProSliderAdapter extends SliderViewAdapter<ProSliderAdapter.SliderA
     private final Context context;
     ArrayList<String> imgArrayList;
 
-    public ProSliderAdapter(Context context) {
-        this.context = context;
-    }
 
     public ProSliderAdapter(Context context, ArrayList<String> imgArrayList) {
         this.context = context;
@@ -49,10 +46,12 @@ public class ProSliderAdapter extends SliderViewAdapter<ProSliderAdapter.SliderA
         notifyDataSetChanged();
     }
 
+    // Define an interface
+
     @Override
     public ProSliderAdapter.SliderAdapterVH onCreateViewHolder(ViewGroup parent) {
         View inflate = LayoutInflater.from(parent.getContext()).inflate(R.layout.image_slider_layout_item, null);
-        return new ProSliderAdapter.SliderAdapterVH(inflate);
+        return new SliderAdapterVH(inflate);
     }
 
     @Override
@@ -69,12 +68,13 @@ public class ProSliderAdapter extends SliderViewAdapter<ProSliderAdapter.SliderA
         viewHolder.btn_removeimage.setOnClickListener(v -> {
             if (getCount() != -1) {
                 deleteItem(position);
-                notifyDataSetChanged();
-                if (getCount() == 0) {
-                    ProductDonateActivity donateActivity = new ProductDonateActivity();
-                    donateActivity.Task();
-                    notifyDataSetChanged();
+
+                if (getCount()==0){
+                    ProductDonateActivity.Task();
                 }
+                notifyDataSetChanged();
+
+
             } else {
                 ProductDonateActivity.Task();
             }
@@ -88,7 +88,7 @@ public class ProSliderAdapter extends SliderViewAdapter<ProSliderAdapter.SliderA
         return imgArrayList.size();
     }
 
-    class SliderAdapterVH extends SliderViewAdapter.ViewHolder {
+    static class SliderAdapterVH extends SliderViewAdapter.ViewHolder {
 
         View itemView;
         ImageView imageViewBackground;

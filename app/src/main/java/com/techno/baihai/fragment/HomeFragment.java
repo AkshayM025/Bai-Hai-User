@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.app.ProgressDialog;
 import android.content.ActivityNotFoundException;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.res.Configuration;
@@ -41,9 +40,6 @@ import androidx.cardview.widget.CardView;
 import androidx.fragment.app.Fragment;
 
 import com.android.billingclient.api.QueryProductDetailsParams;
-import com.android.billingclient.api.SkuDetails;
-import com.android.billingclient.api.SkuDetailsParams;
-import com.android.billingclient.api.SkuDetailsResponseListener;
 import com.google.common.collect.ImmutableList;
 import com.squareup.picasso.Picasso;
 import com.techno.baihai.R;
@@ -227,7 +223,7 @@ public class HomeFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 setLog("Paso a  seccion de suscribir a bye-hi desde home");
-                ImmutableList productDetailsParamsList =
+                ImmutableList<BillingFlowParams.ProductDetailsParams> productDetailsParamsList =
                         ImmutableList.of(
                                 BillingFlowParams.ProductDetailsParams.newBuilder()
                                         // retrieve a value for "productDetails" by calling queryProductDetailsAsync()

@@ -97,9 +97,8 @@ public class GPSTracker extends Service implements LocationListener {
                         }
                     }
                 }
-            } else {
-                // no network provider is enabled
-            }
+            }  // no network provider is enabled
+
 
         } catch (Exception e) {
             e.printStackTrace();

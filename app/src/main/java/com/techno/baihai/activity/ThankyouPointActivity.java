@@ -47,7 +47,7 @@ public class ThankyouPointActivity extends AppCompatActivity {
         String id =user.getId();
 
         HashMap<String, String> param = new HashMap<>();
-        param.put("user_id", id);
+        param.put("user_id", "104");
         ApiCallBuilder.build(this)
                 .isShowProgressBar(false)
                 .setUrl(Constant.BASE_URL + "get_profile?")

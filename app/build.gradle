@@ -156,6 +156,7 @@ dependencies {
 
 
 
+
     implementation platform('com.google.firebase:firebase-bom:26.1.1')
 
     // Declare the dependencies for the Crashlytics and Analytics libraries
@@ -167,14 +168,14 @@ dependencies {
     implementation 'com.marozzi.roundbutton:round-button:1.0.7'
 
     implementation 'com.github.shadowalker77:wp7progressbar:1.0.5'
-    implementation 'org.jetbrains.kotlin:kotlin-bom:1.8.0'
+    implementation platform('org.jetbrains.kotlin:kotlin-bom:1.8.0')
     //trackUser
     implementation 'com.android.installreferrer:installreferrer:2.2'
      implementation 'com.facebook.soloader:soloader:0.10.3'
     implementation 'com.facebook.android:facebook-share:latest' //Facebook Share
         implementation 'com.erikagtierrez.multiple_media_picker:multiple-media-picker:1.0.5'
     //  implementation  'com.fxn769:pix:1.0.5'
-     //  implementation  'com.fxn769:pix:1.5.6'
+       implementation  'com.fxn769:pix:1.5.6'
     implementation 'io.ak1.pix:piximagepicker:1.6.3'
 
 

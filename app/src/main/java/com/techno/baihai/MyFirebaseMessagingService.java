@@ -20,6 +20,7 @@ import com.techno.baihai.activity.ChattingBotActivity;
 import com.techno.baihai.activity.DriverInfoActivity;
 import com.techno.baihai.activity.HomeActivity;
 import com.techno.baihai.activity.RatingActivity;
+import com.techno.baihai.activity.RewardPointsActivity;
 import com.techno.baihai.utils.PrefManager;
 
 import org.json.JSONObject;
@@ -168,7 +169,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 PendingIntent.FLAG_MUTABLE);
                     }else{
                         pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
-                                PendingIntent.FLAG_ONE_SHOT);
+                                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
                     }
 
                 } catch (Exception e) {
@@ -193,7 +194,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 PendingIntent.FLAG_MUTABLE);
                     }else{
                         pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
-                                PendingIntent.FLAG_ONE_SHOT);
+                                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -214,7 +215,25 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 PendingIntent.FLAG_MUTABLE);
                     }else{
                         pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
-                                PendingIntent.FLAG_ONE_SHOT);
+                                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+
+                }
+            }else if (chatRequestStatus.equals("congratulations")) {
+
+                try {
+                    msg = object.optString("key1");
+                    title = object.optString("key");
+                    intent = new Intent(this, RewardPointsActivity.class);
+                    intent.putExtra("Reward", "1");
+                    if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.S) {
+                        pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                                PendingIntent.FLAG_MUTABLE);
+                    }else{
+                        pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
+                                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -236,7 +255,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 PendingIntent.FLAG_MUTABLE);
                     }else{
                         pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
-                                PendingIntent.FLAG_ONE_SHOT);
+                                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -288,7 +307,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                                 PendingIntent.FLAG_MUTABLE);
                     }else{
                         pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
-                                PendingIntent.FLAG_ONE_SHOT);
+                                PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
                     }
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -312,7 +331,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             PendingIntent.FLAG_MUTABLE);
                 }else{
                     pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
-                            PendingIntent.FLAG_ONE_SHOT);
+                            PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
                 }
             }
 
@@ -328,7 +347,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             PendingIntent.FLAG_MUTABLE);
                 }else{
                     pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
-                            PendingIntent.FLAG_ONE_SHOT);
+                            PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
                 }
             }
 
@@ -344,7 +363,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             PendingIntent.FLAG_MUTABLE);
                 }else{
                     pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
-                            PendingIntent.FLAG_ONE_SHOT);
+                            PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
                 }
             }
 
@@ -370,7 +389,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
                             PendingIntent.FLAG_MUTABLE);
                 }else{
                     pendingIntent = PendingIntent.getActivity(this, requestCode, intent,
-                            PendingIntent.FLAG_ONE_SHOT);
+                            PendingIntent.FLAG_ONE_SHOT | PendingIntent.FLAG_IMMUTABLE);
                 }
             }
 
@@ -380,7 +399,10 @@ if((messageBody.equals("message user") && (currentTime.getDate()== 16 ))
         chatStatus1.equals("Accepted")  ||
         status.equals("Complete") ||
         status.equals("Accept") ||
-        status.equals("Rejected") || chatRequestStatus.equals("You have new chat request")  ||messageBody.equals("Please help us  donate products to Bye-Hi") ||message.equals("Product Aproved") || message.equals("Fundation Aproved")){
+        status.equals("Rejected") || chatRequestStatus.equals("You have new chat request")
+        ||messageBody.equals("Please help us  donate products to Bye-Hi") || chatRequestStatus.equals("congratulations")
+        ||message.equals("Product Aproved") ||
+        message.equals("Fundation Aproved")){
     String channelId = getString(R.string.default_notification_channel_id);
     Uri defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
     NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this, channelId)
