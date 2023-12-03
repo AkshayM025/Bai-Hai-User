@@ -187,6 +187,8 @@ dependencies {
     def billing_version1 = '4.0.0'
     
     implementation "com.android.billingclient:billing:$billing_version1"
+        implementation 'com.google.android.gms:play-services-ads:22.5.0'
+
 
 }
 apply plugin: 'com.google.firebase.crashlytics'
