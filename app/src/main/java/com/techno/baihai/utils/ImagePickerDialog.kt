@@ -41,9 +41,13 @@ class ImagePickerDialog : BottomSheetDialogFragment() {
     private var isImage: Boolean? = false
     private var isMedia: Boolean? = false
     private var listener: ImagePickerListener? = null
+    private var selectedImageFiles: MutableList<String> = mutableListOf()
+
 
     interface ImagePickerListener {
         fun onImageSelected(imageFile: File)
+        fun onImagesSelected(imageFiles: MutableList<String>)
+
     }
     fun setImageListener(listeners: ImagePickerListener) {
         listener = listeners
@@ -218,15 +222,16 @@ class ImagePickerDialog : BottomSheetDialogFragment() {
                     "image/* video/*"
                 } else {
                     "image/*"
+
                 }
-//                putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
+                putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)
 //                action = Intent.ACTION_GET_CONTENT
             }
-        startActivityForResult(intent, galleryRequestCode)
+
+        startActivityForResult(Intent.createChooser(intent, "Select Picture"), galleryRequestCode)
 
     }
 
-    @Deprecated("Deprecated in Java")
     @SuppressLint("SuspiciousIndentation")
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -267,16 +272,83 @@ class ImagePickerDialog : BottomSheetDialogFragment() {
 
 
                 galleryRequestCode -> {
-                    val selectedImageUri = data?.data
-                    selectedImageUri?.let {
-                        val img_file = Utilities.uriToFile(requireContext(), it)
-                        listener?.onImageSelected(img_file!!)
-                        dismiss()
+                    // Handle multiple selected images from gallery
+                    if (data?.clipData != null) {
+                        val count = data.clipData!!.itemCount
+                        for (i in 0 until count) {
+                            val imageUri: Uri = data.clipData!!.getItemAt(i).uri
+                            val imgFile = Utilities.uriToFile(requireContext(), imageUri)
+                            selectedImageFiles.add(imgFile?.path!!)
+                        }
+                    } else if (data?.data != null) {
+                        // Handle single selected image from gallery
+                        val selectedImageUri = data.data
+                        selectedImageUri?.let {
+                            val imgFile = Utilities.uriToFile(requireContext(), it)
+                            selectedImageFiles.add(imgFile?.path!!)
+                        }
                     }
+
+                    // Notify the listener with the list of selected images
+                    listener?.onImagesSelected(selectedImageFiles)
+                    dismiss()
                 }
             }
         }
     }
+
+
+    /*   @Deprecated("Deprecated in Java")
+       @SuppressLint("SuspiciousIndentation")
+       override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+           super.onActivityResult(requestCode, resultCode, data)
+
+           if (resultCode == Activity.RESULT_OK) {
+               when (requestCode) {
+                   cameraRequestCode -> {
+
+                       val imageBitmap = data?.extras?.get("data") as Bitmap?
+
+                       // CALL THIS METHOD TO GET THE URI FROM THE BITMAP
+                       if (imageBitmap != null) {
+                           // val tempUri = getImageUri(requireContext(), imageBitmap)
+                           val timeStamp =
+                               SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
+                           val imageFileName = "JPEG_$timeStamp.jpg"
+                           val imageFile =
+                               getImageFile(requireContext(), imageBitmap, imageFileName)
+
+                           // CALL THIS METHOD TO GET THE ACTUAL PATH
+                           //  val pathOfImg = tempUri?.let { RealPathUtil.getRealPath(requireContext(), it) }
+                           if (imageFile != null) {
+                               listener?.onImageSelected(imageFile)
+
+
+                               // File(pathOfImg).let { listener?.onImageSelected(it) }
+                           } else {
+                               // Handle the case where pathOfImg is null
+                               Log.e("ImageCapture", "PathOfImg is null")
+                           }
+                       } else {
+                           // Handle the case where imageBitmap is null
+                           Log.e("ImageCapture", "ImageBitmap is null")
+                       }
+                       dismiss()
+
+                   }
+
+
+                   galleryRequestCode -> {
+                       val selectedImageUri = data?.data
+                       selectedImageUri?.let {
+                           val img_file = Utilities.uriToFile(requireContext(), it)
+                           listener?.onImageSelected(img_file!!)
+                           dismiss()
+                       }
+                   }
+               }
+           }
+       }*/
 
     companion object {
         fun newInstance(): ImagePickerDialog {

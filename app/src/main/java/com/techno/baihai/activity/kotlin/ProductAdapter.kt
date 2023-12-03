@@ -1,7 +1,6 @@
 package com.techno.baihai.activity.kotlin
 
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -12,10 +11,9 @@ import com.bumptech.glide.Glide
 import com.smarteist.autoimageslider.SliderViewAdapter
 import com.techno.baihai.R
 import com.techno.baihai.activity.kotlin.ProductDonateActivity.Companion.task
-import java.io.File
 
 
-class ProductAdapter(mContext: Context, private var imgArrayList: ArrayList<String?>) :
+class ProductAdapter(mContext: Context, private var imgArrayList: MutableList<String>) :
     SliderViewAdapter<ProductAdapter.SliderAdapterVH>() {
 
     var context: Context = mContext
@@ -23,7 +21,7 @@ class ProductAdapter(mContext: Context, private var imgArrayList: ArrayList<Stri
 
 
     interface OnClickListener {
-        fun onItemClick(currentItem: ArrayList<String?>)
+        fun onItemClick(currentItem: MutableList<String>)
     }
 
     // Setter method for item click listener

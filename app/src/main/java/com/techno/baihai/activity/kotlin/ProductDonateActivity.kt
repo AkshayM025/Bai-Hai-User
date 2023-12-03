@@ -95,7 +95,9 @@ class ProductDonateActivity : AppCompatActivity(), AdapterView.OnItemSelectedLis
     private var file5: File? = null
     private var photos_viewpager: ViewPager? = null
     private val imagePickerDialog = ImagePickerDialog.newInstance()
-    private var imagePathList: ArrayList<String?> = ArrayList()
+//    private var imagePathList: ArrayList<String?> = ArrayList()
+    private var imagePathList: MutableList<String> = mutableListOf()
+
     private var imagePath: String? = null
 
 
@@ -281,7 +283,7 @@ class ProductDonateActivity : AppCompatActivity(), AdapterView.OnItemSelectedLis
                                                 "File-docPath-->>$imageFile"
                                             )
 
-                                            imagePathList.add(imagePath.toString())
+                                            imagePathList.add(imagePath!!)
                                             Log.e(
                                                 "addProduct",
                                                 "File-imagePathList-->>$imagePathList"
@@ -290,6 +292,18 @@ class ProductDonateActivity : AppCompatActivity(), AdapterView.OnItemSelectedLis
                                             setUpAdapter()
 
 
+                                        }
+
+                                        override fun onImagesSelected(imageFiles: MutableList<String>) {
+
+
+                                            imagePathList.addAll(imageFiles)
+                                            Log.e(
+                                                "addProduct",
+                                                "File-imagePathList-->>$imagePathList"
+                                            )
+
+                                            setUpAdapter()
                                         }
 
                                     })
@@ -364,8 +378,8 @@ class ProductDonateActivity : AppCompatActivity(), AdapterView.OnItemSelectedLis
 
         proSliderAdapter?.setOnItemClickListener(object :
             ProductAdapter.OnClickListener {
-            override fun onItemClick(currentItem: ArrayList<String?>) {
-                imagePathList = currentItem
+            override fun onItemClick(currentItem: MutableList<String>) {
+                imagePathList = currentItem!!
                 if (imagePathList.isEmpty()) {
                     binding?.image1?.visibility = View.VISIBLE
                     binding?.imageSlider?.visibility = View.GONE
