@@ -394,6 +394,7 @@ public class MyFirebaseMessagingService extends FirebaseMessagingService {
             }
 
 
+
 if((messageBody.equals("message user") && (currentTime.getDate()== 16 ))
         || Chatresult.equals("insert_chat") ||
         chatStatus1.equals("Accepted")  ||
