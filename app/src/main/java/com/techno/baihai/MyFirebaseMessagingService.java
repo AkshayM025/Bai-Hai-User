@@ -400,7 +400,7 @@ if((messageBody.equals("message user") && (currentTime.getDate()== 16 ))
         status.equals("Complete") ||
         status.equals("Accept") ||
         status.equals("Rejected") || chatRequestStatus.equals("You have new chat request")
-        ||messageBody.equals("Please help us  donate products to Bye-Hi") || chatRequestStatus.equals("congratulations")
+        ||messageBody.equals("Please help us  donate products to Bye-Hi") || chatStatus.equals("congratulations")
         ||message.equals("Product Aproved") ||
         message.equals("Fundation Aproved")){
     String channelId = getString(R.string.default_notification_channel_id);
